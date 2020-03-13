@@ -104,7 +104,7 @@ class CDSBuilder(Application):
     )
 
     base_url = Unicode(
-        '/',
+        os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/'),
         help="The base URL of the entire application",
         config=True)
 
@@ -115,6 +115,20 @@ class CDSBuilder(Application):
         if not proposal.value.endswith('/'):
             proposal.value = proposal.value + '/'
         return proposal.value
+
+    extra_footer_scripts = Dict(
+        {},
+        help="""
+        Extra bits of JavaScript that should be loaded in footer of each page.
+
+        Only the values are set up as scripts. Keys are used only
+        for sorting.
+
+        Omit the <script> tag. This should be primarily used for
+        analytics code.
+        """,
+        config=True
+    )
 
     def init_pycurl(self):
         try:
@@ -181,8 +195,9 @@ class CDSBuilder(Application):
 
         self.tornado_settings.update({
             "debug": self.debug,
-            #"static_path": os.path.join(HERE, "static"),
-            #'static_url_prefix': url_path_join(self.base_url, 'static/'),
+            'base_url': self.base_url,
+            "static_path": os.path.join(HERE, "static"),
+            'static_url_prefix': url_path_join(self.base_url, 'static/'),
             #'template_variables': self.template_variables,
             #'executor': self.executor,
             'build_pool': self.build_pool,
@@ -191,6 +206,7 @@ class CDSBuilder(Application):
             'registry': registry,
             'build_pool': self.build_pool,
             'jinja2_env': jinja_env,
+            'extra_footer_scripts': self.extra_footer_scripts,
             #'event_log': self.event_log,
             #'normalized_origin': self.normalized_origin
         })
@@ -232,7 +248,7 @@ class CDSBuilder(Application):
             # {'path': os.path.join(self.tornado_settings['static_path'], 'images')}),
             #(r'/about', AboutHandler),
             #(r'/health', HealthHandler, {'hub_url': self.hub_url}),
-            (r'/builder/(?P<user_name>[^/]+)/app/(?P<server_mame>[^/]+)?', MainHandler),
+            (self.base_url + r'(?P<user_name>[^/]+)/app/(?P<server_name>[^/]+)?', MainHandler),
             #(r'.*', Custom404),
         ]
         #handlers = self.add_url_prefix(self.base_url, handlers)
@@ -245,6 +261,8 @@ class CDSBuilder(Application):
                              url_path_join(self.base_url, 'oauth_callback')
         oauth_redirect_uri = urlparse(oauth_redirect_uri).path
         handlers.insert(-1, (re.escape(oauth_redirect_uri), HubOAuthCallbackHandler))
+
+        self.log.info(self.base_url)
 
         self.tornado_app = tornado.web.Application(handlers, **self.tornado_settings)
 
