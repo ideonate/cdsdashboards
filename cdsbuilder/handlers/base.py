@@ -1,4 +1,5 @@
 from tornado import web
+from tornado.log import app_log
 from jupyterhub.services.auth import HubOAuthenticated, HubOAuth
 
 
@@ -7,6 +8,7 @@ class BaseHandler(HubOAuthenticated, web.RequestHandler):
 
     def initialize(self):
         super().initialize()
+        self.log = app_log
         self.hub_auth = HubOAuth.instance(config=self.settings['traitlets_config'])
 
     @property

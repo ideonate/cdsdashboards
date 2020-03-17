@@ -18,7 +18,8 @@ import tornado.log
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jupyterhub.services.auth import HubOAuthCallbackHandler
 
-from .handlers.main import MainHandler
+from .handlers.main import MainDashboardHandler
+from .dashboard import Dashboard
 from .util import url_path_join
 
 
@@ -130,6 +131,29 @@ class CDSBuilder(Application):
         config=True
     )
 
+    hub_api_token = Unicode(
+        help="""API token for talking to the JupyterHub API""",
+        config=True,
+    )
+    @default('hub_api_token')
+    def _default_hub_token(self):
+        return os.environ.get('JUPYTERHUB_API_TOKEN', '')
+
+    hub_url = Unicode(
+        help="""
+        The base URL of the JupyterHub instance where users will run.
+
+        e.g. https://hub.mybinder.org/
+        """,
+        config=True,
+    )
+    @validate('hub_url')
+    def _add_slash(self, proposal):
+        """trait validator to ensure hub_url ends with a trailing slash"""
+        if proposal.value is not None and not proposal.value.endswith('/'):
+            return proposal.value + '/'
+        return proposal.value
+
     def init_pycurl(self):
         try:
             AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
@@ -180,12 +204,11 @@ class CDSBuilder(Application):
         else:
             registry = None
 
-        #self.launcher = Launcher(
-        #    parent=self,
-        #    hub_url=self.hub_url,
-        #    hub_api_token=self.hub_api_token,
-        #    create_user=not self.auth_enabled,
-        #)
+        self.dashboard = Dashboard(
+            parent=self,
+            hub_url=self.hub_url,
+            hub_api_token=self.hub_api_token
+        )
 
         #self.event_log = EventLog(parent=self)
 
@@ -207,6 +230,7 @@ class CDSBuilder(Application):
             'build_pool': self.build_pool,
             'jinja2_env': jinja_env,
             'extra_footer_scripts': self.extra_footer_scripts,
+            'dashboard': self.dashboard
             #'event_log': self.event_log,
             #'normalized_origin': self.normalized_origin
         })
@@ -248,7 +272,7 @@ class CDSBuilder(Application):
             # {'path': os.path.join(self.tornado_settings['static_path'], 'images')}),
             #(r'/about', AboutHandler),
             #(r'/health', HealthHandler, {'hub_url': self.hub_url}),
-            (self.base_url + r'(?P<user_name>[^/]+)/app/(?P<server_name>[^/]+)?', MainHandler),
+            (self.base_url + r'(?P<user_name>[^/]+)/app/(?P<server_name>[^/]+)?', MainDashboardHandler),
             #(r'.*', Custom404),
         ]
         #handlers = self.add_url_prefix(self.base_url, handlers)
