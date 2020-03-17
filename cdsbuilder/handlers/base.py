@@ -1,15 +1,15 @@
 from tornado import web
 from tornado.log import app_log
-from jupyterhub.services.auth import HubOAuthenticated, HubOAuth
+#from jupyterhub.services.auth import HubOAuthenticated, HubOAuth
 
 
-class BaseHandler(HubOAuthenticated, web.RequestHandler):
+class BaseHandler(web.RequestHandler): # HubOAuthenticated
     """HubAuthenticated by default allows all successfully identified users (see allow_all property)."""
 
     def initialize(self):
         super().initialize()
         self.log = app_log
-        self.hub_auth = HubOAuth.instance(config=self.settings['traitlets_config'])
+        #self.hub_auth = HubOAuth.instance(config=self.settings['traitlets_config'])
 
     @property
     def template_namespace(self):
