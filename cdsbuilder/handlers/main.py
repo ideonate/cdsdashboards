@@ -5,7 +5,7 @@ from jupyterhub.handlers.base import BaseHandler
 
 class MainDashboardHandler(BaseHandler):
 
-    #@authenticated
+    @authenticated
     async def get(self, user_name, server_name=''):
 
         #dashboard_store = self.settings['dashboard']

@@ -2,13 +2,14 @@
 Application for configuring and building the app environments.
 """
 
+import asyncio
 import os
 import re
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
-from traitlets import Unicode, Integer, Bool, Dict, validate, TraitError, Union, default
+from traitlets import Unicode, Integer, Bool, Dict, validate, TraitError, Union, default, observe
 from traitlets.config import Application
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
@@ -17,6 +18,8 @@ import tornado.options
 import tornado.log
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jupyterhub.services.auth import HubOAuthCallbackHandler
+from jupyterhub import __version__ as __jh_version__
+from jupyterhub import dbutil
 
 from .handlers.main import MainDashboardHandler
 from .dashboard import Dashboard
@@ -26,8 +29,47 @@ from .util import url_path_join
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
+common_aliases = {
+    'log-level': 'Application.log_level',
+    'f': 'CDSBuilder.config_file',
+    'config': 'CDSBuilder.config_file',
+    'db': 'CDSBuilder.db_url',
+}
+
+class UpgradeDB(Application):
+    """Upgrade the CDSBuilder database schema."""
+
+    name = 'cdsbuilder-upgrade-db'
+    version = __jh_version__
+    description = """Upgrade the CDSBuilder database to the current schema.
+
+    Usage:
+
+        cdsbuilder upgrade-db
+    """
+    aliases = common_aliases
+    classes = []
+
+    def start(self):
+        self.log.debug('Starting upgrade-db')
+
+        hub = CDSBuilder(parent=self)
+        hub.load_config_file(hub.config_file)
+        self.log = hub.log
+        dbutil.upgrade_if_needed(hub.db_url, log=self.log)
+
+        self.log.debug('Finished upgrade-db')
+
+
 class CDSBuilder(Application):
     """An Application for starting a builder."""
+
+    subcommands = {
+        'upgrade-db': (
+            UpgradeDB,
+            "Upgrade your CDSBuilder state database to the current version.",
+        ),
+    }
 
     @default('log_level')
     def _log_level(self):
@@ -165,6 +207,24 @@ class CDSBuilder(Application):
         if self.log_level < logging.INFO:
             curl_log = logging.getLogger('tornado.curl_httpclient')
             curl_log.setLevel(logging.INFO)
+
+    db_url = Unicode(
+        'sqlite:///jupyterhub.sqlite',
+        help="url for the database. e.g. `sqlite:///jupyterhub.sqlite`",
+    ).tag(config=True)
+
+    @observe('db_url')
+    def _db_url_changed(self, change):
+        new = change['new']
+        if '://' not in new:
+            # assume sqlite, if given as a plain filename
+            self.db_url = 'sqlite:///%s' % new
+
+    db_kwargs = Dict(
+        help="""Include any kwargs to pass to the database connection.
+        See sqlalchemy.create_engine for details.
+        """
+    ).tag(config=True)
 
     def initialize(self, *args, **kwargs):
         """Load configuration settings."""
@@ -306,6 +366,9 @@ class CDSBuilder(Application):
     def stop(self):
         self.http_server.stop()
         #self.build_pool.shutdown()
+
+
+UpgradeDB.classes.append(CDSBuilder)
 
 main = CDSBuilder.launch_instance
 
