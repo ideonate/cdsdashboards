@@ -2,28 +2,30 @@
 Application for configuring and building the app environments.
 """
 
-import asyncio
 import os
 import re
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
-from traitlets import Unicode, Integer, Bool, Dict, validate, TraitError, Union, default, observe
-from traitlets.config import Application
+from traitlets import Unicode, Integer, Bool, Dict, validate, Any, default, observe
+from traitlets.config import Application, catch_config_error
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
 import tornado.ioloop
 import tornado.options
 import tornado.log
+from sqlalchemy.exc import OperationalError
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jupyterhub.services.auth import HubOAuthCallbackHandler
 from jupyterhub import __version__ as __jh_version__
 from jupyterhub import dbutil
 
 from .handlers.main import MainDashboardHandler
-from .dashboard import Dashboard
+from .dashboard import DashboardRepr
 from .util import url_path_join
+from jupyterhub import orm as jhorm
+from .orm import Base, Server
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -56,6 +58,11 @@ class UpgradeDB(Application):
         hub = CDSBuilder(parent=self)
         hub.load_config_file(hub.config_file)
         self.log = hub.log
+
+        self.log.debug('DB URL {}'.format(hub.db_url))
+
+        my_table_names = set(Base.metadata.tables.keys())
+
         dbutil.upgrade_if_needed(hub.db_url, log=self.log)
 
         self.log.debug('Finished upgrade-db')
@@ -226,10 +233,70 @@ class CDSBuilder(Application):
         """
     ).tag(config=True)
 
+    upgrade_db = Bool(
+        False,
+        help="""Upgrade the database automatically on start.
+
+        Only safe if database is regularly backed up.
+        Only SQLite databases will be backed up to a local file automatically.
+    """,
+    ).tag(config=True)
+    reset_db = Bool(False, help="Purge and reset the database.").tag(config=True)
+    debug_db = Bool(
+        False, help="log all database transactions. This has A LOT of output"
+    ).tag(config=True)
+    session_factory = Any()
+
+    def init_db(self):
+        """Create the database connection"""
+
+        urlinfo = urlparse(self.db_url)
+        if urlinfo.password:
+            # avoid logging the database password
+            urlinfo = urlinfo._replace(
+                netloc='{}:[redacted]@{}:{}'.format(
+                    urlinfo.username, urlinfo.hostname, urlinfo.port
+                )
+            )
+            db_log_url = urlinfo.geturl()
+        else:
+            db_log_url = self.db_url
+        self.log.debug("Connecting to db: %s", db_log_url)
+        if self.upgrade_db:
+            dbutil.upgrade_if_needed(self.db_url, log=self.log)
+
+        try:
+            self.session_factory = jhorm.new_session_factory(
+                self.db_url, reset=self.reset_db, echo=self.debug_db, **self.db_kwargs
+            )
+            self.db = self.session_factory()
+        except OperationalError as e:
+            self.log.error("Failed to connect to db: %s", db_log_url)
+            self.log.debug("Database error was:", exc_info=True)
+            if self.db_url.startswith('sqlite:///'):
+                self._check_db_path(self.db_url.split(':///', 1)[1])
+            self.log.critical(
+                '\n'.join(
+                    [
+                        "If you recently upgraded JupyterHub, try running",
+                        "    jupyterhub upgrade-db",
+                        "to upgrade your JupyterHub database schema",
+                    ]
+                )
+            )
+            self.exit(1)
+        except jhorm.DatabaseSchemaMismatch as e:
+            self.exit(e)
+
+    @catch_config_error
     def initialize(self, *args, **kwargs):
         """Load configuration settings."""
         super().initialize(*args, **kwargs)
         self.load_config_file(self.config_file)
+
+        if self.subapp:
+            return
+
         # hook up tornado logging
         if self.debug:
             self.log_level = logging.DEBUG
@@ -238,6 +305,7 @@ class CDSBuilder(Application):
         self.log = tornado.log.app_log
 
         self.init_pycurl()
+        self.init_db()
 
         # times 2 for log + build threads
         self.build_pool = ThreadPoolExecutor(self.concurrent_build_limit * 2)
@@ -258,13 +326,13 @@ class CDSBuilder(Application):
             FileSystemLoader(template_paths)
         ])
         jinja_env = Environment(loader=loader, **jinja_options)
-        if self.use_registry and self.builder_required:
+        if self.use_registry:
             #registry = DockerRegistry(parent=self)
             pass
         else:
             registry = None
 
-        self.dashboard = Dashboard(
+        self.dashboard = DashboardRepr(
             parent=self,
             hub_url=self.hub_url,
             hub_api_token=self.hub_api_token
@@ -351,17 +419,22 @@ class CDSBuilder(Application):
         self.tornado_app = tornado.web.Application(handlers, **self.tornado_settings)
 
 
-    def start(self, run_loop=True):
+    def start(self):
+        if self.subapp:
+            self.subapp.start()
+            return
+
         self.log.info("CDSBuilder starting on port %i", self.port)
         self.http_server = HTTPServer(
             self.tornado_app,
             xheaders=True,
         )
         self.http_server.listen(self.port)
+
         #if self.builder_required:
         #    asyncio.ensure_future(self.watch_build_pods())
-        if run_loop:
-            tornado.ioloop.IOLoop.current().start()
+
+        tornado.ioloop.IOLoop.current().start()
 
     def stop(self):
         self.http_server.stop()

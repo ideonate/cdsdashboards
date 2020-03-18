@@ -1,7 +1,8 @@
-from tornado.web import authenticated, gen
+from tornado.web import authenticated
 
 from jupyterhub.handlers.base import BaseHandler
 
+from ..orm import Dashboard
 
 class MainDashboardHandler(BaseHandler):
 
@@ -18,11 +19,21 @@ class MainDashboardHandler(BaseHandler):
 
         user = self.find_user(user_name)
 
+        current_user = await self.get_current_user()
+
+
+        db = self.db
+
+        d = Dashboard(name=server_name, user_id=current_user.id)
+        db.add(d)
+        db.commit()
+
         html = self.render_template(
             "appconfig.html",
             base_url=self.settings['base_url'],
             user_name=user_name,
             server_name=server_name,
-            user=user
+            user=user,
+            current_user=current_user
         )
         self.write(html)

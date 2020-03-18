@@ -1,3 +1,5 @@
+__all__ = ['Dashboard', 'user_dashboard_map']
+
 from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Server, Table
 
 class Dashboard(Base):

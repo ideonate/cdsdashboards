@@ -8,7 +8,7 @@ from tornado.log import app_log
 from tornado import web, gen
 
 
-class Dashboard(LoggingConfigurable):
+class DashboardRepr(LoggingConfigurable):
     """Object for an individual app/server for a user, such as files or repo and allowed visitors"""
 
     hub_api_token = Unicode(help="The API token for the Hub")
