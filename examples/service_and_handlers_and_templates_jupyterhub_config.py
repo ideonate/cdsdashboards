@@ -219,11 +219,9 @@ c.JupyterHub.default_url = '/hub/home'
 #
 #  The Hub prefix will be added, so `/my-page` will be served at `/hub/my-page`.
 
-from cdsbuilder.handlers.main import MainDashboardHandler
+from cdsbuilder.handlers import extra_handlers as cdsbuilder_extra_handlers
 
-c.JupyterHub.extra_handlers = [
-    (r'dashboards/(?P<user_name>[^/]+)/app/(?P<server_name>[^/]+?)', MainDashboardHandler)
-]
+c.JupyterHub.extra_handlers = cdsbuilder_extra_handlers
 
 ## DEPRECATED: use output redirection instead, e.g.
 #
