@@ -1,5 +1,7 @@
 __all__ = ['Dashboard', 'user_dashboard_map']
 
+from datetime import datetime
+
 from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Server, Table
 
 class Dashboard(Base):
@@ -16,9 +18,9 @@ class Dashboard(Base):
     state = Column(JSONDict)
     name = Column(Unicode(255))
     description = Column(Unicode(255))
-    safe_name = Column(Unicode(255), index=True, unique=True)
+    urlname = Column(Unicode(255), index=True, unique=True, nullable=False)
 
-    created = Column(DateTime)
+    created = Column(DateTime, default=datetime.utcnow)
     started = Column(DateTime)
     last_activity = Column(DateTime, nullable=True)
     dashboard_options = Column(JSONDict)
@@ -33,6 +35,15 @@ class Dashboard(Base):
     @property
     def orm_dashboard(self):
         return self
+
+    @classmethod
+    def find(cls, db, urlname, user=None):
+        """Find a Dashboard by urlname.
+        Returns None if not found.
+        """
+        if user is None:
+            return db.query(cls).filter(cls.urlname == urlname).first()
+        return db.query(cls).filter(cls.urlname == urlname, cls.user_id == user.id).first()
 
 
 # user:dashboard many:many mapping table
