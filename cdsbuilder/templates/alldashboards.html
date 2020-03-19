@@ -1,0 +1,20 @@
+{% extends "page.html" %}
+
+{% block main %}
+<div id="main" class="container">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+
+
+            <h2>Here are your own dashboards.</h2>
+
+            {% for dash in dashboards %}
+
+            <p>{{ dash.name | escape }} - <a href="{{ base_url }}hub/dashboards/{{ current_user.name }}/{{ dash.safe_name }}/edit">Configure</a></p>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endblock main %}

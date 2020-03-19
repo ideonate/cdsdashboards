@@ -15,7 +15,10 @@ class Dashboard(Base):
 
     state = Column(JSONDict)
     name = Column(Unicode(255))
+    description = Column(Unicode(255))
+    safe_name = Column(Unicode(255), index=True, unique=True)
 
+    created = Column(DateTime)
     started = Column(DateTime)
     last_activity = Column(DateTime, nullable=True)
     dashboard_options = Column(JSONDict)

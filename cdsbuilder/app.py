@@ -21,7 +21,6 @@ from jupyterhub.services.auth import HubOAuthCallbackHandler
 from jupyterhub import __version__ as __jh_version__
 from jupyterhub import dbutil
 
-from .handlers.main import MainDashboardHandler
 from .dashboard import DashboardRepr
 from .util import url_path_join
 from jupyterhub import orm as jhorm
@@ -61,7 +60,7 @@ class UpgradeDB(Application):
 
         self.log.debug('DB URL {}'.format(hub.db_url))
 
-        my_table_names = set(Base.metadata.tables.keys())
+        # my_table_names = set(Base.metadata.tables.keys())
 
         dbutil.upgrade_if_needed(hub.db_url, log=self.log)
 
@@ -400,7 +399,7 @@ class CDSBuilder(Application):
             # {'path': os.path.join(self.tornado_settings['static_path'], 'images')}),
             #(r'/about', AboutHandler),
             #(r'/health', HealthHandler, {'hub_url': self.hub_url}),
-            (self.base_url + r'(?P<user_name>[^/]+)/app/(?P<server_name>[^/]+)?', MainDashboardHandler),
+            #(self.base_url + r'(?P<user_name>[^/]+)/app/(?P<server_name>[^/]+)?', MainDashboardHandler),
             #(r'.*', Custom404),
         ]
         #handlers = self.add_url_prefix(self.base_url, handlers)
