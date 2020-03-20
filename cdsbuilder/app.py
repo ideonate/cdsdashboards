@@ -24,7 +24,7 @@ from jupyterhub import dbutil
 from .dashboard import DashboardRepr
 from .util import url_path_join
 from jupyterhub import orm as jhorm
-from .orm import Base, Server
+from .orm import Base
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))

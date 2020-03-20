@@ -122,7 +122,7 @@ class DashboardNewHandler(DashboardBaseHandler):
         self.redirect("{}hub/dashboards/{}/{}/edit".format(self.settings['base_url'], current_user.name, urlname))
 
 
-class DashboardConfigHandler(DashboardBaseHandler):
+class DashboardEditHandler(DashboardBaseHandler):
 
     @authenticated
     async def get(self, user_name, dashboard_urlname=''):
@@ -137,10 +137,16 @@ class DashboardConfigHandler(DashboardBaseHandler):
         if dashboard is None:
             return self.send_error(404)
 
+        # Get User's servers:
+
+        # spawners = [spawner for _, spawner in current_user.spawners.items()]
+        spawners = current_user.all_spawners(include_default=True) #current_user.orm_user._orm_spawners
+
         html = self.render_template(
-            "appconfig.html",
+            "editdashboard.html",
             base_url=self.settings['base_url'],
             dashboard=dashboard,
-            current_user=current_user
+            current_user=current_user,
+            spawners=spawners
         )
         self.write(html)
