@@ -2,7 +2,7 @@ __all__ = ['Dashboard', 'user_dashboard_map']
 
 from datetime import datetime
 
-from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner
+from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Table
 
 class Dashboard(Base):
     """"Database class for a Dashboard"""

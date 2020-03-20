@@ -11,6 +11,8 @@ from ..util import DefaultObjDict
 class DashboardBaseHandler(BaseHandler):
 
     unsafe_regex = re.compile(r'[^a-zA-Z0-9]+')
+
+    name_regex = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_\- \!\@\$\(\)\*\+\?\<\>]+$')
     
     def calc_urlname(self, dashboard_name):
         urlname = base_urlname = re.sub(self.unsafe_regex, '-', dashboard_name).lower()
@@ -57,7 +59,7 @@ class AllDashboardsHandler(DashboardBaseHandler):
 
 class DashboardNewHandler(DashboardBaseHandler):
 
-    name_regex = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_\- \!\@\$\(\)\*\+\?\<\>]+$')
+    
 
     @authenticated
     async def get(self):
@@ -137,16 +139,97 @@ class DashboardEditHandler(DashboardBaseHandler):
         if dashboard is None:
             return self.send_error(404)
 
-        # Get User's servers:
+        # Get User's spawners:
 
-        # spawners = [spawner for _, spawner in current_user.spawners.items()]
-        spawners = current_user.all_spawners(include_default=True) #current_user.orm_user._orm_spawners
+        spawners = current_user.all_spawners(include_default=True)
+
+        spawner_name=None
+        if dashboard.source_spawner is not None:
+            spawner_name=dashboard.source_spawner.name
+
+        errors = DefaultObjDict()
 
         html = self.render_template(
             "editdashboard.html",
             base_url=self.settings['base_url'],
             dashboard=dashboard,
+            dashboard_name=dashboard.name,
+            spawner_name=spawner_name,
             current_user=current_user,
-            spawners=spawners
+            spawners=spawners,
+            errors=errors
         )
         self.write(html)
+
+    @authenticated
+    async def post(self, user_name, dashboard_urlname=''):
+
+        current_user = await self.get_current_user()
+
+        if current_user.name != user_name:
+            return self.send_error(403)
+
+        dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=current_user)
+
+        if dashboard is None:
+            return self.send_error(404)
+
+        dashboard_name = self.get_argument('name').strip()
+
+        errors = DefaultObjDict()
+
+        if dashboard_name == '':
+            errors.name = 'Please enter a name'
+        elif not self.name_regex.match(dashboard_name):
+            errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>'
+        
+
+        spawners = current_user.all_spawners(include_default=True)
+
+        spawner_name = self.get_argument('spawner_name')
+
+        self.log.debug('Got spawner_name {}.'.format(spawner_name))
+
+        spawner = None
+        thisspawners = [spawner for spawner in spawners if spawner.name == spawner_name]
+
+        if len(thisspawners) == 1:
+            spawner = thisspawners[0]
+        else:
+            errors.spawner = 'Spawner {} not found'.format(spawner_name)
+
+            # Pick the existing one again
+            if dashboard.source_spawner is not None:
+                spawner_name=dashboard.source_spawner.name
+
+        if len(errors) == 0:
+            db = self.db
+
+            try:
+
+                dashboard.name = dashboard_name
+                dashboard.source_spawner = spawner.orm_spawner
+                db.add(dashboard)
+                db.commit()
+
+            except Exception as e:
+                errors.all = str(e)
+
+        if len(errors):
+            html = self.render_template(
+                "editdashboard.html",
+                base_url=self.settings['base_url'],
+                dashboard=dashboard,
+                dashboard_name=dashboard_name,
+                spawner_name=spawner_name,
+                spawners=spawners,
+                errors=errors,
+                current_user=current_user
+            )
+            return self.write(html)
+        
+        # redirect to main dashboard page
+
+        #self.redirect("{}hub/dashboards/{}/{}/edit".format(self.settings['base_url'], current_user.name, dashboard.urlname))
+        self.redirect("{}hub/dashboards".format(self.settings['base_url']))
+
