@@ -219,7 +219,7 @@ c.JupyterHub.default_url = '/hub/home'
 #
 #  The Hub prefix will be added, so `/my-page` will be served at `/hub/my-page`.
 
-from cdsbuilder.handlers import extra_handlers as cdsbuilder_extra_handlers
+from cdsbuilder.hubextension import extra_handlers as cdsbuilder_extra_handlers
 
 c.JupyterHub.extra_handlers = cdsbuilder_extra_handlers
 
@@ -516,8 +516,6 @@ c.JupyterHub.hub_ip = public_ips()[0]
 
 #c.JupyterHub.hub_ip = '127.0.0.1'
 
-print('c.JupyterHub.hub_ip {}'.format(c.JupyterHub.hub_ip))
-
 c.DockerSpawner.debug = True
 
 c.DockerSpawner.remove = False
@@ -542,10 +540,11 @@ c.Authenticator.admin_users = {'dan'}
 c.ConfigurableHTTPProxy.debug = True
 
 c.JupyterHub.cleanup_servers = True
-c.ConfigurableHTTPProxy.should_start = True
 
-#c.ConfigurableHTTPProxy.api_url = 'http://127.0.0.1:8001'
-#c.ConfigurableHTTPProxy.auth_token = "CONFIGPROXY_AUTH_TOKEN"
+c.ConfigurableHTTPProxy.should_start = False
+
+c.ConfigurableHTTPProxy.api_url = 'http://127.0.0.1:8001'
+c.ConfigurableHTTPProxy.auth_token = "CONFIGPROXY_AUTH_TOKEN"
 
 
 ## Path to SSL certificate file for the public facing interface of the proxy
@@ -585,7 +584,7 @@ c.ConfigurableHTTPProxy.should_start = True
 
 ## Paths to search for jinja templates, before using the default templates.
 import os
-from cdsbuilder.app import HERE as CDSBUILDER_HERE
+from cdsbuilder.app import HERE as CDSBUILDER_HERE, cdsbuilder_tornado_settings
 
 c.JupyterHub.template_paths = [
     os.path.join(CDSBUILDER_HERE, 'templates')
@@ -595,7 +594,8 @@ c.JupyterHub.template_paths = [
 #c.JupyterHub.template_vars = {}
 
 ## Extra settings overrides to pass to the tornado application.
-#c.JupyterHub.tornado_settings = {}
+
+c.JupyterHub.tornado_settings = cdsbuilder_tornado_settings
 
 ## Trust user-provided tokens (via JupyterHub.service_tokens) to have good
 #  entropy.

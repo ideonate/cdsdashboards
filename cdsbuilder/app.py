@@ -25,9 +25,14 @@ from .dashboard import DashboardRepr
 from .util import url_path_join
 from jupyterhub import orm as jhorm
 from .orm import Base
+from .builders import builders_store
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+cdsbuilder_tornado_settings = {
+    'cds_builders': builders_store
+}
 
 
 common_aliases = {
