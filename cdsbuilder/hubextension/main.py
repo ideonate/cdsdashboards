@@ -5,8 +5,7 @@ from tornado.web import authenticated
 from jupyterhub.handlers.base import BaseHandler
 
 from ..orm import Dashboard
-from ..util import DefaultObjDict
-from ..builder.builders import Builder
+from ..util import DefaultObjDict, maybe_future
 
 
 class DashboardBaseHandler(BaseHandler):
@@ -256,7 +255,8 @@ class MainViewDashboardHandler(DashboardBaseHandler):
         builder = builders_store[dashboard.id]
 
         if not builder.active:
-            builder.start()
+            self.log.debug('starting builder')
+            f = maybe_future(builder.start())
 
         html = self.render_template(
             "viewdashboard.html",

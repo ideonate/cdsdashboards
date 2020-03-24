@@ -5,6 +5,8 @@ from .builders import Builder
 
 class DockerBuilder(Builder):
 
+    counter = 0
+
     async def start(self):
         """Start the dashboard
 
@@ -12,9 +14,10 @@ class DockerBuilder(Builder):
           (str, int): the (ip, port) where the Hub can connect to the server.
 
         """
-
+        self._build_pending = True
         for i in range(20):
             await gen.sleep(2)
+            self.counter += 1
             self.log.debug('Still starting dashboard {} ({})'.format(self.dashboard_id, i))
 
 
@@ -34,3 +37,7 @@ class DockerBuilder(Builder):
         raise NotImplementedError(
             "Override in subclass. Must be a Tornado gen.coroutine."
         )
+
+
+    async def poll(self):
+        pass

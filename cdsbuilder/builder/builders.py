@@ -28,6 +28,8 @@ class Builder(LoggingConfigurable):
 
     dashboard_id = None
 
+    server = None # TODO not currently used
+
     # private attributes for tracking status
     _build_pending = False
     _start_pending = False
@@ -55,7 +57,7 @@ class Builder(LoggingConfigurable):
         Return False if nothing is pending.
         """
         if self._build_pending:
-            return 'spawn'
+            return 'build'
         elif self._stop_pending:
             return 'stop'
         elif self._check_pending:
@@ -70,8 +72,8 @@ class Builder(LoggingConfigurable):
         """
         if self.pending:
             return False
-        #if self.server is None:
-        #    return False
+        if self.server is None:
+            return False
         return True
 
     @property
@@ -410,8 +412,3 @@ class BuildersDict(dict):
         return super().__getitem__(key)
 
 
-def builder_factory(key):
-    app_log.debug("Builder factory for key {}".format(key))
-    return Builder(dashboard_id=key)
-
-builders_store = BuildersDict(builder_factory)

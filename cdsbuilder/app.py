@@ -8,7 +8,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
-from traitlets import Unicode, Integer, Bool, Dict, validate, Any, Instance, default, observe
+from traitlets import Unicode, Integer, Bool, Dict, validate, Any, Type, Instance, default, observe
 from traitlets.config import Application, catch_config_error
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
@@ -24,15 +24,11 @@ from jupyterhub import dbutil
 from .dashboard import DashboardRepr
 from .util import url_path_join
 from jupyterhub import orm as jhorm
-from .builder.builders import BuildersDict, builders_store
+from .builder.builders import BuildersDict, Builder
+from .builder.dockerbuilder import DockerBuilder
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-
-cdsbuilder_tornado_settings = {
-    'cds_builders': builders_store
-}
-
 
 common_aliases = {
     'log-level': 'Application.log_level',
@@ -189,6 +185,9 @@ class CDSBuilder(Application):
         """,
         config=True
     )
+
+    # TODO This builder_class config is not currently used - always just does DockerBuilder
+    builder_class = Type(default_value=DockerBuilder, klass=Builder).tag(config=True)
 
     hub_api_token = Unicode(
         help="""API token for talking to the JupyterHub API""",
@@ -455,6 +454,19 @@ class CDSBuilder(Application):
 UpgradeDB.classes.append(CDSBuilder)
 
 main = CDSBuilder.launch_instance
+
+
+
+def builder_factory(key):
+    tornado.log.app_log.debug("Builder factory for key {}".format(key))
+    return DockerBuilder(dashboard_id=key)
+
+
+builders_store = BuildersDict(builder_factory)
+
+cdsbuilder_tornado_settings = {
+    'cds_builders': builders_store,
+}
 
 if __name__ == '__main__':
     main()
