@@ -8,7 +8,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
-from traitlets import Unicode, Integer, Bool, Dict, validate, Any, default, observe
+from traitlets import Unicode, Integer, Bool, Dict, validate, Any, Instance, default, observe
 from traitlets.config import Application, catch_config_error
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
@@ -24,8 +24,7 @@ from jupyterhub import dbutil
 from .dashboard import DashboardRepr
 from .util import url_path_join
 from jupyterhub import orm as jhorm
-from .orm import Base
-from .builders import builders_store
+from .builder.builders import BuildersDict, builders_store
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -138,6 +137,13 @@ class CDSBuilder(Application):
         This executor is not used for long-running tasks (e.g. builds).
         """,
     )
+
+    builders = Instance(BuildersDict)
+
+    @default('builders')
+    def _builders_default(self):
+        assert self.tornado_settings
+        return BuildersDict(db_factory=lambda: self.db, settings=self.tornado_settings)
 
     template_path = Unicode(
         help="Path to search for custom jinja templates, before using the default templates.",
@@ -362,7 +368,8 @@ class CDSBuilder(Application):
             'build_pool': self.build_pool,
             'jinja2_env': jinja_env,
             'extra_footer_scripts': self.extra_footer_scripts,
-            'dashboard': self.dashboard
+            'dashboard': self.dashboard,
+            'builders': self.builders
             #'event_log': self.event_log,
             #'normalized_origin': self.normalized_origin
         })

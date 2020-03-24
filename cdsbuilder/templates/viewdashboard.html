@@ -1,0 +1,19 @@
+{% extends "page.html" %}
+
+{% block main %}
+<div id="main" class="container">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+
+            <p>This is the dashboard view page of user {{ current_user.name }}</p>
+            <p>Dashboard {{ dashboard.name }} ({{ dashboard.urlname }})</p>
+
+            <p>Builder {{ builder }}.</p>
+
+            <p>{% if builder.active %} ACTIVE {% endif %}</p>
+            <p>{% if builder.pending %} PENDING {% endif %}</p>
+
+        </div>
+    </div>
+</div>
+{% endblock main %}

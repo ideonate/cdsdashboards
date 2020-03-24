@@ -6,6 +6,7 @@ from jupyterhub.handlers.base import BaseHandler
 
 from ..orm import Dashboard
 from ..util import DefaultObjDict
+from ..builder.builders import Builder
 
 
 class DashboardBaseHandler(BaseHandler):
@@ -58,8 +59,6 @@ class AllDashboardsHandler(DashboardBaseHandler):
 
 
 class DashboardNewHandler(DashboardBaseHandler):
-
-    
 
     @authenticated
     async def get(self):
@@ -233,3 +232,37 @@ class DashboardEditHandler(DashboardBaseHandler):
         #self.redirect("{}hub/dashboards/{}/{}/edit".format(self.settings['base_url'], current_user.name, dashboard.urlname))
         self.redirect("{}hub/dashboards".format(self.settings['base_url']))
 
+
+class MainViewDashboardHandler(DashboardBaseHandler):
+    
+    @authenticated
+    async def get(self, user_name, dashboard_urlname=''):
+
+        current_user = await self.get_current_user()
+
+        # TODO maybe authorised visitors should also see something here
+        if current_user.name != user_name:
+            return self.send_error(403)
+
+        dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=current_user)
+
+        if dashboard is None:
+            return self.send_error(404)
+
+        # Get User's builders:
+
+        builders_store = self.settings['cds_builders']
+
+        builder = builders_store[dashboard.id]
+
+        if not builder.active:
+            builder.start()
+
+        html = self.render_template(
+            "viewdashboard.html",
+            base_url=self.settings['base_url'],
+            dashboard=dashboard,
+            builder=builder,
+            current_user=current_user
+        )
+        self.write(html)

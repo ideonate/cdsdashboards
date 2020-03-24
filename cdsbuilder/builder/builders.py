@@ -2,6 +2,7 @@ from async_generator import yield_, async_generator
 
 from traitlets.config import LoggingConfigurable
 from tornado.ioloop import PeriodicCallback
+from tornado.log import app_log
 from traitlets import Any
 from traitlets import Bool
 from traitlets import Float
@@ -10,8 +11,6 @@ from traitlets import List
 
 from jupyterhub.utils import exponential_backoff
 from jupyterhub.utils import maybe_future
-
-builders_store = dict()
 
 
 class Builder(LoggingConfigurable):
@@ -26,6 +25,8 @@ class Builder(LoggingConfigurable):
     - poll
 
     """
+
+    dashboard_id = None
 
     # private attributes for tracking status
     _build_pending = False
@@ -95,6 +96,9 @@ class Builder(LoggingConfigurable):
     user = Any()
 
     def __init_subclass__(cls, **kwargs):
+
+        app_log.debug('init subclass of builder')
+
         super().__init_subclass__()
 
         missing = []
@@ -395,3 +399,19 @@ class Builder(LoggingConfigurable):
         except TimeoutError:
             return False
 
+
+class BuildersDict(dict):
+    def __init__(self, builder_factory):
+        self.builder_factory = builder_factory
+
+    def __getitem__(self, key):
+        if key not in self:
+            self[key] = self.builder_factory(key)
+        return super().__getitem__(key)
+
+
+def builder_factory(key):
+    app_log.debug("Builder factory for key {}".format(key))
+    return Builder(dashboard_id=key)
+
+builders_store = BuildersDict(builder_factory)
