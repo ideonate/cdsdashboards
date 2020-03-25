@@ -2,7 +2,7 @@ __all__ = ['Dashboard', 'user_dashboard_map']
 
 from datetime import datetime
 
-from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Table
+from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Table, User
 
 class Dashboard(Base):
     """"Database class for a Dashboard"""
@@ -11,6 +11,7 @@ class Dashboard(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
+    user = relationship(User, cascade="all")
 
     source_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
     source_spawner = relationship(Spawner, cascade="all")

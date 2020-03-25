@@ -26,7 +26,7 @@ class Builder(LoggingConfigurable):
 
     """
 
-    dashboard_id = None
+    dashboard = None
 
     server = None # TODO not currently used
 
@@ -358,10 +358,10 @@ class BuildersDict(dict):
     def __init__(self, builder_factory):
         self.builder_factory = builder_factory
 
-    def __getitem__(self, key):
-        if key not in self:
-            self[key] = self.builder_factory(key)
-        return super().__getitem__(key)
+    def __getitem__(self, orm_dashboard):
+        if orm_dashboard not in self:
+            self[orm_dashboard] = self.builder_factory(orm_dashboard)
+        return super().__getitem__(orm_dashboard)
 
 
 class BuildException(Exception):

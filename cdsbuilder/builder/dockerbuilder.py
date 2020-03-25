@@ -3,15 +3,19 @@ from concurrent.futures import ThreadPoolExecutor
 import docker
 from docker.errors import APIError
 from docker.utils import kwargs_from_env
-from traitlets import Dict, Unicode
+from traitlets import Dict, Unicode, Any
 from tornado import gen
 from tornado.log import app_log
 from datetime import datetime
+
+from jupyterhub.user import User
 
 from cdsbuilder.builder.builders import Builder, BuildException
 
 
 class DockerBuilder(Builder):
+
+    user = Any()
 
     @property
     def client(self):
@@ -97,12 +101,54 @@ class DockerBuilder(Builder):
 
         tag = datetime.today().strftime('%Y%m%d-%H%M%S')
 
-        app_log.info('Committing Docker image {}:{}'.format(reponame, tag))
+        image_name = '{}:{}'.format(reponame, tag)
+
+        app_log.info('Committing Docker image {}'.format(image_name))
 
         yield self.docker('commit', object_id, repository=reponame, tag=tag)
 
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
+        ### Start a new server
+
+        new_server_name = '{}-{}'.format(dashboard.urlname, tag)
+
+        dashboard_user = User(dashboard.user)
+
+        if not self.allow_named_servers:
+            raise BuildException(400, "Named servers are not enabled.")
+        if (
+            self.named_server_limit_per_user > 0
+            and new_server_name not in dashboard_user.orm_spawners
+        ):
+            named_spawners = list(dashboard_user.all_spawners(include_default=False))
+            if self.named_server_limit_per_user <= len(named_spawners):
+                raise BuildException(
+                    "User {} already has the maximum of {} named servers."
+                    "  One must be deleted before a new server can be created".format(
+                        dashboard_user.name, self.named_server_limit_per_user
+                    ),
+                )
+        spawner = dashboard_user.spawners[new_server_name]
+        pending = spawner.pending
+
+        if spawner.ready:
+            # include notify, so that a server that died is noticed immediately
+            # set _spawn_pending flag to prevent races while we wait
+            spawner._spawn_pending = True
+            try:
+                state = yield spawner.poll_and_notify()
+            finally:
+                spawner._spawn_pending = False
+
+        new_server_options = {'image': image_name}
+
+        return (new_server_name, new_server_options)
+        
+
+
+    allow_named_servers = True # TODO take from main app config
+    named_server_limit_per_user = 10
 
     @gen.coroutine
     def stop(self, now=False):
