@@ -139,7 +139,7 @@ class CDSBuilder(Application):
     @default('builders')
     def _builders_default(self):
         assert self.tornado_settings
-        return BuildersDict(db_factory=lambda: self.db, settings=self.tornado_settings)
+        return BuildersDict(settings=self.tornado_settings)
 
     template_path = Unicode(
         help="Path to search for custom jinja templates, before using the default templates.",

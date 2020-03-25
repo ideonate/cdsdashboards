@@ -1,4 +1,4 @@
-from async_generator import yield_, async_generator
+#from async_generator import yield_, async_generator
 
 from traitlets.config import LoggingConfigurable
 from tornado.ioloop import PeriodicCallback
@@ -88,6 +88,8 @@ class Builder(LoggingConfigurable):
     orm_builder = Any()
     db = Any()
 
+    log = Any(default_value=app_log).tag(config=True)
+
     #@observe('orm_builder')
     #def _orm_spawner_changed(self, change):
     #    if change.new and change.new.server:
@@ -119,18 +121,6 @@ class Builder(LoggingConfigurable):
     @property
     def last_activity(self):
         return self.orm_builder.last_activity
-
-    will_resume = Bool(
-        False,
-        help="""Whether the Builder will resume on next start
-
-
-        Default is False where each launch of the Spawner will be a new instance.
-        If True, an existing Spawner will resume instead of starting anew
-        (e.g. resuming a Docker container),
-        and API tokens in use when the Spawner stops will not be deleted.
-        """,
-    )
 
     consecutive_failure_limit = Integer(
         0,
@@ -185,50 +175,11 @@ class Builder(LoggingConfigurable):
         config=True
     )
 
-    def load_state(self, state):
-        """Restore state of spawner from database.
-
-        Called for each user's spawner after the hub process restarts.
-
-        `state` is a dict that'll contain the value returned by `get_state` of
-        the spawner, or {} if the spawner hasn't persisted any state yet.
-
-        Override in subclasses to restore any extra state that is needed to track
-        the single-user server for that user. Subclasses should call super().
-        """
-        pass
-
-    def get_state(self):
-        """Save state of spawner into database.
-
-        A black box of extra state for custom spawners. The returned value of this is
-        passed to `load_state`.
-
-        Subclasses should call `super().get_state()`, augment the state returned from
-        there, and return that state.
-
-        Returns
-        -------
-        state: dict
-             a JSONable dict of state
-        """
-        state = {}
-        return state
-
-    def clear_state(self):
-        """Clear any state that should be cleared when the single-user server stops.
-
-        State that should be preserved across single-user server instances should not be cleared.
-
-        Subclasses should call super, to ensure that state is properly cleared.
-        """
-        self.api_token = ''
-
     #@property
     #def _progress_url(self):
     #    return self.user.progress_url(self.name)
 
-    @async_generator
+    #@async_generator
     async def _generate_progress(self):
         """Private wrapper of progress generator
 
@@ -241,14 +192,15 @@ class Builder(LoggingConfigurable):
             )
             return
 
-        await yield_({"progress": 0, "message": "Server requested"})
+        #await yield_({"progress": 0, "message": "Server requested"})
         from async_generator import aclosing
 
         async with aclosing(self.progress()) as progress:
             async for event in progress:
-                await yield_(event)
+                pass
+                #await yield_(event)
 
-    @async_generator
+    #@async_generator
     async def progress(self):
         """Async generator for progress events
 
@@ -272,9 +224,9 @@ class Builder(LoggingConfigurable):
 
         .. versionadded:: 0.9
         """
-        await yield_({"progress": 50, "message": "Spawning server..."})
+        #await yield_({"progress": 50, "message": "Spawning server..."})
 
-    async def start(self):
+    async def start(self, dashboard, db):
         """Start the single-user server
 
         Returns:
@@ -412,3 +364,5 @@ class BuildersDict(dict):
         return super().__getitem__(key)
 
 
+class BuildException(Exception):
+    pass

@@ -256,7 +256,8 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         if not builder.active:
             self.log.debug('starting builder')
-            f = maybe_future(builder.start())
+            #builder.start(dashboard, self.settings['db'])
+            f = maybe_future(builder.start(dashboard, self.settings['db']))
 
         html = self.render_template(
             "viewdashboard.html",
