@@ -3,9 +3,10 @@ from concurrent.futures import ThreadPoolExecutor
 import docker
 from docker.errors import APIError
 from docker.utils import kwargs_from_env
-from traitlets import Dict
+from traitlets import Dict, Unicode
 from tornado import gen
 from tornado.log import app_log
+from datetime import datetime
 
 from cdsbuilder.builder.builders import Builder, BuildException
 
@@ -63,17 +64,7 @@ class DockerBuilder(Builder):
             cls._executor = ThreadPoolExecutor(1)
         return cls._executor
 
-    def fakestart(self, dashboard, db):
-        """Start the dashboard
-
-        Returns:
-          (str, int): the (ip, port) where the Hub can connect to the server.
-
-        """
-
-        raise NotImplementedError(
-            "fakestart."
-        )
+    repo_prefix = Unicode(default_value='cdsuser').tag(config=True)
 
     @gen.coroutine
     def start(self, dashboard, db):
@@ -99,8 +90,22 @@ class DockerBuilder(Builder):
 
         source_container = yield self.docker('inspect_container', object_id)
 
+        if source_container is None:
+            raise BuildException('No docker object returned as source container')
 
-    async def stop(self, now=False):
+        reponame = '{}/{}'.format(self.repo_prefix, dashboard.urlname)
+
+        tag = datetime.today().strftime('%Y%m%d-%H%M%S')
+
+        app_log.info('Committing Docker image {}:{}'.format(reponame, tag))
+
+        yield self.docker('commit', object_id, repository=reponame, tag=tag)
+
+        self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
+
+
+    @gen.coroutine
+    def stop(self, now=False):
         """Stop the single-user server
 
         If `now` is False (default), shutdown the server as gracefully as possible,
@@ -116,5 +121,6 @@ class DockerBuilder(Builder):
         )
 
 
-    async def poll(self):
+    @gen.coroutine
+    def poll(self):
         pass

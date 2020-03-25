@@ -10,7 +10,9 @@
 
             {% for dash in dashboards %}
 
-            <p>{{ dash.name | escape }} - <a href="{{ base_url }}hub/dashboards/{{ current_user.name }}/{{ dash.urlname }}/edit">Configure</a></p>
+            <p>{{ dash.name | escape }} 
+                - <a href="{{ base_url }}hub/dashboards/{{ current_user.name }}/{{ dash.urlname }}">View</a>
+                - <a href="{{ base_url }}hub/dashboards/{{ current_user.name }}/{{ dash.urlname }}/edit">Configure</a></p>
 
             {% endfor %}
 
