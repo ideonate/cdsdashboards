@@ -105,7 +105,9 @@ class DockerBuilder(Builder):
 
         app_log.info('Committing Docker image {}'.format(image_name))
 
-        yield self.docker('commit', object_id, repository=reponame, tag=tag)
+        dockerfile_changes='CMD ["voila-entrypoint.sh"]'
+
+        yield self.docker('commit', object_id, repository=reponame, tag=tag, changes=dockerfile_changes)
 
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 

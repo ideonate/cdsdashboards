@@ -514,6 +514,9 @@ from jupyter_client.localinterfaces import public_ips
 
 c.JupyterHub.hub_ip = public_ips()[0]
 
+import sys
+print(sys.path)
+
 #c.JupyterHub.hub_ip = '127.0.0.1'
 
 c.DockerSpawner.debug = True
@@ -526,7 +529,7 @@ c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 # c.DockerSpawner.image = 'ideonate/jupyterhub-singleuser-streamlit-native:latest'
 #c.DockerSpawner.image = 'jupyterhub/singleuser:1.2'
 
-c.DockerSpawner.image = 'jupyterhub/singleuser:1.2'
+c.DockerSpawner.image = 'ideonate/jh-voila-singleuser:1.2'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
 
