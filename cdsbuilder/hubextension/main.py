@@ -1,9 +1,12 @@
 import re
+from datetime import timedelta
 
 from tornado.web import authenticated
+from tornado import gen
 
 from jupyterhub.handlers.base import BaseHandler
 
+from ..util import maybe_future
 from ..orm import Dashboard
 from ..util import DefaultObjDict
 
@@ -250,22 +253,45 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         # Get User's builders:
 
+        status = 'Nothing'
+
         builders_store = self.settings['cds_builders']
 
         builder = builders_store[dashboard]
 
+        if builder._build_future and builder._build_future.done():
+            builder._build_future = None
+
         if not builder.active:
             self.log.debug('starting builder')
-            #builder.start(dashboard, self.settings['db'])
-            (new_server_name, new_server_options) = await builder.start(dashboard, self.settings['db'])
+            status = 'Started build'
 
-            await self.spawn_single_user(current_user, new_server_name, options=new_server_options)
+            builder._build_pending = True
+
+            async def do_build():
+            
+                (new_server_name, new_server_options) =  await builder.start(dashboard, self.settings['db'])
+
+                await self.spawn_single_user(current_user, new_server_name, options=new_server_options)
+
+                builder._build_pending = False
+
+            builder._build_future = maybe_future(do_build())
+
+            #f = maybe_future(do_build())
+            # TODO commit any changes in spawner.start (always commit db changes before yield)
+            #gen.with_timeout(timedelta(seconds=builder.start_timeout), f)
+
+        elif builder.pending:
+            status = 'Pending'
 
         html = self.render_template(
             "viewdashboard.html",
             base_url=self.settings['base_url'],
             dashboard=dashboard,
             builder=builder,
-            current_user=current_user
+            current_user=current_user,
+            status=status,
+            build_pending=builder._build_pending
         )
         self.write(html)

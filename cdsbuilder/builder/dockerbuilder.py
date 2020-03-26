@@ -111,6 +111,10 @@ class DockerBuilder(Builder):
 
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
+        for i in range(10):
+            self.log.debug('Waiting in builder')
+            yield gen.sleep(1)
+
         ### Start a new server
 
         new_server_name = '{}-{}'.format(dashboard.urlname, tag)

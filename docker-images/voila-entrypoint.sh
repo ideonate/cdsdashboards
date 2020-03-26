@@ -32,6 +32,7 @@ do
 done
 
 
-base_url=$JUPYTERHUB_SERVICE_PREFIX
+# Remove trailing slash
+base_url=${JUPYTERHUB_SERVICE_PREFIX%/}
 
 voila /home/jovyan --port=${port} --no-browser --Voila.base_url=${base_url} --Voila.ip=0.0.0.0
