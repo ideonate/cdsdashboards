@@ -4,6 +4,7 @@ from datetime import datetime
 
 from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Table, User
 
+
 class Dashboard(Base):
     """"Database class for a Dashboard"""
 
@@ -13,8 +14,9 @@ class Dashboard(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
     user = relationship(User, cascade="all")
 
+    # Which spawner/server is being cloned
     source_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    source_spawner = relationship(Spawner, cascade="all")
+    source_spawner = relationship(Spawner, cascade="all", foreign_keys=[source_spawner_id])
 
     state = Column(JSONDict)
     name = Column(Unicode(255))
@@ -22,9 +24,12 @@ class Dashboard(Base):
     urlname = Column(Unicode(255), index=True, unique=True, nullable=False)
 
     created = Column(DateTime, default=datetime.utcnow)
+
     started = Column(DateTime)
-    last_activity = Column(DateTime, nullable=True)
-    dashboard_options = Column(JSONDict)
+    
+    # The resulting spawner displaying the finished dashboad, once ready
+    final_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
+    final_spawner = relationship(Spawner, cascade="all", foreign_keys=[final_spawner_id])
 
     # properties on the dashboard wrapper
     # some APIs get these low-level objects

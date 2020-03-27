@@ -112,7 +112,7 @@ class DockerBuilder(Builder):
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
         for i in range(10):
-            self.log.debug('Waiting in builder')
+            self.log.debug('Waiting in builder {}'.format(i))
             yield gen.sleep(1)
 
         ### Start a new server
@@ -135,8 +135,7 @@ class DockerBuilder(Builder):
                         dashboard_user.name, self.named_server_limit_per_user
                     ),
                 )
-        spawner = dashboard_user.spawners[new_server_name]
-        pending = spawner.pending
+        spawner = dashboard_user.spawners[new_server_name] # Could be orm_spawner or Spawner wrapper
 
         if spawner.ready:
             # include notify, so that a server that died is noticed immediately

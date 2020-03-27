@@ -1,5 +1,5 @@
 import re
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from tornado.web import authenticated
 from tornado import gen
@@ -262,7 +262,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
         if builder._build_future and builder._build_future.done():
             builder._build_future = None
 
-        if not builder.active:
+        if not builder.active and dashboard.final_spawner is None:
             self.log.debug('starting builder')
             status = 'Started build'
 
@@ -275,6 +275,17 @@ class MainViewDashboardHandler(DashboardBaseHandler):
                 await self.spawn_single_user(current_user, new_server_name, options=new_server_options)
 
                 builder._build_pending = False
+
+                if new_server_name in current_user.orm_user.orm_spawners:
+                    final_spawner = current_user.orm_user.orm_spawners[new_server_name]
+
+                    dashboard.final_spawner = final_spawner
+
+                # TODO if not, then what?
+
+                dashboard.started = datetime.utcnow()
+
+                self.db.commit()
 
             builder._build_future = maybe_future(do_build())
 
