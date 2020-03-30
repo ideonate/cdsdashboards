@@ -1,5 +1,8 @@
 ARG TAG=1.2
-FROM ideonate/jh-voila-public-singleuser:$TAG
+ARG BASE_REPO=jupyterhub/singleuser
+FROM $BASE_REPO:$TAG
+
+RUN conda install --quiet --yes -c conda-forge voila
 
 RUN pip install jhsingle-native-proxy
 

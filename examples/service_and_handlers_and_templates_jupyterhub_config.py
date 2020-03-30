@@ -529,9 +529,16 @@ c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 # c.DockerSpawner.image = 'ideonate/jupyterhub-singleuser-streamlit-native:latest'
 #c.DockerSpawner.image = 'jupyterhub/singleuser:1.2'
 
-c.DockerSpawner.image = 'ideonate/jh-voila-singleuser:1.2'
+c.DockerSpawner.image = 'ideonate/jh-voila-oauth-singleuser:dc9744740e12'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
+
+def group_from_spawner(spawner):
+    if spawner.user_options and 'auth_users' in spawner.user_options:
+        return spawner.user_options['auth_users']
+    return ''
+
+# c.DockerSpawner.environment = {'JUPYTERHUB_USER_EXTRA': group_from_spawner}
 
 #c.DockerSpawner.image_whitelist = ['ideonate/jupyterhub-singleuser-voila-native:latest',
 #                                   'jupyterhub/singleuser:1.2']
