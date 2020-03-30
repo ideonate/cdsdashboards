@@ -16,7 +16,7 @@ class Dashboard(Base):
 
     # Which spawner/server is being cloned
     source_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    source_spawner = relationship(Spawner, cascade="all", foreign_keys=[source_spawner_id])
+    source_spawner = relationship(Spawner, cascade="all", foreign_keys=[source_spawner_id],  backref='dashboard_source_for')
 
     state = Column(JSONDict)
     name = Column(Unicode(255))
@@ -29,7 +29,7 @@ class Dashboard(Base):
     
     # The resulting spawner displaying the finished dashboad, once ready
     final_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    final_spawner = relationship(Spawner, cascade="all", foreign_keys=[final_spawner_id])
+    final_spawner = relationship(Spawner, cascade="all", foreign_keys=[final_spawner_id], backref='dashboard_final_of')
 
     # properties on the dashboard wrapper
     # some APIs get these low-level objects

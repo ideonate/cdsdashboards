@@ -6,7 +6,8 @@
         <div class="col-lg-10 col-lg-offset-1">
 
             <p>This is the dashboard view page of user {{ current_user.name }}</p>
-            <p>Dashboard {{ dashboard.name }} ({{ dashboard.urlname }})</p>
+
+            <p>Dashboard {{ dashboard.name }} ({{ dashboard.urlname }}) is owned by {{ dashboard_user.name }}</p>
 
             <p>Builder {{ builder }}.</p>
 
@@ -15,13 +16,15 @@
 
             <p>Status: {{ status }}</p>
 
-            <p>Build Pending: {{ build_pending }}</p>
-
             <p>Final Spawner: {{ dashboard.final_spawner }}</p>
 
             <p>Started time: {{ dashboard.started }}</p>
 
             {% if dashboard.final_spawner %}
+
+                {% if dashboard.final_spawner.server %}
+                <p>Final Server: {{ dashboard.final_spawner.server }} </p>
+                {% endif %}
 
             <p><a href="/user/{{ dashboard.user.name }}/{{ dashboard.final_spawner.name }}">Go to Dashboard</a></p>
 

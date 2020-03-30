@@ -242,25 +242,27 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         current_user = await self.get_current_user()
 
-        # TODO maybe authorised visitors should also see something here
-        if current_user.name != user_name:
-            return self.send_error(403)
+        dashboard_user = self.user_from_username(user_name)
 
-        dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=current_user)
+        #dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=dashboard_user)
+        dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
 
-        if dashboard is None:
+        if dashboard is None or dashboard_user is None:
             return self.send_error(404)
+
+        if dashboard.user.name != dashboard_user.name:
+            raise Exception('Dashboard user {} does not match {}'.format(dashboard.user.name, dashboard_user.name))
 
         # Get User's builders:
 
-        status = 'Nothing'
+        status = 'Initial Status'
 
         builders_store = self.settings['cds_builders']
 
         builder = builders_store[dashboard]
 
-        if builder._build_future and builder._build_future.done():
-            builder._build_future = None
+        #if builder._build_future and builder._build_future.done():
+        #    builder._build_future = None
 
         if not builder.active and dashboard.final_spawner is None:
             self.log.debug('starting builder')
@@ -272,12 +274,12 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             
                 (new_server_name, new_server_options) =  await builder.start(dashboard, self.settings['db'])
 
-                await self.spawn_single_user(current_user, new_server_name, options=new_server_options)
+                await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
 
                 builder._build_pending = False
 
-                if new_server_name in current_user.orm_user.orm_spawners:
-                    final_spawner = current_user.orm_user.orm_spawners[new_server_name]
+                if new_server_name in dashboard_user.orm_user.orm_spawners:
+                    final_spawner = dashboard_user.orm_user.orm_spawners[new_server_name]
 
                     dashboard.final_spawner = final_spawner
 
@@ -289,12 +291,25 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
             builder._build_future = maybe_future(do_build())
 
-            #f = maybe_future(do_build())
             # TODO commit any changes in spawner.start (always commit db changes before yield)
             #gen.with_timeout(timedelta(seconds=builder.start_timeout), f)
 
-        elif builder.pending:
-            status = 'Pending'
+        elif builder.pending and dashboard.final_spawner is None:
+            status = 'Pending build'
+        elif dashboard.final_spawner:
+            if dashboard.final_spawner.server:
+                status = 'Running already'
+            elif dashboard.final_spawner.pending:
+                status = 'Final spawner is pending'
+            else:
+                status = 'Final spawner is dormant - starting up...'
+                final_spawner = dashboard.final_spawner
+                final_spawner._spawn_pending = True
+                def do_existing_final_spawn():
+                    final_spawner._spawn_pending = True
+
+                f = maybe_future(self.spawn_single_user(dashboard_user, final_spawner.name))
+
 
         html = self.render_template(
             "viewdashboard.html",
@@ -302,6 +317,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             dashboard=dashboard,
             builder=builder,
             current_user=current_user,
+            dashboard_user=dashboard_user,
             status=status,
             build_pending=builder._build_pending
         )
