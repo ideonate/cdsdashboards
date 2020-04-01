@@ -6,7 +6,7 @@
         <div class="col-lg-10 col-lg-offset-1">
 
 
-            <h2>Here are your own dashboards.</h2>
+            <h2>Here are your own dashboards</h2>
 
             {% for dash in my_dashboards %}
 
@@ -15,6 +15,10 @@
                 - <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}/edit">Configure</a></p>
 
             {% endfor %}
+
+            {% if not visitor_dashboards %}
+            <p>You have not created any dashboards yet</p>
+            {% endif %}
 
             <p><a href="dashboards/new">+ ADD</a></p>
 
@@ -25,8 +29,13 @@
 
             <p>{{ dash.name | escape }} 
                 - <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}">View</a>
+                - from {{ dash.user.name }}
 
             {% endfor %}
+
+            {% if not visitor_dashboards %}
+            <p>No-one has shared any dashboards with you</p>
+            {% endif %}
 
         </div>
     </div>

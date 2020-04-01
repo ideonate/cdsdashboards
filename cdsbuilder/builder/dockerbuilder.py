@@ -72,7 +72,7 @@ class DockerBuilder(Builder):
     repo_prefix = Unicode(default_value='cdsuser').tag(config=True)
 
     @gen.coroutine
-    def start(self, dashboard, db):
+    def start(self, dashboard, visitor_users, db):
         """Start the dashboard
 
         Returns:
@@ -105,9 +105,7 @@ class DockerBuilder(Builder):
         groupname = 'dash-{}'.format(dashboard.urlname)
 
         # Just allow everyone for now, don't include dashboard owner explicitly
-        users = db.query(jhorm.User).all(jhorm.User != dashboard.user)
-
-        group = self.sync_group(dashboard.group, groupname, users, db)
+        group = self.sync_group(dashboard.group, groupname, visitor_users, db)
 
         # Commit image of current server
 
@@ -170,7 +168,7 @@ class DockerBuilder(Builder):
     allow_named_servers = True # TODO take from main app config
     named_server_limit_per_user = 10
 
-    def sync_group(self, group, groupname, users, db):
+    def sync_group(self, group, groupname, visitor_users, db):
         """
         Make sure all allowed JupyterHub users are part of this group
         """
@@ -178,13 +176,13 @@ class DockerBuilder(Builder):
 
         if group is None:
             # Group could exist - what if it does? TODO
-            group = jhorm.Group(name=groupname, users=users)
+            group = jhorm.Group(name=groupname, users=visitor_users)
             db.add(group)
             db.commit()
 
         else:
-            unwantedusers = set(group.users) - set(users)
-            newusers = set(users) - set(group.users)
+            unwantedusers = set(group.users) - set(visitor_users)
+            newusers = set(visitor_users) - set(group.users)
 
             if len(unwantedusers) + len(newusers) > 0:
 

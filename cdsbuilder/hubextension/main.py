@@ -5,7 +5,7 @@ from tornado.web import authenticated
 from tornado import gen
 
 from jupyterhub.handlers.base import BaseHandler
-from jupyterhub.orm import Group
+from jupyterhub.orm import Group, User
 
 from ..util import maybe_future
 from ..orm import Dashboard
@@ -26,7 +26,7 @@ class DashboardBaseHandler(BaseHandler):
         now_unique = False
         counter = 1
         while not now_unique:
-            orm_dashboard = Dashboard.find(db=self.db, urlname=urlname) #self.db.query(Dashboard).filter(urlname==urlname).one_or_none()
+            orm_dashboard = Dashboard.find(db=self.db, urlname=urlname)
             self.log.info("{} - {}".format(urlname,orm_dashboard))
             if orm_dashboard is None or counter >= 100:
                 now_unique = True
@@ -285,9 +285,13 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
                 builder._build_pending = True
 
+                visitor_users = self.db.query(User).filter(User.id != dashboard.user.id).all()
+
                 async def do_build():
+
+                    
                 
-                    (new_server_name, new_server_options, group) =  await builder.start(dashboard, self.settings['db'])
+                    (new_server_name, new_server_options, group) =  await builder.start(dashboard, visitor_users, self.db)
 
                     await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
 
