@@ -275,36 +275,48 @@ class MainViewDashboardHandler(DashboardBaseHandler):
         #    builder._build_future = None
 
         if not builder.active and dashboard.final_spawner is None:
-            self.log.debug('starting builder')
-            status = 'Started build'
-
-            builder._build_pending = True
-
-            async def do_build():
             
-                (new_server_name, new_server_options, group) =  await builder.start(dashboard, self.settings['db'])
+            if builder._build_future and builder._build_future.done() and builder._build_future.exception():
+                status = 'Error: {}'.format(builder._build_future.exception())
 
-                await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
+            else:
+                self.log.debug('starting builder')
+                status = 'Started build'
 
-                builder._build_pending = False
+                builder._build_pending = True
 
-                if new_server_name in dashboard_user.orm_user.orm_spawners:
-                    final_spawner = dashboard_user.orm_user.orm_spawners[new_server_name]
+                async def do_build():
+                
+                    (new_server_name, new_server_options, group) =  await builder.start(dashboard, self.settings['db'])
 
-                    dashboard.final_spawner = final_spawner
+                    await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
 
-                # TODO if not, then what?
+                    builder._build_pending = False
 
-                dashboard.started = datetime.utcnow()
+                    if new_server_name in dashboard_user.orm_user.orm_spawners:
+                        final_spawner = dashboard_user.orm_user.orm_spawners[new_server_name]
 
-                dashboard.group = group
+                        dashboard.final_spawner = final_spawner
 
-                self.db.commit()
+                    # TODO if not, then what?
 
-            builder._build_future = maybe_future(do_build())
+                    dashboard.started = datetime.utcnow()
 
-            # TODO commit any changes in spawner.start (always commit db changes before yield)
-            #gen.with_timeout(timedelta(seconds=builder.start_timeout), f)
+                    dashboard.group = group
+
+                    self.db.commit()
+
+                builder._build_future = maybe_future(do_build())
+
+                def do_final_build(f):
+                    if f.cancelled() or f.exception() is None:
+                        builder._build_future = None
+                    builder._build_pending = False
+
+                builder._build_future.add_done_callback(do_final_build)
+
+                # TODO commit any changes in spawner.start (always commit db changes before yield)
+                #gen.with_timeout(timedelta(seconds=builder.start_timeout), f)
 
         elif builder.pending and dashboard.final_spawner is None:
             status = 'Pending build'
@@ -317,8 +329,6 @@ class MainViewDashboardHandler(DashboardBaseHandler):
                 status = 'Final spawner is dormant - starting up...'
                 final_spawner = dashboard.final_spawner
                 final_spawner._spawn_pending = True
-                def do_existing_final_spawn():
-                    final_spawner._spawn_pending = False
 
                 f = maybe_future(self.spawn_single_user(dashboard_user, final_spawner.name))
 
