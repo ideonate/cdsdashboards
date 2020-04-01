@@ -1,8 +1,8 @@
-__all__ = ['Dashboard', 'user_dashboard_map']
+__all__ = ['Dashboard']
 
 from datetime import datetime
 
-from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Table, User
+from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Group, User, backref
 
 
 class Dashboard(Base):
@@ -12,11 +12,11 @@ class Dashboard(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
-    user = relationship(User, cascade="all")
+    user = relationship(User, cascade="all", backref=backref("dashboards_own", uselist=True))
 
     # Which spawner/server is being cloned
     source_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    source_spawner = relationship(Spawner, cascade="all", foreign_keys=[source_spawner_id],  backref='dashboard_source_for')
+    source_spawner = relationship(Spawner, cascade="all", foreign_keys=[source_spawner_id],  backref=backref('dashboard_source_for', uselist=False))
 
     state = Column(JSONDict)
     name = Column(Unicode(255))
@@ -29,7 +29,10 @@ class Dashboard(Base):
     
     # The resulting spawner displaying the finished dashboad, once ready
     final_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    final_spawner = relationship(Spawner, cascade="all", foreign_keys=[final_spawner_id], backref='dashboard_final_of')
+    final_spawner = relationship(Spawner, cascade="all", foreign_keys=[final_spawner_id], backref=backref('dashboard_final_of', uselist=False))
+
+    group_id = Column(Integer, ForeignKey('groups.id', ondelete='SET NULL'))
+    group = relationship(Group, cascade="all", foreign_keys=[group_id], backref=backref('dashboard_visitors_for', uselist=False))
 
     # properties on the dashboard wrapper
     # some APIs get these low-level objects
@@ -50,13 +53,4 @@ class Dashboard(Base):
         if user is None:
             return db.query(cls).filter(cls.urlname == urlname).first()
         return db.query(cls).filter(cls.urlname == urlname, cls.user_id == user.id).first()
-
-
-# user:dashboard many:many mapping table
-user_dashboard_map = Table(
-    'user_dashboard_map',
-    Base.metadata,
-    Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), primary_key=True),
-    Column('dashboard_id', ForeignKey('dashboards.id', ondelete='CASCADE'), primary_key=True),
-)
 

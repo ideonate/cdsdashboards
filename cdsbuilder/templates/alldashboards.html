@@ -8,15 +8,25 @@
 
             <h2>Here are your own dashboards.</h2>
 
-            {% for dash in dashboards %}
+            {% for dash in my_dashboards %}
 
             <p>{{ dash.name | escape }} 
-                - <a href="{{ base_url }}hub/dashboards/{{ current_user.name }}/{{ dash.urlname }}">View</a>
-                - <a href="{{ base_url }}hub/dashboards/{{ current_user.name }}/{{ dash.urlname }}/edit">Configure</a></p>
+                - <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}">View</a>
+                - <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}/edit">Configure</a></p>
 
             {% endfor %}
 
             <p><a href="dashboards/new">+ ADD</a></p>
+
+
+            <h2>Dashboards from others</h2>
+
+            {% for dash in visitor_dashboards %}
+
+            <p>{{ dash.name | escape }} 
+                - <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}">View</a>
+
+            {% endfor %}
 
         </div>
     </div>

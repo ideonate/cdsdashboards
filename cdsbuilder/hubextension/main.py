@@ -5,6 +5,7 @@ from tornado.web import authenticated
 from tornado import gen
 
 from jupyterhub.handlers.base import BaseHandler
+from jupyterhub.orm import Group
 
 from ..util import maybe_future
 from ..orm import Dashboard
@@ -36,8 +37,15 @@ class DashboardBaseHandler(BaseHandler):
         self.log.debug('calc safe name : '+urlname)
         return urlname
 
-    def get_users_dashboards(self, user):
-        orm_dashboards = self.db.query(Dashboard).filter(user==user)
+    def get_source_spawners(self, user):
+        return [spawner for spawner in user.all_spawners(include_default=True) if not spawner.orm_spawner.dashboard_final_of]
+
+    def get_visitor_dashboards(self, user):
+        orm_dashboards = []
+        for group in user.groups:
+            if group.dashboard_visitors_for:
+                orm_dashboards.append(group.dashboard_visitors_for)
+
         return orm_dashboards
         
 
@@ -48,12 +56,15 @@ class AllDashboardsHandler(DashboardBaseHandler):
 
         current_user = await self.get_current_user()
 
-        dashboards = self.get_users_dashboards(current_user)
+        my_dashboards = current_user.dashboards_own
+
+        visitor_dashboards = self.get_visitor_dashboards(current_user)
 
         html = self.render_template(
             "alldashboards.html",
             base_url=self.settings['base_url'],
-            dashboards=dashboards,
+            my_dashboards=my_dashboards,
+            visitor_dashboards=visitor_dashboards,
             current_user=current_user
         )
         self.write(html)
@@ -102,7 +113,7 @@ class DashboardNewHandler(DashboardBaseHandler):
 
             try:
 
-                d = Dashboard(name=dashboard_name, urlname=urlname, user_id=current_user.id)
+                d = Dashboard(name=dashboard_name, urlname=urlname, user=current_user.orm_user)
                 self.log.debug('dashboard urlname '+d.urlname+', main name '+d.name)
                 db.add(d)
                 db.commit()
@@ -142,7 +153,7 @@ class DashboardEditHandler(DashboardBaseHandler):
 
         # Get User's spawners:
 
-        spawners = current_user.all_spawners(include_default=True)
+        spawners = self.get_source_spawners(current_user)
 
         spawner_name=None
         if dashboard.source_spawner is not None:
@@ -184,8 +195,7 @@ class DashboardEditHandler(DashboardBaseHandler):
         elif not self.name_regex.match(dashboard_name):
             errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>'
         
-
-        spawners = current_user.all_spawners(include_default=True)
+        spawners = self.get_source_spawners(current_user)
 
         spawner_name = self.get_argument('spawner_name')
 
@@ -272,7 +282,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
             async def do_build():
             
-                (new_server_name, new_server_options) =  await builder.start(dashboard, self.settings['db'])
+                (new_server_name, new_server_options, group) =  await builder.start(dashboard, self.settings['db'])
 
                 await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
 
@@ -286,6 +296,8 @@ class MainViewDashboardHandler(DashboardBaseHandler):
                 # TODO if not, then what?
 
                 dashboard.started = datetime.utcnow()
+
+                dashboard.group = group
 
                 self.db.commit()
 
@@ -306,7 +318,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
                 final_spawner = dashboard.final_spawner
                 final_spawner._spawn_pending = True
                 def do_existing_final_spawn():
-                    final_spawner._spawn_pending = True
+                    final_spawner._spawn_pending = False
 
                 f = maybe_future(self.spawn_single_user(dashboard_user, final_spawner.name))
 

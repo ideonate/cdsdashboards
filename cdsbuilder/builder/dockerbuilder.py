@@ -86,6 +86,8 @@ class DockerBuilder(Builder):
 
         source_spawner = dashboard.source_spawner
 
+        app_log.debug('source_spawner {}'.format(source_spawner))
+
         object_id = source_spawner.state.get('object_id',None)
 
         app_log.debug('Docker object_id is {}'.format(object_id))
@@ -102,10 +104,10 @@ class DockerBuilder(Builder):
 
         groupname = 'dash-{}'.format(dashboard.urlname)
 
-        # Just allow everyone for now
-        users = db.query(jhorm.User).all()
+        # Just allow everyone for now, don't include dashboard owner explicitly
+        users = db.query(jhorm.User).all(jhorm.User != dashboard.user)
 
-        self.sync_group(groupname, users, db)
+        group = self.sync_group(dashboard.group, groupname, users, db)
 
         # Commit image of current server
 
@@ -163,18 +165,19 @@ class DockerBuilder(Builder):
 
         new_server_options = {'image': image_name}
 
-        return (new_server_name, new_server_options)
+        return (new_server_name, new_server_options, group)
         
     allow_named_servers = True # TODO take from main app config
     named_server_limit_per_user = 10
 
-    def sync_group(self, groupname, users, db):
+    def sync_group(self, group, groupname, users, db):
         """
         Make sure all allowed JupyterHub users are part of this group
         """
-        group = jhorm.Group.find(db, name=groupname)
+        # group = jhorm.Group.find(db, name=groupname)
 
         if group is None:
+            # Group could exist - what if it does? TODO
             group = jhorm.Group(name=groupname, users=users)
             db.add(group)
             db.commit()
@@ -192,6 +195,8 @@ class DockerBuilder(Builder):
                     group.users.append(user)
 
                 db.commit()
+
+        return group
 
     @gen.coroutine
     def stop(self, now=False):
