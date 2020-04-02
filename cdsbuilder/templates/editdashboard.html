@@ -42,6 +42,15 @@
                 {% endif %}
 
 
+                <h3>Select Users:</h3>
+
+                {% for visitor_tuple in all_visitors %}
+
+                <p><label><input type="checkbox" name="all_visitors[]" value="{{ visitor_tuple[1].name | escape }}" {%if visitor_tuple[0] %}checked{% endif %}/>
+                     {{ visitor_tuple[1].name | escape }}</label></p>
+
+                {% endfor %}
+                
     
                 <input type="submit"/>
                 

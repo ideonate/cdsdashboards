@@ -34,6 +34,12 @@ class Dashboard(Base):
     group_id = Column(Integer, ForeignKey('groups.id', ondelete='SET NULL'))
     group = relationship(Group, cascade="all", foreign_keys=[group_id], backref=backref('dashboard_visitors_for', uselist=False))
 
+    @property
+    def groupname(self):
+        if not self.urlname:
+            raise Exception('Cannot calculate groupname before urlname is set')
+        return 'dash-{}'.format(self.urlname)
+
     # properties on the dashboard wrapper
     # some APIs get these low-level objects
     # when the dashboard isn't running,

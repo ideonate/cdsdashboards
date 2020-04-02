@@ -100,13 +100,6 @@ class DockerBuilder(Builder):
         if source_container is None:
             raise BuildException('No docker object returned as source container')
 
-        # Make Group of authed users
-
-        groupname = 'dash-{}'.format(dashboard.urlname)
-
-        # Just allow everyone for now, don't include dashboard owner explicitly
-        group = self.sync_group(dashboard.group, groupname, visitor_users, db)
-
         # Commit image of current server
 
         reponame = '{}/{}'.format(self.repo_prefix, dashboard.urlname)
@@ -119,7 +112,7 @@ class DockerBuilder(Builder):
 
         dockerfile_changes="\n".join([
             'CMD ["voila-entrypoint.sh"]',
-            'ENV JUPYTERHUB_GROUP {}'.format(groupname)
+            'ENV JUPYTERHUB_GROUP {}'.format(dashboard.groupname)
         ])
 
         yield self.docker('commit', object_id, repository=reponame, tag=tag, changes=dockerfile_changes)
@@ -167,34 +160,6 @@ class DockerBuilder(Builder):
         
     allow_named_servers = True # TODO take from main app config
     named_server_limit_per_user = 10
-
-    def sync_group(self, group, groupname, visitor_users, db):
-        """
-        Make sure all allowed JupyterHub users are part of this group
-        """
-        # group = jhorm.Group.find(db, name=groupname)
-
-        if group is None:
-            # Group could exist - what if it does? TODO
-            group = jhorm.Group(name=groupname, users=visitor_users)
-            db.add(group)
-            db.commit()
-
-        else:
-            unwantedusers = set(group.users) - set(visitor_users)
-            newusers = set(visitor_users) - set(group.users)
-
-            if len(unwantedusers) + len(newusers) > 0:
-
-                for user in unwantedusers:
-                    group.users.remove(user)
-
-                for user in newusers:
-                    group.users.append(user)
-
-                db.commit()
-
-        return group
 
     @gen.coroutine
     def stop(self, now=False):

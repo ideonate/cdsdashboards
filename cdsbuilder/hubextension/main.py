@@ -6,6 +6,7 @@ from tornado import gen
 
 from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Group, User
+from sqlalchemy import and_
 
 from ..util import maybe_future
 from ..orm import Dashboard
@@ -47,7 +48,40 @@ class DashboardBaseHandler(BaseHandler):
                 orm_dashboards.append(group.dashboard_visitors_for)
 
         return orm_dashboards
+
+    def get_visitor_users(self, exclude_user_id):
+        return self.db.query(User).filter(User.id != exclude_user_id).all()
+
+    def get_visitor_tuples(self, exclude_user_id, existing_group_users=None):
+        possible_visitor_users = self.get_visitor_users(exclude_user_id)
+
+        visitor_users = []
+
+        if existing_group_users is not None:
+            visitor_users = existing_group_users
+
+        return [(True, user) for user in visitor_users] + [(False, user) for user in set(possible_visitor_users) - set(visitor_users)]
         
+    def sync_group(self, group, visitor_users):
+        """
+        Make sure all allowed JupyterHub users are part of this group
+        Returns True if changes made, False otherwise
+        """
+        unwantedusers = set(group.users) - set(visitor_users)
+        newusers = set(visitor_users) - set(group.users)
+
+        if len(unwantedusers) + len(newusers) > 0:
+
+            for user in unwantedusers:
+                group.users.remove(user)
+
+            for user in newusers:
+                group.users.append(user)
+
+            return True
+
+        return False
+
 
 class AllDashboardsHandler(DashboardBaseHandler):
 
@@ -151,6 +185,12 @@ class DashboardEditHandler(DashboardBaseHandler):
         if dashboard is None:
             return self.send_error(404)
 
+        # Get List of possible visitor users
+        existing_group_users = None
+        if dashboard.group:
+            existing_group_users = dashboard.group.users
+        all_visitors = self.get_visitor_tuples(dashboard.user.id, existing_group_users)
+
         # Get User's spawners:
 
         spawners = self.get_source_spawners(current_user)
@@ -169,6 +209,7 @@ class DashboardEditHandler(DashboardBaseHandler):
             spawner_name=spawner_name,
             current_user=current_user,
             spawners=spawners,
+            all_visitors=all_visitors,
             errors=errors
         )
         self.write(html)
@@ -194,10 +235,21 @@ class DashboardEditHandler(DashboardBaseHandler):
             errors.name = 'Please enter a name'
         elif not self.name_regex.match(dashboard_name):
             errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>'
-        
-        spawners = self.get_source_spawners(current_user)
 
-        spawner_name = self.get_argument('spawner_name')
+        # Get or create group
+
+        group = dashboard.group
+
+        all_visitors = self.get_arguments('all_visitors[]')
+
+        #.filter(User.name != dashboard.user.name)
+        all_visitors_users = self.db.query(User).filter(User.name.in_(all_visitors)).all()
+
+        # Get Spawners
+        
+        spawner_name = self.get_argument('spawner_name', None)
+
+        spawners = self.get_source_spawners(current_user)
 
         self.log.debug('Got spawner_name {}.'.format(spawner_name))
 
@@ -213,6 +265,9 @@ class DashboardEditHandler(DashboardBaseHandler):
             if dashboard.source_spawner is not None:
                 spawner_name=dashboard.source_spawner.name
 
+        # In case we have to display an error, we also need all these users
+        all_visitors = self.get_visitor_tuples(dashboard.user.id, all_visitors_users)
+        
         if len(errors) == 0:
             db = self.db
 
@@ -220,7 +275,19 @@ class DashboardEditHandler(DashboardBaseHandler):
 
                 dashboard.name = dashboard_name
                 dashboard.source_spawner = spawner.orm_spawner
+                
+
+                if group is None:
+                    # Group could exist - what if it does? TODO
+                    group = Group(name=dashboard.groupname, users=all_visitors_users)
+                    self.db.add(group)
+                    dashboard.group = group
+
                 db.add(dashboard)
+
+                if self.sync_group(group, all_visitors_users):
+                    self.db.add(group)
+                    
                 db.commit()
 
             except Exception as e:
@@ -234,6 +301,7 @@ class DashboardEditHandler(DashboardBaseHandler):
                 dashboard_name=dashboard_name,
                 spawner_name=spawner_name,
                 spawners=spawners,
+                all_visitors=all_visitors,
                 errors=errors,
                 current_user=current_user
             )
@@ -254,7 +322,6 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         dashboard_user = self.user_from_username(user_name)
 
-        #dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=dashboard_user)
         dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
 
         if dashboard is None or dashboard_user is None:
@@ -285,7 +352,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
                 builder._build_pending = True
 
-                visitor_users = self.db.query(User).filter(User.id != dashboard.user.id).all()
+                visitor_users = self.get_visitor_users(dashboard.user.id)
 
                 async def do_build():
 
@@ -295,7 +362,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
                     await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
 
-                    builder._build_pending = False
+                    self.db.expire(dashboard) # May have changed during async code above
 
                     if new_server_name in dashboard_user.orm_user.orm_spawners:
                         final_spawner = dashboard_user.orm_user.orm_spawners[new_server_name]
@@ -318,9 +385,6 @@ class MainViewDashboardHandler(DashboardBaseHandler):
                     builder._build_pending = False
 
                 builder._build_future.add_done_callback(do_final_build)
-
-                # TODO commit any changes in spawner.start (always commit db changes before yield)
-                #gen.with_timeout(timedelta(seconds=builder.start_timeout), f)
 
         elif builder.pending and dashboard.final_spawner is None:
             status = 'Pending build'
