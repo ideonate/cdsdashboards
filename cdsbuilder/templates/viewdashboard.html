@@ -9,11 +9,6 @@
 
             <p>Dashboard {{ dashboard.name }} ({{ dashboard.urlname }}) is owned by {{ dashboard_user.name }}</p>
 
-            <p>Builder {{ builder }}.</p>
-
-            <p>{% if builder.active %} ACTIVE {% endif %}</p>
-            <p>{% if builder.pending %} PENDING {% endif %}</p>
-
             <p>Status: {{ status }}</p>
 
             <p>Final Spawner: {{ dashboard.final_spawner }}</p>

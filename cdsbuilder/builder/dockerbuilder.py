@@ -72,7 +72,7 @@ class DockerBuilder(Builder):
     repo_prefix = Unicode(default_value='cdsuser').tag(config=True)
 
     @gen.coroutine
-    def start(self, dashboard, visitor_users, db):
+    def start(self, dashboard, db):
         """Start the dashboard
 
         Returns:
@@ -119,9 +119,9 @@ class DockerBuilder(Builder):
 
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
-        #for i in range(10):
-        #    self.log.debug('Waiting in builder {}'.format(i))
-        #    yield gen.sleep(1)
+        for i in range(10):
+            self.log.debug('Waiting in builder {}'.format(i))
+            yield gen.sleep(1)
 
         ### Start a new server
 
@@ -156,7 +156,7 @@ class DockerBuilder(Builder):
 
         new_server_options = {'image': image_name}
 
-        return (new_server_name, new_server_options, group)
+        return (new_server_name, new_server_options)
         
     allow_named_servers = True # TODO take from main app config
     named_server_limit_per_user = 10

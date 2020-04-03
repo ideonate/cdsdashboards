@@ -1,7 +1,7 @@
 import re
 from datetime import timedelta, datetime
 
-from tornado.web import authenticated
+from tornado.web import authenticated, HTTPError
 from tornado import gen
 
 from jupyterhub.handlers.base import BaseHandler
@@ -81,6 +81,118 @@ class DashboardBaseHandler(BaseHandler):
             return True
 
         return False
+
+    async def maybe_start_build(self, dashboard, dashboard_user, force_start=False):
+
+        builders_store = self.settings['cds_builders']
+
+        builder = builders_store[dashboard]
+
+        #if builder._build_future and builder._build_future.done():
+        #    builder._build_future = None
+
+        status = ''
+
+        def do_final_build(f):
+            if f.cancelled() or f.exception() is None:
+                builder._build_future = None
+            builder._build_pending = False
+
+        if not builder.active and (dashboard.final_spawner is None or force_start):
+            
+            if builder._build_future and builder._build_future.done() and builder._build_future.exception() and not force_start:
+                status = 'Error: {}'.format(builder._build_future.exception())
+
+            else:
+                self.log.debug('starting builder')
+                status = 'Started build'
+
+                builder._build_pending = True
+
+                async def do_build():
+
+                    await self.maybe_delete_existing_server(dashboard.final_spawner, dashboard_user)
+
+                    (new_server_name, new_server_options) =  await builder.start(dashboard, self.db)
+
+                    await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
+
+                    self.db.expire(dashboard) # May have changed during async code above
+
+                    if new_server_name in dashboard_user.orm_user.orm_spawners:
+                        dashboard.final_spawner = dashboard_user.orm_user.orm_spawners[new_server_name]
+
+                    # TODO if not, then what?
+
+                    dashboard.started = datetime.utcnow()
+
+                    self.db.commit()
+
+                builder._build_future = maybe_future(do_build())
+
+                builder._build_future.add_done_callback(do_final_build)
+
+        elif builder.pending:
+            status = 'Pending build'
+
+        elif dashboard.final_spawner:
+            user = self._user_from_orm(dashboard_user)
+
+            final_spawner = user.spawners[dashboard.final_spawner.name]
+
+            if final_spawner.ready:
+                status = 'Spawner already active'
+            elif final_spawner.pending:
+                status = 'Spawner is pending...'
+            else:
+                status = 'Final spawner is dormant - starting up...'
+
+                f = maybe_future(self.spawn_single_user(dashboard_user, final_spawner.name))
+
+                f.add_done_callback(do_final_build)
+
+        return status
+
+    async def maybe_delete_existing_server(self, orm_spawner, dashboard_user):
+        if not orm_spawner:
+            return
+        
+        server_name = orm_spawner.name
+
+        user = self._user_from_orm(dashboard_user)
+
+        spawner = user.spawners[server_name]
+
+        if server_name:
+            if not self.allow_named_servers:
+                raise HTTPError(400, "Named servers are not enabled.")
+            if server_name not in user.orm_spawners:
+                self.log.debug("%s does not exist anyway", spawner._log_name)
+                return
+        else:
+            raise HTTPError(400, "Cannot delete the default server")
+
+        if spawner.pending == 'stop':
+            self.log.debug("%s already stopping", spawner._log_name)
+
+            await spawner._stop_future
+
+        if spawner.ready or spawner.pending == 'spawn':
+
+            if spawner.pending == 'spawn':
+                self.log.debug("%s awaiting spawn to finish so can shut it down", spawner._log_name)
+                await spawner._spawn_future
+
+            # include notify, so that a server that died is noticed immediately
+            status = await spawner.poll_and_notify()
+            if status is None:
+                stop_future = await self.stop_single_user(user, server_name)
+                await stop_future
+
+        self.log.info("Deleting spawner %s", spawner._log_name)
+        self.db.delete(spawner.orm_spawner)
+        user.spawners.pop(server_name, None)
+        self.db.commit()
 
 
 class AllDashboardsHandler(DashboardBaseHandler):
@@ -290,6 +402,28 @@ class DashboardEditHandler(DashboardBaseHandler):
                     
                 db.commit()
 
+                # Now cancel any existing build and force a rebuild
+                # TODO delete existing final_spawner
+                builders_store = self.settings['cds_builders']
+                builder = builders_store[dashboard]
+
+                status = ''
+
+                async def do_restart_build(f):
+                    status = await self.maybe_start_build(dashboard, current_user, True)
+                    self.log.debug('Force build start: {}'.format(status))
+                    return status
+
+                if builder.pending and builder._build_future and not builder._build_future.done():
+
+                    self.log.debug('Cancelling build')
+                    builder._build_future.add_done_callback(do_restart_build)
+                    builder._build_future.cancel()
+
+                else:
+                    status = await do_restart_build(None)
+
+
             except Exception as e:
                 errors.all = str(e)
 
@@ -332,83 +466,15 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         # Get User's builders:
 
-        status = 'Initial Status'
-
-        builders_store = self.settings['cds_builders']
-
-        builder = builders_store[dashboard]
-
-        #if builder._build_future and builder._build_future.done():
-        #    builder._build_future = None
-
-        if not builder.active and dashboard.final_spawner is None:
-            
-            if builder._build_future and builder._build_future.done() and builder._build_future.exception():
-                status = 'Error: {}'.format(builder._build_future.exception())
-
-            else:
-                self.log.debug('starting builder')
-                status = 'Started build'
-
-                builder._build_pending = True
-
-                visitor_users = self.get_visitor_users(dashboard.user.id)
-
-                async def do_build():
-
-                    
-                
-                    (new_server_name, new_server_options, group) =  await builder.start(dashboard, visitor_users, self.db)
-
-                    await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
-
-                    self.db.expire(dashboard) # May have changed during async code above
-
-                    if new_server_name in dashboard_user.orm_user.orm_spawners:
-                        final_spawner = dashboard_user.orm_user.orm_spawners[new_server_name]
-
-                        dashboard.final_spawner = final_spawner
-
-                    # TODO if not, then what?
-
-                    dashboard.started = datetime.utcnow()
-
-                    dashboard.group = group
-
-                    self.db.commit()
-
-                builder._build_future = maybe_future(do_build())
-
-                def do_final_build(f):
-                    if f.cancelled() or f.exception() is None:
-                        builder._build_future = None
-                    builder._build_pending = False
-
-                builder._build_future.add_done_callback(do_final_build)
-
-        elif builder.pending and dashboard.final_spawner is None:
-            status = 'Pending build'
-        elif dashboard.final_spawner:
-            if dashboard.final_spawner.server:
-                status = 'Running already'
-            elif dashboard.final_spawner.pending:
-                status = 'Final spawner is pending'
-            else:
-                status = 'Final spawner is dormant - starting up...'
-                final_spawner = dashboard.final_spawner
-                final_spawner._spawn_pending = True
-
-                f = maybe_future(self.spawn_single_user(dashboard_user, final_spawner.name))
-
+        status = await self.maybe_start_build(dashboard, dashboard_user)
 
         html = self.render_template(
             "viewdashboard.html",
             base_url=self.settings['base_url'],
             dashboard=dashboard,
-            builder=builder,
             current_user=current_user,
             dashboard_user=dashboard_user,
-            status=status,
-            build_pending=builder._build_pending
+            status=status
         )
         self.write(html)
+
