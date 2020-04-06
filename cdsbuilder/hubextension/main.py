@@ -327,6 +327,7 @@ class DashboardEditHandler(DashboardBaseHandler):
             base_url=self.settings['base_url'],
             dashboard=dashboard,
             dashboard_name=dashboard.name,
+            dashboard_description=dashboard.description,
             spawner_name=spawner_name,
             current_user=current_user,
             spawners=spawners,
@@ -349,6 +350,8 @@ class DashboardEditHandler(DashboardBaseHandler):
             return self.send_error(404)
 
         dashboard_name = self.get_argument('name').strip()
+
+        dashboard_description = self.get_argument('description').strip()
 
         errors = DefaultObjDict()
 
@@ -395,6 +398,7 @@ class DashboardEditHandler(DashboardBaseHandler):
             try:
 
                 dashboard.name = dashboard_name
+                dashboard.description = dashboard_description
                 dashboard.source_spawner = spawner.orm_spawner
                 
 
@@ -442,6 +446,7 @@ class DashboardEditHandler(DashboardBaseHandler):
                 base_url=self.settings['base_url'],
                 dashboard=dashboard,
                 dashboard_name=dashboard_name,
+                dashboard_description=dashboard_description,
                 spawner_name=spawner_name,
                 spawners=spawners,
                 all_visitors=all_visitors,

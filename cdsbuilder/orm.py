@@ -20,7 +20,7 @@ class Dashboard(Base):
 
     state = Column(JSONDict)
     name = Column(Unicode(255))
-    description = Column(Unicode(255))
+    description = Column(Unicode(255), default='')
     urlname = Column(Unicode(255), index=True, unique=True, nullable=False)
 
     created = Column(DateTime, default=datetime.utcnow)

@@ -21,6 +21,18 @@
                 {% endif %}
 
 
+                <p><label for="name">Description:</label></p>
+    
+                <p><textarea name="description">{{ dashboard_description | escape }}</textarea></p>
+    
+                {% if errors.description %}
+    
+                <p class="error">{{ errors.description | escape }}</p>
+    
+                {% endif %}
+
+
+
                 <h3>Choose a server:</h3>
 
                 {% for spawner in spawners %}
