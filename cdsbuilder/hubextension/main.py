@@ -1,12 +1,13 @@
 import re
 from datetime import timedelta, datetime
+from collections import defaultdict
 
 from tornado.web import authenticated, HTTPError
 from tornado import gen
 
 from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Group, User
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 
 from ..util import maybe_future
 from ..orm import Dashboard
@@ -42,12 +43,20 @@ class DashboardBaseHandler(BaseHandler):
         return [spawner for spawner in user.all_spawners(include_default=True) if not spawner.orm_spawner.dashboard_final_of]
 
     def get_visitor_dashboards(self, user):
-        orm_dashboards = []
+        orm_dashboards = set()
+
         for group in user.groups:
             if group.dashboard_visitors_for:
-                orm_dashboards.append(group.dashboard_visitors_for)
+                orm_dashboards.add(group.dashboard_visitors_for)
 
-        return orm_dashboards
+        orm_dashboards.update(self.db.query(Dashboard).filter(Dashboard.allow_all==True).filter(Dashboard.user != user.orm_user).all())
+
+        user_dashboard_groups = defaultdict(list)
+
+        for dash in orm_dashboards:
+            user_dashboard_groups[dash.user.name].append(dash)
+
+        return user_dashboard_groups
 
     def get_visitor_users(self, exclude_user_id):
         return self.db.query(User).filter(User.id != exclude_user_id).all()
@@ -204,13 +213,13 @@ class AllDashboardsHandler(DashboardBaseHandler):
 
         my_dashboards = current_user.dashboards_own
 
-        visitor_dashboards = self.get_visitor_dashboards(current_user)
+        visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
 
         html = self.render_template(
             "alldashboards.html",
             base_url=self.settings['base_url'],
             my_dashboards=my_dashboards,
-            visitor_dashboards=visitor_dashboards,
+            visitor_dashboard_groups=visitor_dashboard_groups,
             current_user=current_user
         )
         self.write(html)

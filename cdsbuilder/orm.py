@@ -2,7 +2,7 @@ __all__ = ['Dashboard']
 
 from datetime import datetime
 
-from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Group, User, backref
+from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Group, User, backref, Boolean
 
 
 class Dashboard(Base):
@@ -26,6 +26,8 @@ class Dashboard(Base):
     created = Column(DateTime, default=datetime.utcnow)
 
     started = Column(DateTime)
+
+    allow_all = Column(Boolean, index=True, default=True)
     
     # The resulting spawner displaying the finished dashboad, once ready
     final_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))

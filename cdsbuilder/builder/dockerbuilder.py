@@ -112,7 +112,8 @@ class DockerBuilder(Builder):
 
         dockerfile_changes="\n".join([
             'CMD ["voila-entrypoint.sh"]',
-            'ENV JUPYTERHUB_GROUP {}'.format(dashboard.groupname)
+            'ENV JUPYTERHUB_GROUP {}'.format(dashboard.groupname),
+            'ENV JUPYTERHUB_ANYONE {}'.format(dashboard.allow_all and '1' or '0')
         ])
 
         yield self.docker('commit', object_id, repository=reponame, tag=tag, changes=dockerfile_changes)

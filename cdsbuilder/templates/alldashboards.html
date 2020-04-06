@@ -25,15 +25,23 @@
 
             <h2>Dashboards from others</h2>
 
-            {% for dash in visitor_dashboards %}
+            {% for username, dashlist in visitor_dashboard_groups.items() %}
 
-            <p>{{ dash.name | escape }} 
-                - <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}">View</a>
-                - from {{ dash.user.name }}
+                <h3>{{ username | escape }}</h3>
+
+                <ul>
+                {% for dash in dashlist|sort(attribute='name') %}
+
+                    <li>
+                        <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}">{{ dash.name | escape }}</a>
+                    </li>
+
+                {% endfor %}
+                </ul>
 
             {% endfor %}
 
-            {% if not visitor_dashboards %}
+            {% if not visitor_dashboard_groups %}
             <p>No-one has shared any dashboards with you</p>
             {% endif %}
 
