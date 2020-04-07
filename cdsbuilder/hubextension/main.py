@@ -1,15 +1,13 @@
 import re
-from datetime import timedelta, datetime
+from datetime import datetime
 from collections import defaultdict
 
 from tornado.web import authenticated, HTTPError
-from tornado import gen
 
 from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Group, User
-from sqlalchemy import and_, or_
 
-from ..util import maybe_future
+from ..util import maybe_future, url_path_join
 from ..orm import Dashboard
 from ..util import DefaultObjDict
 
@@ -478,16 +476,22 @@ class MainViewDashboardHandler(DashboardBaseHandler):
         if dashboard.user.name != dashboard_user.name:
             raise Exception('Dashboard user {} does not match {}'.format(dashboard.user.name, dashboard_user.name))
 
+        if not dashboard.is_orm_user_allowed(current_user.orm_user):
+            return self.send_error(403)
+
         # Get User's builders:
 
         status = await self.maybe_start_build(dashboard, dashboard_user)
 
+        base_url = self.settings['base_url']
+
         html = self.render_template(
             "viewdashboard.html",
-            base_url=self.settings['base_url'],
+            base_url=base_url,
             dashboard=dashboard,
             current_user=current_user,
             dashboard_user=dashboard_user,
+            progress_url=url_path_join(base_url, 'dashboards', dashboard_user.name, dashboard_urlname, 'progress'),
             status=status
         )
         self.write(html)

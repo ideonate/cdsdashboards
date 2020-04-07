@@ -38,6 +38,9 @@
 {% block script %}
 {{ super () }}
 <script type="text/javascript">
+  // hook up event-stream for progress
+  var dashboard_progress_url = "{{ progress_url | escape }}";
+
 require(["../../dashboards-static/js/viewdashboard"]);
 </script>
 {% endblock script %}

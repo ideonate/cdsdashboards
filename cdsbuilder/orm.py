@@ -62,3 +62,11 @@ class Dashboard(Base):
             return db.query(cls).filter(cls.urlname == urlname).first()
         return db.query(cls).filter(cls.urlname == urlname, cls.user_id == user.id).first()
 
+    def is_orm_user_allowed(self, user):
+        if user == self.user:
+            return True
+        if not self.allow_all:
+            if not user in self.group.users:
+                return False
+        return True
+

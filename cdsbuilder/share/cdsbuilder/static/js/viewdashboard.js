@@ -1,8 +1,14 @@
 require(["jquery"], function($) {
     "use strict";
   
-  //  $('#launch').on('click', function(e) { alert('Clicked'); });
+    // hook up event-stream for progress
+    var evtSource = new EventSource(dashboard_progress_url);
+
     
+    evtSource.onmessage = function(e) {
+        var evt = JSON.parse(e.data);
+        console.log(evt);
+    }
 
   });
 
