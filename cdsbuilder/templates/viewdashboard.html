@@ -5,27 +5,32 @@
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
 
-            <p>This is the dashboard view page of user {{ current_user.name }}</p>
+            <h2>Dashboard {{ dashboard.name }}</h2>
 
-            <p>Dashboard {{ dashboard.name }} ({{ dashboard.urlname }}) is owned by {{ dashboard_user.name }}</p>
+            {% if dashboard.description %}
+            <p>{{ dashboard.description | escape }}</p>
+            {% endif %}
+
+            <p>Owner: {{ dashboard_user.name }}</p>
 
             <p>Status: {{ status }}</p>
 
-            <p>Final Spawner: {{ dashboard.final_spawner }}</p>
+            <p>Created: {{ dashboard.created.strftime('%Y-%m-%d %H:%M:%S') }}</p>
 
-            <p>Started time: {{ dashboard.started }}</p>
-
-            {% if dashboard.final_spawner %}
-
-                {% if dashboard.final_spawner.server %}
-                <p>Final Server: {{ dashboard.final_spawner.server }} </p>
-                {% endif %}
-
-            <p><a href="/user/{{ dashboard.user.name }}/{{ dashboard.final_spawner.name }}">Go to Dashboard</a></p>
-
-            {% endif %}
+            <p>Started: {{ dashboard.started.strftime('%Y-%m-%d %H:%M:%S') }}</p>
 
         </div>
     </div>
+
+    <div class="row">
+        <div class="text-center">
+          {% if dashboard.final_spawner %}
+          <a id="launch" role="button" class="btn btn-lg btn-primary" href="/user/{{ dashboard.user.name }}/{{ dashboard.final_spawner.name }}">
+              Go to Dashboard
+              </a>
+          {% endif %}
+        </div>
+      </div>
+
 </div>
 {% endblock main %}
