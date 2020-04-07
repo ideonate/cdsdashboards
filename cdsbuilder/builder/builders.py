@@ -1,4 +1,4 @@
-#from async_generator import yield_, async_generator
+from asyncio import Queue
 
 from traitlets.config import LoggingConfigurable
 from tornado.ioloop import PeriodicCallback
@@ -40,6 +40,8 @@ class Builder(LoggingConfigurable):
     _jupyterhub_version = None
     _build_future = None
 
+    event_queue = Queue()
+
     @property
     def _failed(self):
         """Did the last build fail?"""
@@ -49,6 +51,15 @@ class Builder(LoggingConfigurable):
             and self._build_future.done()
             and self._build_future.exception()
         )
+
+    @property
+    def _log_name(self):
+        """Return username:dashboard_urlname
+        """
+        if self.dashboard:
+            return '%s:%s' % (self.dashboard.user.name, self.dashboard.urlname)
+        else:
+            return 'Dashboard Builder {}'.format(self)
 
     @property
     def pending(self):
@@ -72,7 +83,9 @@ class Builder(LoggingConfigurable):
         """
         if self.pending:
             return False
-        if self.server is None:
+        if self.dashboard is None:
+            return False
+        if self.dashboard.final_spawner is None:
             return False
         return True
 
@@ -175,11 +188,6 @@ class Builder(LoggingConfigurable):
         config=True
     )
 
-    #@property
-    #def _progress_url(self):
-    #    return self.user.progress_url(self.name)
-
-    #@async_generator
     async def _generate_progress(self):
         """Private wrapper of progress generator
 
@@ -192,21 +200,17 @@ class Builder(LoggingConfigurable):
             )
             return
 
-        #await yield_({"progress": 0, "message": "Server requested"})
+        yield {"progress": 0, "message": "Builder requested"}
         from async_generator import aclosing
 
         async with aclosing(self.progress()) as progress:
             async for event in progress:
-                pass
-                #await yield_(event)
+                yield event
 
-    #@async_generator
     async def progress(self):
         """Async generator for progress events
 
         Must be an async generator
-
-        For Python 3.5-compatibility, use the async_generator package
 
         Should yield messages of the form:
 
@@ -222,9 +226,13 @@ class Builder(LoggingConfigurable):
         Progress will be updated if defined.
         To update messages without progress omit the progress field.
 
-        .. versionadded:: 0.9
         """
-        #await yield_({"progress": 50, "message": "Spawning server..."})
+        #yield {"progress": 50, "message": "Spawning build..."}
+
+        while True:
+            evt = await self.event_queue.get()
+            yield evt
+
 
     async def start(self, dashboard, db):
         """Start the single-user server

@@ -1,16 +1,17 @@
 from concurrent.futures import ThreadPoolExecutor
+import functools
 
 import docker
 from docker.errors import APIError
 from docker.utils import kwargs_from_env
 from traitlets import Dict, Unicode, Any
-from tornado import gen
+from tornado import gen, ioloop
 from tornado.log import app_log
 from datetime import datetime
 
 from jupyterhub.user import User
-import jupyterhub.orm as jhorm
 
+from ..util import maybe_future
 from cdsbuilder.builder.builders import Builder, BuildException
 
 
@@ -57,7 +58,8 @@ class DockerBuilder(Builder):
         """Call a docker method in a background thread
         returns a Future
         """
-        return self.executor.submit(self._docker, method, *args, **kwargs)
+        fn = functools.partial(self._docker, method, *args, **kwargs)
+        return ioloop.IOLoop.current().run_in_executor(self._executor, fn)
 
     _executor = None
 
@@ -71,8 +73,7 @@ class DockerBuilder(Builder):
 
     repo_prefix = Unicode(default_value='cdsuser').tag(config=True)
 
-    @gen.coroutine
-    def start(self, dashboard, db):
+    async def start(self, dashboard, db):
         """Start the dashboard
 
         Returns:
@@ -81,6 +82,8 @@ class DockerBuilder(Builder):
         """
 
         app_log.info('Starting start function')
+
+        self.event_queue.put_nowait({'progress': 10, 'message': 'Starting builder'})
 
         self._build_pending = True
 
@@ -95,7 +98,11 @@ class DockerBuilder(Builder):
         if object_id is None:
             raise BuildException('No docker object specified in spawner state')
 
-        source_container = yield self.docker('inspect_container', object_id)
+        i_c_future = self.docker('inspect_container', object_id)
+
+        #i_c_future = maybe_future(i_c_future)
+
+        source_container = await i_c_future
 
         if source_container is None:
             raise BuildException('No docker object returned as source container')
@@ -116,13 +123,14 @@ class DockerBuilder(Builder):
             'ENV JUPYTERHUB_ANYONE {}'.format(dashboard.allow_all and '1' or '0')
         ])
 
-        yield self.docker('commit', object_id, repository=reponame, tag=tag, changes=dockerfile_changes)
+        await self.docker('commit', object_id, repository=reponame, tag=tag, changes=dockerfile_changes)
 
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
-        for i in range(10):
+        for i in range(8):
             self.log.debug('Waiting in builder {}'.format(i))
-            yield gen.sleep(1)
+            self.event_queue.put_nowait({'progress': 60, 'message': 'Waiting in builder {}'.format(i)})
+            await gen.sleep(1)
 
         ### Start a new server
 
@@ -151,7 +159,7 @@ class DockerBuilder(Builder):
             # set _spawn_pending flag to prevent races while we wait
             spawner._spawn_pending = True
             try:
-                state = yield spawner.poll_and_notify()
+                state = await spawner.poll_and_notify()
             finally:
                 spawner._spawn_pending = False
 
@@ -162,8 +170,7 @@ class DockerBuilder(Builder):
     allow_named_servers = True # TODO take from main app config
     named_server_limit_per_user = 10
 
-    @gen.coroutine
-    def stop(self, now=False):
+    async def stop(self, now=False):
         """Stop the single-user server
 
         If `now` is False (default), shutdown the server as gracefully as possible,
@@ -178,7 +185,5 @@ class DockerBuilder(Builder):
             "Override in subclass. Must be a Tornado gen.coroutine."
         )
 
-
-    @gen.coroutine
-    def poll(self):
+    async def poll(self):
         pass

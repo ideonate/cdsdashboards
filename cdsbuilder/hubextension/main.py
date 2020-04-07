@@ -105,7 +105,7 @@ class DashboardBaseHandler(BaseHandler):
                 builder._build_future = None
             builder._build_pending = False
 
-        if not builder.active and (dashboard.final_spawner is None or force_start):
+        if not builder.pending and (dashboard.final_spawner is None or force_start):
             
             if builder._build_future and builder._build_future.done() and builder._build_future.exception() and not force_start:
                 status = 'Error: {}'.format(builder._build_future.exception())

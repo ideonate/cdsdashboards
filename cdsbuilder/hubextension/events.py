@@ -89,7 +89,7 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
         # progress finished, wait for spawn to actually resolve,
         # in case progress finished early
         # (ignore errors, which will be logged elsewhere)
-        await asyncio.wait([build_future])
+        await build_future
 
         # progress and spawn finished, check if spawn succeeded
         if builder.ready:

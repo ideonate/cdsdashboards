@@ -8,6 +8,13 @@ require(["jquery"], function($) {
     evtSource.onmessage = function(e) {
         var evt = JSON.parse(e.data);
         console.log(evt);
+
+
+        if (evt.ready || evt.failed) {
+            evtSource.close();
+            
+            console.log("Close progress eventstream");
+        }
     }
 
   });
