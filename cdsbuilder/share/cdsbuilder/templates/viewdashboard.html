@@ -34,3 +34,10 @@
 
 </div>
 {% endblock main %}
+
+{% block script %}
+{{ super () }}
+<script type="text/javascript">
+require(["../../dashboards-static/js/viewdashboard"]);
+</script>
+{% endblock script %}

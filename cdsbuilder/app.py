@@ -26,9 +26,11 @@ from .util import url_path_join
 from jupyterhub import orm as jhorm
 from .builder.builders import BuildersDict, Builder
 from .builder.dockerbuilder import DockerBuilder
+from ._data import DATA_FILES_PATH
 
+TEMPLATE_PATH = os.path.join(DATA_FILES_PATH, 'templates')
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+#HERE = os.path.dirname(os.path.abspath(__file__))
 
 common_aliases = {
     'log-level': 'Application.log_level',
