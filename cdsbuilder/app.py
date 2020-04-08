@@ -30,8 +30,6 @@ from ._data import DATA_FILES_PATH
 
 TEMPLATE_PATH = os.path.join(DATA_FILES_PATH, 'templates')
 
-#HERE = os.path.dirname(os.path.abspath(__file__))
-
 common_aliases = {
     'log-level': 'Application.log_level',
     'f': 'CDSBuilder.config_file',
@@ -358,7 +356,7 @@ class CDSBuilder(Application):
         self.tornado_settings.update({
             "debug": self.debug,
             'base_url': self.base_url,
-            "static_path": os.path.join(HERE, "static"),
+            "static_path": os.path.join(DATA_FILES_PATH, "static"),
             'static_url_prefix': url_path_join(self.base_url, 'static/'),
             #'template_variables': self.template_variables,
             #'executor': self.executor,

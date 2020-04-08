@@ -8,6 +8,7 @@ from jupyterhub.apihandlers.users import SpawnProgressAPIHandler
 from jupyterhub.utils import iterate_until
 
 from ..orm import Dashboard
+from ..util import url_path_join
 
 
 class ProgressDashboardHandler(SpawnProgressAPIHandler):
@@ -39,14 +40,15 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
         # - spawner not running at all
         # - spawner failed
         # - spawner pending start (what we expect)
-        url = 'testurl'
-        ready_event = {
-            'progress': 100,
-            'ready': True,
-            'message': "Server ready at {}".format(url),
-            'html_message': 'Server ready at <a href="{0}">{0}</a>'.format(url),
-            'url': url,
-        }
+        def ready_event(dashboard):
+            url = url_path_join(self.settings['base_url'], "user", dashboard.user.name, dashboard.final_spawner.name)
+            return {
+                'progress': 100,
+                'ready': True,
+                'message': "Server ready at {}".format(url),
+                'html_message': 'Server ready at <a href="{0}">{0}</a>'.format(url),
+                'url': url,
+            }
         failed_event = {'progress': 100, 'failed': True, 'message': "Build failed"}
 
 
@@ -57,7 +59,7 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
         if builder.ready:
             # spawner already ready. Trigger progress-completion immediately
             self.log.info("Server %s is already started", builder._log_name)
-            await self.send_event(ready_event)
+            await self.send_event(ready_event(dashboard))
             return
 
         build_future = builder._build_future
@@ -95,7 +97,7 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
         if builder.ready:
             # spawner is ready, signal completion and redirect
             self.log.info("Server %s is ready", builder._log_name)
-            await self.send_event(ready_event)
+            await self.send_event(ready_event(dashboard))
         else:
             # what happened? Maybe spawn failed?
             f = build_future

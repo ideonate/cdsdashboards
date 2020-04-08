@@ -2,7 +2,6 @@ from concurrent.futures import ThreadPoolExecutor
 import functools
 
 import docker
-from docker.errors import APIError
 from docker.utils import kwargs_from_env
 from traitlets import Dict, Unicode, Any
 from tornado import gen, ioloop
@@ -11,7 +10,6 @@ from datetime import datetime
 
 from jupyterhub.user import User
 
-from ..util import maybe_future
 from cdsbuilder.builder.builders import Builder, BuildException
 
 
@@ -98,11 +96,7 @@ class DockerBuilder(Builder):
         if object_id is None:
             raise BuildException('No docker object specified in spawner state')
 
-        i_c_future = self.docker('inspect_container', object_id)
-
-        #i_c_future = maybe_future(i_c_future)
-
-        source_container = await i_c_future
+        source_container = await self.docker('inspect_container', object_id)
 
         if source_container is None:
             raise BuildException('No docker object returned as source container')
