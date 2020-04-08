@@ -53,6 +53,12 @@ require(["jquery"], function($) {
             progressBar.addClass('progress-bar-danger');
             // open event log for debugging
             $('#progress-details').prop('open', true);
+
+            launchA.attr('href', evt.url);
+
+            launchA.text('Try Again');
+
+            launchA.show();
         }
 
     }

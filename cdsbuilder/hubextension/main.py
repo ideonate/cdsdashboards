@@ -95,9 +95,6 @@ class DashboardBaseHandler(BaseHandler):
 
         builder = builders_store[dashboard]
 
-        #if builder._build_future and builder._build_future.done():
-        #    builder._build_future = None
-
         status = ''
 
         def do_final_build(f):
@@ -479,8 +476,6 @@ class MainViewDashboardHandler(DashboardBaseHandler):
         if not dashboard.is_orm_user_allowed(current_user.orm_user):
             return self.send_error(403)
 
-        # Get User's builders:
-
         status = await self.maybe_start_build(dashboard, dashboard_user)
 
         base_url = self.settings['base_url']
@@ -495,4 +490,33 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             status=status
         )
         self.write(html)
+
+
+class ClearErrorDashboardHandler(DashboardBaseHandler):
+    
+    @authenticated
+    async def get(self, user_name, dashboard_urlname=''):
+
+        current_user = await self.get_current_user()
+
+        dashboard_user = self.user_from_username(user_name)
+
+        dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
+
+        if dashboard is None or dashboard_user is None:
+            return self.send_error(404)
+
+        if dashboard.user.name != dashboard_user.name:
+            raise Exception('Dashboard user {} does not match {}'.format(dashboard.user.name, dashboard_user.name))
+
+        if dashboard.is_orm_user_allowed(current_user.orm_user):
+            builders_store = self.settings['cds_builders']
+
+            builder = builders_store[dashboard]
+
+            if not builder.pending and builder._build_future and builder._build_future.done() and builder._build_future.exception():
+                builder._build_future = None
+
+        self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.user.name, dashboard.urlname))
+
 

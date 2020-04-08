@@ -87,6 +87,9 @@ class DockerBuilder(Builder):
 
         source_spawner = dashboard.source_spawner
 
+        if source_spawner is None:
+            raise BuildException('The source server does not exist')
+
         app_log.debug('source_spawner {}'.format(source_spawner))
 
         object_id = source_spawner.state.get('object_id',None)

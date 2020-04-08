@@ -49,7 +49,10 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
                 'html_message': 'Server ready at <a href="{0}">{0}</a>'.format(url),
                 'url': url,
             }
-        failed_event = {'progress': 100, 'failed': True, 'message': "Build failed"}
+
+        failed_event = {'progress': 100, 'failed': True, 'message': "Build failed", 
+            'url': url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.user.name, dashboard.urlname, 'clear-error')
+            }
 
 
         builders_store = self.settings['cds_builders']
