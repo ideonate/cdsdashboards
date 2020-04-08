@@ -504,12 +504,12 @@ class ClearErrorDashboardHandler(DashboardBaseHandler):
         dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
 
         if dashboard is None or dashboard_user is None:
-            return self.send_error(404)
+            pass # Redirect anyway, to let regular MainViewDashboardHandler handle the error
 
-        if dashboard.user.name != dashboard_user.name:
-            raise Exception('Dashboard user {} does not match {}'.format(dashboard.user.name, dashboard_user.name))
+        elif dashboard.user.name != dashboard_user.name:
+            pass
 
-        if dashboard.is_orm_user_allowed(current_user.orm_user):
+        elif dashboard.is_orm_user_allowed(current_user.orm_user):
             builders_store = self.settings['cds_builders']
 
             builder = builders_store[dashboard]
@@ -517,6 +517,6 @@ class ClearErrorDashboardHandler(DashboardBaseHandler):
             if not builder.pending and builder._build_future and builder._build_future.done() and builder._build_future.exception():
                 builder._build_future = None
 
-        self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.user.name, dashboard.urlname))
+        self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", user_name, dashboard_urlname))
 
 
