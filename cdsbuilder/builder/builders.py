@@ -1,4 +1,4 @@
-from asyncio import Queue
+from asyncio import sleep
 
 from traitlets.config import LoggingConfigurable
 from tornado.ioloop import PeriodicCallback
@@ -40,7 +40,7 @@ class Builder(LoggingConfigurable):
     _jupyterhub_version = None
     _build_future = None
 
-    event_queue = Queue()
+    event_queue = []
 
     @property
     def _failed(self):
@@ -227,12 +227,33 @@ class Builder(LoggingConfigurable):
         To update messages without progress omit the progress field.
 
         """
-        #yield {"progress": 50, "message": "Spawning build..."}
+        next_event = 0
 
+        break_while_loop = False
         while True:
-            evt = await self.event_queue.get()
-            yield evt
+            # Ensure we always capture events following the start_future
+            # signal has fired.
+            if self._build_future.done():
+                break_while_loop = True
+            event_queue = self.event_queue
 
+            len_events = len(event_queue)
+            if next_event < len_events:
+
+                for i in range(next_event, len_events):
+                    event = event_queue[i]
+
+                    yield event 
+                
+                next_event = len_events
+
+            if break_while_loop:
+                break
+
+            await sleep(1)
+
+    def add_progress_event(self, event):
+        self.event_queue.append(event)
 
     async def start(self, dashboard, db):
         """Start the single-user server

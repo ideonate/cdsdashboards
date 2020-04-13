@@ -71,9 +71,6 @@ class DockerBuilder(Builder):
 
     repo_prefix = Unicode(default_value='cdsuser').tag(config=True)
 
-    def add_progress_event(self, event):
-        self.event_queue.put_nowait(event)
-
     async def start(self, dashboard, db):
         """Start the dashboard
 
@@ -83,6 +80,8 @@ class DockerBuilder(Builder):
         """
 
         app_log.info('Starting start function')
+
+        self.event_queue = []
 
         self.add_progress_event({'progress': 10, 'message': 'Starting builder'})
 
