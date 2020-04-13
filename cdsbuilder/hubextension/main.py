@@ -1,11 +1,15 @@
 import re
 from datetime import datetime
 from collections import defaultdict
+from asyncio import sleep, CancelledError
 
+from async_generator import aclosing
 from tornado.web import authenticated, HTTPError
+from tornado.log import app_log
 
 from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Group, User
+from jupyterhub.utils import iterate_until
 
 from ..util import maybe_future, url_path_join
 from ..orm import Dashboard
@@ -27,7 +31,7 @@ class DashboardBaseHandler(BaseHandler):
         counter = 1
         while not now_unique:
             orm_dashboard = Dashboard.find(db=self.db, urlname=urlname)
-            self.log.info("{} - {}".format(urlname,orm_dashboard))
+            self.log.info("{} - {}".format(urlname, orm_dashboard))
             if orm_dashboard is None or counter >= 100:
                 now_unique = True
             else:
@@ -36,6 +40,37 @@ class DashboardBaseHandler(BaseHandler):
 
         self.log.debug('calc safe name : '+urlname)
         return urlname
+
+    @staticmethod
+    async def pipe_spawner_progress(dashboard_user, new_server_name, builder):
+        
+        while True:
+
+            await sleep(0.01)
+
+            if builder._build_future.done():
+                break
+
+            if new_server_name in dashboard_user.spawners and dashboard_user.spawners[new_server_name].pending \
+                and dashboard_user.spawners[new_server_name]._spawn_future:
+
+                spawner = dashboard_user.spawners[new_server_name]
+
+                app_log.debug('Found spawner for progress')
+
+                async with aclosing(
+                    iterate_until(builder._build_future, spawner._generate_progress())
+                ) as spawnevents:
+                    try:
+                        async for event in spawnevents:
+                            if 'message' in event:
+                                builder.add_progress_event({
+                                    'progress': 95, 'message': 'Spawner progress: {}'.format(event['message'])
+                                    })
+                    except CancelledError:
+                        pass
+
+                break 
 
     def get_source_spawners(self, user):
         return [spawner for spawner in user.all_spawners(include_default=True) if not spawner.orm_spawner.dashboard_final_of]
@@ -123,6 +158,8 @@ class DashboardBaseHandler(BaseHandler):
 
                     builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard, after build'})
 
+                    maybe_future(self.pipe_spawner_progress(dashboard_user, new_server_name, builder))
+
                     await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
 
                     self.db.expire(dashboard) # May have changed during async code above
@@ -160,6 +197,8 @@ class DashboardBaseHandler(BaseHandler):
 
                     builder.add_progress_event({'progress': 90, 'message': 'Attaching to spawn of final server for Dashboard'})
 
+                    # TODO This branch is rare, but should attach pipe to spawner progress
+
                     final_spawner.getattr('_{}_future'.format(final_spawner.pending)).add_done_callback(do_final_build)
 
                 else:
@@ -170,9 +209,13 @@ class DashboardBaseHandler(BaseHandler):
 
                 builder._build_pending = True
 
+                builder.event_queue = []
+
                 builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard'})
 
-                builder._build_future = maybe_future(self.spawn_single_user(dashboard_user, final_spawner.name))
+                maybe_future(self.pipe_spawner_progress(user, final_spawner.name, builder))
+
+                builder._build_future = maybe_future(self.spawn_single_user(user, final_spawner.name))
 
                 builder._build_future.add_done_callback(do_final_build)
 
@@ -365,7 +408,7 @@ class DashboardEditHandler(DashboardBaseHandler):
 
                     dashboard = Dashboard(
                         name=dashboard_name, urlname=urlname, user=current_user.orm_user, 
-                        description = dashboard_description, source_spawner = spawner.orm_spawner
+                        description=dashboard_description, source_spawner=spawner.orm_spawner
                         )
                     self.log.debug('dashboard urlname '+dashboard.urlname+', main name '+dashboard.name)
 

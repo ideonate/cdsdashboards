@@ -129,7 +129,7 @@ class DockerBuilder(Builder):
 
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
-        for i in range(8):
+        for i in range(2):
             self.log.debug('Waiting in builder {}'.format(i))
             self.add_progress_event({'progress': 60, 'message': 'Waiting in builder {}'.format(i)})
             await gen.sleep(1)
