@@ -241,99 +241,42 @@ class AllDashboardsHandler(DashboardBaseHandler):
         self.write(html)
 
 
-
-class DashboardNewHandler(DashboardBaseHandler):
-
-    @authenticated
-    async def get(self):
-
-        self.log.debug('calling DashboardNewHandler')
-
-        current_user = await self.get_current_user()
-
-        errors = DefaultObjDict()
-
-        html = self.render_template(
-            "newdashboard.html",
-            base_url=self.settings['base_url'],
-            current_user=current_user,
-            dashboard_name='',
-            errors=errors
-        )
-        self.write(html)
-
-    @authenticated
-    async def post(self):
-
-        current_user = await self.get_current_user()
-
-        dashboard_name = self.get_argument('name').strip()
-
-        errors = DefaultObjDict()
-
-        if dashboard_name == '':
-            errors.name = 'Please enter a name'
-        elif not self.name_regex.match(dashboard_name):
-            errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>'
-        else:
-            urlname = self.calc_urlname(dashboard_name)    
-
-            self.log.debug('Final urlname is '+urlname)  
-
-            db = self.db
-
-            try:
-
-                d = Dashboard(name=dashboard_name, urlname=urlname, user=current_user.orm_user)
-                self.log.debug('dashboard urlname '+d.urlname+', main name '+d.name)
-                db.add(d)
-                db.commit()
-
-            except Exception as e:
-                errors.all = str(e)
-
-        if len(errors):
-            html = self.render_template(
-                "newdashboard.html",
-                base_url=self.settings['base_url'],
-                dashboard_name=dashboard_name,
-                errors=errors,
-                current_user=current_user
-            )
-            return self.write(html)
-        
-        # redirect to edit dashboard page
-
-        self.redirect("{}hub/dashboards/{}/{}/edit".format(self.settings['base_url'], current_user.name, urlname))
-
-
 class DashboardEditHandler(DashboardBaseHandler):
 
     @authenticated
-    async def get(self, user_name, dashboard_urlname=''):
+    async def get(self, user_name=None, dashboard_urlname=None):
 
         current_user = await self.get_current_user()
 
-        if current_user.name != user_name:
-            return self.send_error(403)
+        dashboard = None
+        dashboard_name = ''
+        dashboard_description = ''
 
-        dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=current_user)
+        if user_name is not None and dashboard_urlname is not None:
 
-        if dashboard is None:
-            return self.send_error(404)
+            if current_user.name != user_name:
+                return self.send_error(403)
+
+            dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=current_user)
+
+            if dashboard is None:
+                return self.send_error(404)
+
+            dashboard_name = dashboard.name
+            dashboard_description = dashboard.description
 
         # Get List of possible visitor users
         existing_group_users = None
-        if dashboard.group:
+        if dashboard is not None and dashboard.group:
             existing_group_users = dashboard.group.users
-        all_visitors = self.get_visitor_tuples(dashboard.user.id, existing_group_users)
+        all_visitors = self.get_visitor_tuples(current_user.id, existing_group_users)
 
         # Get User's spawners:
 
         spawners = self.get_source_spawners(current_user)
 
         spawner_name=None
-        if dashboard.source_spawner is not None:
+        if dashboard is not None and dashboard.source_spawner is not None:
             spawner_name=dashboard.source_spawner.name
 
         errors = DefaultObjDict()
@@ -342,8 +285,8 @@ class DashboardEditHandler(DashboardBaseHandler):
             "editdashboard.html",
             base_url=self.settings['base_url'],
             dashboard=dashboard,
-            dashboard_name=dashboard.name,
-            dashboard_description=dashboard.description,
+            dashboard_name=dashboard_name,
+            dashboard_description=dashboard_description,
             spawner_name=spawner_name,
             current_user=current_user,
             spawners=spawners,
@@ -353,17 +296,25 @@ class DashboardEditHandler(DashboardBaseHandler):
         self.write(html)
 
     @authenticated
-    async def post(self, user_name, dashboard_urlname=''):
+    async def post(self, user_name=None, dashboard_urlname=None):
 
         current_user = await self.get_current_user()
 
-        if current_user.name != user_name:
-            return self.send_error(403)
+        dashboard = None
+        group = None
 
-        dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=current_user)
+        if user_name is not None and dashboard_urlname is not None:
+            # Edit (not new)
 
-        if dashboard is None:
-            return self.send_error(404)
+            if current_user.name != user_name:
+                return self.send_error(403)
+
+            dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=current_user)
+
+            if dashboard is None:
+                return self.send_error(404)
+
+            group = dashboard.group
 
         dashboard_name = self.get_argument('name').strip()
 
@@ -376,13 +327,8 @@ class DashboardEditHandler(DashboardBaseHandler):
         elif not self.name_regex.match(dashboard_name):
             errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>'
 
-        # Get or create group
-
-        group = dashboard.group
-
         all_visitors = self.get_arguments('all_visitors[]')
 
-        #.filter(User.name != dashboard.user.name)
         all_visitors_users = self.db.query(User).filter(User.name.in_(all_visitors)).all()
 
         # Get Spawners
@@ -402,22 +348,32 @@ class DashboardEditHandler(DashboardBaseHandler):
             errors.spawner = 'Spawner {} not found'.format(spawner_name)
 
             # Pick the existing one again
-            if dashboard.source_spawner is not None:
+            if dashboard is not None and dashboard.source_spawner is not None:
                 spawner_name=dashboard.source_spawner.name
 
-        # In case we have to display an error, we also need all these users
-        all_visitors = self.get_visitor_tuples(dashboard.user.id, all_visitors_users)
-        
+                
         if len(errors) == 0:
             db = self.db
 
             try:
 
-                dashboard.name = dashboard_name
-                dashboard.description = dashboard_description
-                dashboard.source_spawner = spawner.orm_spawner
-                
+                if dashboard is None:
 
+                    urlname = self.calc_urlname(dashboard_name)    
+
+                    self.log.debug('Final urlname is '+urlname)  
+
+                    dashboard = Dashboard(
+                        name=dashboard_name, urlname=urlname, user=current_user.orm_user, 
+                        description = dashboard_description, source_spawner = spawner.orm_spawner
+                        )
+                    self.log.debug('dashboard urlname '+dashboard.urlname+', main name '+dashboard.name)
+
+                else:
+                    dashboard.name = dashboard_name
+                    dashboard.description = dashboard_description
+                    dashboard.source_spawner = spawner.orm_spawner
+                    
                 if group is None:
                     # Group could exist - what if it does? TODO
                     group = Group(name=dashboard.groupname, users=all_visitors_users)
@@ -457,6 +413,9 @@ class DashboardEditHandler(DashboardBaseHandler):
                 errors.all = str(e)
 
         if len(errors):
+            # In case we have to display an error, we also need all these users
+            all_visitors = self.get_visitor_tuples(current_user.id, all_visitors_users)
+
             html = self.render_template(
                 "editdashboard.html",
                 base_url=self.settings['base_url'],
@@ -471,10 +430,7 @@ class DashboardEditHandler(DashboardBaseHandler):
             )
             return self.write(html)
         
-        # redirect to main dashboard page
-
-        #self.redirect("{}hub/dashboards/{}/{}/edit".format(self.settings['base_url'], current_user.name, dashboard.urlname))
-        self.redirect("{}hub/dashboards".format(self.settings['base_url']))
+        self.redirect("{}hub/dashboards/{}/{}".format(self.settings['base_url'], current_user.name, dashboard.urlname))
 
 
 class MainViewDashboardHandler(DashboardBaseHandler):

@@ -409,7 +409,7 @@ c.JupyterHub.extra_handlers = cdsbuilder_extra_handlers
 #c.JupyterHub.proxy_auth_token = ''
 
 ## Interval (in seconds) at which to check if the proxy is running.
-#c.JupyterHub.proxy_check_interval = 30
+c.JupyterHub.proxy_check_interval = 3000
 
 ## The class to use for configuring the JupyterHub proxy.
 #
@@ -442,7 +442,7 @@ c.JupyterHub.extra_handlers = cdsbuilder_extra_handlers
 
 ## Interval (in seconds) at which to check connectivity of services with web
 #  endpoints.
-#c.JupyterHub.service_check_interval = 60
+c.JupyterHub.service_check_interval = 6000
 
 ## Dict of token:servicename to be loaded into the database.
 #
@@ -477,17 +477,17 @@ c.JupyterHub.service_tokens = {
 #              'environment': {'JUPYTERHUB_SERVICE_PREFIX': '/services/whoami', 'JUPYTERHUB_SERVICE_URL': 'http://127.0.0.1:8072/'}
 #          }]
 
-c.JupyterHub.services = [
-    {
-        'name': 'cdsbuilder',
-        'url': 'http://127.0.0.1:8585',
-        'api_token': 'cdsbuilder-api-token',
-        'admin': True,
-        'oauth_no_confirm': False,
-        'oauth_redirect_uri': "http://127.0.0.1:8000/services/cdsbuilder/oauth_callback",
-        'oauth_client_id': "testjhclientid"
-    }
-]
+#c.JupyterHub.services = [
+#    {
+#        'name': 'cdsbuilder',
+#        'url': 'http://127.0.0.1:8585',
+#        'api_token': 'cdsbuilder-api-token',
+#        'admin': True,
+#        'oauth_no_confirm': False,
+#        'oauth_redirect_uri': "http://127.0.0.1:8000/services/cdsbuilder/oauth_callback",
+#        'oauth_client_id': "testjhclientid"
+#    }
+#]
 
 ## Shuts down all user servers on logout
 #c.JupyterHub.shutdown_on_logout = False
@@ -529,14 +529,9 @@ c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 # c.DockerSpawner.image = 'ideonate/jupyterhub-singleuser-streamlit-native:latest'
 #c.DockerSpawner.image = 'jupyterhub/singleuser:1.2'
 
-c.DockerSpawner.image = 'ideonate/jh-voila-oauth-singleuser:dc9744740e12'
+c.DockerSpawner.image = 'ideonate/jh-voila-oauth-singleuser:scipy-dc9744740e12'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
-
-def group_from_spawner(spawner):
-    if spawner.user_options and 'auth_users' in spawner.user_options:
-        return spawner.user_options['auth_users']
-    return ''
 
 # c.DockerSpawner.environment = {'JUPYTERHUB_USER_EXTRA': group_from_spawner}
 
@@ -594,10 +589,10 @@ c.ConfigurableHTTPProxy.auth_token = "CONFIGPROXY_AUTH_TOKEN"
 
 ## Paths to search for jinja templates, before using the default templates.
 import os
-from cdsbuilder.app import HERE as CDSBUILDER_HERE, cdsbuilder_tornado_settings
+from cdsbuilder.app import TEMPLATE_PATH as CDSBUILDER_TEMPLATE_PATH, cdsbuilder_tornado_settings
 
 c.JupyterHub.template_paths = [
-    os.path.join(CDSBUILDER_HERE, 'templates')
+    CDSBUILDER_TEMPLATE_PATH
 ]
 
 ## Extra variables to be passed into jinja templates
@@ -890,7 +885,7 @@ c.JupyterHub.tornado_settings = cdsbuilder_tornado_settings
 #  if the single-user server is still running. If it isn't running, then
 #  JupyterHub modifies its own state accordingly and removes appropriate routes
 #  from the configurable proxy.
-#c.Spawner.poll_interval = 30
+c.Spawner.poll_interval = 3000
 
 ## The port for single-user servers to listen on.
 #

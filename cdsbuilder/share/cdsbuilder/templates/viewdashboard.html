@@ -15,9 +15,13 @@
 
             <p>Status: {{ status }}</p>
 
+            {% if dashboard.created %}
             <p>Created: {{ dashboard.created.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            {% endif %}
 
+            {% if dashboard.started %}
             <p>Started: {{ dashboard.started.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            {% endif %}
 
         </div>
     </div>

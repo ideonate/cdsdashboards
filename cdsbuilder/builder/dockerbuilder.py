@@ -95,6 +95,9 @@ class DockerBuilder(Builder):
 
         app_log.debug('source_spawner {}'.format(source_spawner))
 
+        if source_spawner.state is None:
+            raise BuildException('Source server has never been run, so there is nothing to clone!')
+
         object_id = source_spawner.state.get('object_id',None)
 
         app_log.debug('Docker object_id is {}'.format(object_id))

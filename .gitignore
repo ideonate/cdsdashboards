@@ -15,6 +15,7 @@ docs/source/_static/rest-api
 /jupyterhub_config.py
 jupyterhub_cookie_secret
 jupyterhub.sqlite
+jupyterhub-proxy.pid
 package-lock.json
 share/jupyterhub/static/components
 share/jupyterhub/static/css/style.min.css

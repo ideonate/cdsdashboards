@@ -5,8 +5,14 @@
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
 
-            <p>This is the dashboard edit page of user {{ current_user.name }}</p>
-            <p>Dashboard {{ dashboard.name }} ({{ dashboard.urlname }})</p>
+            <h2>
+                {% if dashboard %}
+                Editing dashboard {{ dashboard.urlname }}
+                {% else %}
+                Create new dashboard
+                {% endif %}
+            </h2>
+            
 
             <form method="post">
 
