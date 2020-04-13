@@ -71,6 +71,9 @@ class DockerBuilder(Builder):
 
     repo_prefix = Unicode(default_value='cdsuser').tag(config=True)
 
+    def add_progress_event(self, event):
+        self.event_queue.put_nowait(event)
+
     async def start(self, dashboard, db):
         """Start the dashboard
 
@@ -81,7 +84,7 @@ class DockerBuilder(Builder):
 
         app_log.info('Starting start function')
 
-        self.event_queue.put_nowait({'progress': 10, 'message': 'Starting builder'})
+        self.add_progress_event({'progress': 10, 'message': 'Starting builder'})
 
         self._build_pending = True
 
@@ -126,7 +129,7 @@ class DockerBuilder(Builder):
 
         for i in range(8):
             self.log.debug('Waiting in builder {}'.format(i))
-            self.event_queue.put_nowait({'progress': 60, 'message': 'Waiting in builder {}'.format(i)})
+            self.add_progress_event({'progress': 60, 'message': 'Waiting in builder {}'.format(i)})
             await gen.sleep(1)
 
         ### Start a new server

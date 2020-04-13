@@ -97,6 +97,8 @@ class DashboardBaseHandler(BaseHandler):
 
         status = ''
 
+        need_follow_progress = True
+
         def do_final_build(f):
             if f.cancelled() or f.exception() is None:
                 builder._build_future = None
@@ -118,6 +120,8 @@ class DashboardBaseHandler(BaseHandler):
                     await self.maybe_delete_existing_server(dashboard.final_spawner, dashboard_user)
 
                     (new_server_name, new_server_options) =  await builder.start(dashboard, self.db)
+
+                    builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard, after build'})
 
                     await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
 
@@ -146,16 +150,33 @@ class DashboardBaseHandler(BaseHandler):
 
             if final_spawner.ready:
                 status = 'Spawner already active'
+                need_follow_progress = False
+
             elif final_spawner.pending:
                 status = 'Spawner is pending...'
+
+                if final_spawner.pending in ['spawn', 'check']:
+                    builder._build_pending = True
+
+                    builder.add_progress_event({'progress': 90, 'message': 'Attaching to spawn of final server for Dashboard'})
+
+                    final_spawner.getattr('_{}_future'.format(final_spawner.pending)).add_done_callback(do_final_build)
+
+                else:
+                    builder.add_progress_event({'failed': True, 'message': 'Final server for Dashboard is Stopping'})
+
             else:
                 status = 'Final spawner is dormant - starting up...'
 
-                f = maybe_future(self.spawn_single_user(dashboard_user, final_spawner.name))
+                builder._build_pending = True
 
-                f.add_done_callback(do_final_build)
+                builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard'})
 
-        return status
+                builder._build_future = maybe_future(self.spawn_single_user(dashboard_user, final_spawner.name))
+
+                builder._build_future.add_done_callback(do_final_build)
+
+        return status, need_follow_progress
 
     async def maybe_delete_existing_server(self, orm_spawner, dashboard_user):
         if not orm_spawner:
@@ -418,7 +439,7 @@ class DashboardEditHandler(DashboardBaseHandler):
                 status = ''
 
                 async def do_restart_build(f):
-                    status = await self.maybe_start_build(dashboard, current_user, True)
+                    status, _ = await self.maybe_start_build(dashboard, current_user, True)
                     self.log.debug('Force build start: {}'.format(status))
                     return status
 
@@ -476,7 +497,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
         if not dashboard.is_orm_user_allowed(current_user.orm_user):
             return self.send_error(403)
 
-        status = await self.maybe_start_build(dashboard, dashboard_user)
+        status, need_follow_progress = await self.maybe_start_build(dashboard, dashboard_user)
 
         base_url = self.settings['base_url']
 
@@ -486,6 +507,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             dashboard=dashboard,
             current_user=current_user,
             dashboard_user=dashboard_user,
+            need_follow_progress=need_follow_progress,
             progress_url=url_path_join(base_url, 'dashboards', dashboard_user.name, dashboard_urlname, 'progress'),
             status=status
         )
