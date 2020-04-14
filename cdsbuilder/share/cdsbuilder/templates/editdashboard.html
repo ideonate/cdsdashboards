@@ -69,16 +69,17 @@
 
                 {% endfor %}
                 
-    
-                <input type="submit"/>
-                
-                </form>
-    
+                      
                 {% if errors.all %}
     
                 <p class="error">{{ errors.all | escape }}</p>
     
                 {% endif %}
+
+                <input type="submit" value="Save" /> or <a href='../../../dashboards'>Cancel</a>
+
+                </form>
+
 
         </div>
     </div>

@@ -8,20 +8,54 @@
 
             <h2>Your own dashboards</h2>
 
-            {% for dash in my_dashboards %}
+            <p id="dashboards-none" {% if my_dashboards %}class="hidden"{% endif %}>You have not created any dashboards yet</p>
 
-            <p>{{ dash.name | escape }} 
-                - <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}">View</a>
-                - <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}/edit">Configure</a></p>
+            {% if my_dashboards %}
+            
+            <table class="dashboard-table table table-striped">
+                <thead>
+                <tr>
+                    <th>Dashboard name</th>
+                    <th>View URL</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
 
-            {% endfor %}
+                <tbody>
 
-            {% if not my_dashboards  %}
-            <p>You have not created any dashboards yet</p>
+                {% for dash in my_dashboards %}
+
+                <tr class="home-dashboard-row" data-dashboard-name="{{ dash.urlname }}">
+                    {# name #}
+                    <td>{{ dash.name | escape }} </td>
+                    {# url #}
+                    <td>
+                    <a class="dashboard-link" href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}">
+                        hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}
+                    </a>
+                    </td>
+                    {# actions #}
+                    <td>
+                    <a role="button" class="edit-dashboard btn btn-xs btn-primary" id="edit-dash-{{ dash.urlname }}"
+                        href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}/edit">
+                        edit</a>
+                    <a role="button" class="delete-dashboard btn btn-xs btn-danger" id="delete-dash-{{ dash.urlname }}">delete</a>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
             {% endif %}
 
-            <p><a href="dashboards/new">+ ADD</a></p>
-
+            <div class="row">
+                <div class="text-center">
+                    <a id="start" role="button" class="btn btn-lg btn-primary" href="dashboards/new">
+                        New Dashboard
+                    </a>
+                </div>
+            </div>
 
             <h2>Dashboards from others</h2>
 
@@ -49,3 +83,11 @@
     </div>
 </div>
 {% endblock main %}
+
+{% block script %}
+{{ super () }}
+<script type="text/javascript">
+
+require(["../../dashboards-static/js/alldashboards"]);
+</script>
+{% endblock script %}

@@ -11,12 +11,12 @@ class Dashboard(Base):
     __tablename__ = 'dashboards'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
-    user = relationship(User, cascade="all", backref=backref("dashboards_own", uselist=True))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship(User, backref=backref("dashboards_own", uselist=True))
 
     # Which spawner/server is being cloned
     source_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    source_spawner = relationship(Spawner, cascade="all", foreign_keys=[source_spawner_id],  backref=backref('dashboard_source_for', uselist=False))
+    source_spawner = relationship(Spawner, foreign_keys=[source_spawner_id],  backref=backref('dashboard_source_for', uselist=False))
 
     state = Column(JSONDict)
     name = Column(Unicode(255))
@@ -29,7 +29,7 @@ class Dashboard(Base):
 
     allow_all = Column(Boolean, index=True, default=True)
     
-    # The resulting spawner displaying the finished dashboad, once ready
+    # The resulting spawner displaying the finished dashboard, once ready
     final_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
     final_spawner = relationship(Spawner, cascade="all", foreign_keys=[final_spawner_id], backref=backref('dashboard_final_of', uselist=False))
 
