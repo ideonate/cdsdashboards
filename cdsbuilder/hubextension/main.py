@@ -20,10 +20,16 @@ class DashboardBaseHandler(BaseHandler):
 
     unsafe_regex = re.compile(r'[^a-zA-Z0-9]+')
 
-    name_regex = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_\- \!\@\$\(\)\*\+\?\<\>]+$')
+    trailingdash_regex = re.compile(r'\-+$')
+
+    name_regex = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_\- \!\@\$\(\)\*\+\?\<\>\.]{0,99}$')
     
     def calc_urlname(self, dashboard_name):
-        urlname = base_urlname = re.sub(self.unsafe_regex, '-', dashboard_name).lower()
+        base_urlname = re.sub(self.unsafe_regex, '-', dashboard_name).lower()[:35]
+
+        base_urlname = re.sub(self.trailingdash_regex, '', base_urlname)
+
+        urlname = base_urlname
 
         self.log.debug('calc safe name from '+urlname)
 
@@ -368,7 +374,7 @@ class DashboardEditHandler(DashboardBaseHandler):
         if dashboard_name == '':
             errors.name = 'Please enter a name'
         elif not self.name_regex.match(dashboard_name):
-            errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>'
+            errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>. Max 100 chars.'
 
         all_visitors = self.get_arguments('all_visitors[]')
 
