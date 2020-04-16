@@ -52,8 +52,9 @@
         <div class="text-center">
           
           <a id="launch" role="button" class="btn btn-lg btn-primary" 
-          {% if dashboard.final_spawner %}
+          {% if not need_follow_progress and dashboard.final_spawner %}
             href="/user/{{ dashboard_user.name }}/{{ dashboard.final_spawner.name }}"
+            target="_blank"
           {% else %}
             href="#"
             style="display: none"

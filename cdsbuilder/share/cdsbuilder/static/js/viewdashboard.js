@@ -43,6 +43,8 @@ require(["jquery"], function($) {
             
             launchA.attr('href', evt.url);
 
+            launchA.attr('target', '_blank');
+
             launchA.show();
         }
     
@@ -56,6 +58,8 @@ require(["jquery"], function($) {
             launchA.attr('href', evt.url);
 
             launchA.text('Try Again');
+
+            launchA.attr('target', '');
 
             launchA.show();
         }
