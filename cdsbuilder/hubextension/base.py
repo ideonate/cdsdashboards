@@ -134,8 +134,6 @@ class DashboardBaseMixin:
 
         builder = builders_store[dashboard]
 
-        status = ''
-
         need_follow_progress = True
 
         def do_final_build(f):
@@ -146,11 +144,10 @@ class DashboardBaseMixin:
         if not builder.pending and (dashboard.final_spawner is None or force_start):
             
             if builder._build_future and builder._build_future.done() and builder._build_future.exception() and not force_start:
-                status = 'Error: {}'.format(builder._build_future.exception())
+                pass # Progress stream should display the error for us
 
             else:
                 self.log.debug('starting builder')
-                status = 'Started build'
 
                 builder._build_pending = True
 
@@ -182,7 +179,7 @@ class DashboardBaseMixin:
                 builder._build_future.add_done_callback(do_final_build)
 
         elif builder.pending:
-            status = 'Pending build'
+            pass # Progress will show where we've got to
 
         elif dashboard.final_spawner:
             user = self._user_from_orm(dashboard_user)
@@ -190,11 +187,9 @@ class DashboardBaseMixin:
             final_spawner = user.spawners[dashboard.final_spawner.name]
 
             if final_spawner.ready:
-                status = 'Spawner already active'
                 need_follow_progress = False
 
             elif final_spawner.pending:
-                status = 'Spawner is pending...'
 
                 if final_spawner.pending in ['spawn', 'check']:
                     builder._build_pending = True
@@ -209,7 +204,6 @@ class DashboardBaseMixin:
                     builder.add_progress_event({'failed': True, 'message': 'Final server for Dashboard is Stopping'})
 
             else:
-                status = 'Final spawner is dormant - starting up...'
 
                 builder._build_pending = True
 
@@ -223,7 +217,7 @@ class DashboardBaseMixin:
 
                 builder._build_future.add_done_callback(do_final_build)
 
-        return status, need_follow_progress
+        return need_follow_progress
 
     async def maybe_delete_existing_server(self, orm_spawner, dashboard_user):
         if not orm_spawner:

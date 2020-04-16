@@ -13,8 +13,6 @@
 
             <p>Owner: {{ dashboard_user.name }}</p>
 
-            <p>Status: {{ status }}</p>
-
             {% if dashboard.created %}
             <p>Created: {{ dashboard.created.strftime('%Y-%m-%d %H:%M:%S') }}</p>
             {% endif %}

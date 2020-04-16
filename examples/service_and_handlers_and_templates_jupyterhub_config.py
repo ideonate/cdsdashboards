@@ -514,29 +514,15 @@ from jupyter_client.localinterfaces import public_ips
 
 c.JupyterHub.hub_ip = public_ips()[0]
 
-import sys
-print(sys.path)
-
-#c.JupyterHub.hub_ip = '127.0.0.1'
-
 c.DockerSpawner.debug = True
 
-c.DockerSpawner.remove = False
+c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
-
-#c.DockerSpawner.image = 'danlester/jupyterhub-singleuser-streamlit-proxied:latest'
-# c.DockerSpawner.image = 'ideonate/jupyterhub-singleuser-streamlit-native:latest'
-#c.DockerSpawner.image = 'jupyterhub/singleuser:1.2'
 
 c.DockerSpawner.image = 'ideonate/jh-voila-oauth-singleuser:scipy-dc9744740e12'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
-
-# c.DockerSpawner.environment = {'JUPYTERHUB_USER_EXTRA': group_from_spawner}
-
-#c.DockerSpawner.image_whitelist = ['ideonate/jupyterhub-singleuser-voila-native:latest',
-#                                   'jupyterhub/singleuser:1.2']
 
 c.Spawner.start_timeout = 6000
 
@@ -588,7 +574,6 @@ c.ConfigurableHTTPProxy.auth_token = "CONFIGPROXY_AUTH_TOKEN"
 #c.JupyterHub.subdomain_host = ''
 
 ## Paths to search for jinja templates, before using the default templates.
-import os
 from cdsbuilder.app import TEMPLATE_PATH as CDSBUILDER_TEMPLATE_PATH, cdsbuilder_tornado_settings
 
 c.JupyterHub.template_paths = [

@@ -184,12 +184,9 @@ class DashboardEditHandler(DashboardBaseHandler):
                 builders_store = self.settings['cds_builders']
                 builder = builders_store[dashboard]
 
-                status = ''
-
                 async def do_restart_build(f):
-                    status, _ = await self.maybe_start_build(dashboard, current_user, True)
-                    self.log.debug('Force build start: {}'.format(status))
-                    return status
+                    await self.maybe_start_build(dashboard, current_user, True)
+                    self.log.debug('Force build start')
 
                 if builder.pending and builder._build_future and not builder._build_future.done():
 
@@ -198,7 +195,7 @@ class DashboardEditHandler(DashboardBaseHandler):
                     builder._build_future.cancel()
 
                 else:
-                    status = await do_restart_build(None)
+                    await do_restart_build(None)
 
 
             except Exception as e:
@@ -242,7 +239,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         dashboard_user = self._user_from_orm(dashboard.user.name)
 
-        status, need_follow_progress = await self.maybe_start_build(dashboard, dashboard_user)
+        need_follow_progress = await self.maybe_start_build(dashboard, dashboard_user)
 
         base_url = self.settings['base_url']
 
@@ -253,8 +250,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             current_user=current_user,
             dashboard_user=dashboard_user,
             need_follow_progress=need_follow_progress,
-            progress_url=url_path_join(base_url, 'hub', 'dashboards-api', dashboard_urlname, 'progress'),
-            status=status
+            progress_url=url_path_join(base_url, 'hub', 'dashboards-api', dashboard_urlname, 'progress')
         )
         self.write(html)
 
