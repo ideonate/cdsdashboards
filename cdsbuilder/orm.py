@@ -27,6 +27,8 @@ class Dashboard(Base):
 
     started = Column(DateTime)
 
+    start_path = Column(Unicode(255)) # E.g. which ipynb file should Voila display (not yet implemented)
+
     allow_all = Column(Boolean, index=True, default=True)
     
     # The resulting spawner displaying the finished dashboard, once ready
