@@ -71,7 +71,7 @@ class DockerBuilder(Builder):
 
     repo_prefix = Unicode(default_value='cdsuser').tag(config=True)
 
-    async def start(self, dashboard, db):
+    async def start(self, dashboard, dashboard_user, db):
         """Start the dashboard
 
         Returns:
@@ -138,8 +138,6 @@ class DockerBuilder(Builder):
 
         new_server_name = '{}-{}'.format(dashboard.urlname, tag)
 
-        dashboard_user = User(dashboard.user)
-
         if not self.allow_named_servers:
             raise BuildException(400, "Named servers are not enabled.")
         if (
@@ -173,19 +171,8 @@ class DockerBuilder(Builder):
     named_server_limit_per_user = 10
 
     async def stop(self, now=False):
-        """Stop the single-user server
-
-        If `now` is False (default), shutdown the server as gracefully as possible,
-        e.g. starting with SIGINT, then SIGTERM, then SIGKILL.
-        If `now` is True, terminate the server immediately.
-
-        The coroutine should return when the single-user server process is no longer running.
-
-        Must be a coroutine.
+        """Stop the build process - not currently called
         """
         raise NotImplementedError(
             "Override in subclass. Must be a Tornado gen.coroutine."
         )
-
-    async def poll(self):
-        pass

@@ -155,7 +155,7 @@ class DashboardBaseMixin:
 
                     await self.maybe_delete_existing_server(dashboard.final_spawner, dashboard_user)
 
-                    (new_server_name, new_server_options) =  await builder.start(dashboard, self.db)
+                    (new_server_name, new_server_options) =  await builder.start(dashboard, dashboard_user, self.db)
 
                     builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard, after build'})
 

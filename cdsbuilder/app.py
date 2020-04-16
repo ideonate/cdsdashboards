@@ -134,13 +134,6 @@ class CDSBuilder(Application):
         """,
     )
 
-    builders = Instance(BuildersDict)
-
-    @default('builders')
-    def _builders_default(self):
-        assert self.tornado_settings
-        return BuildersDict(settings=self.tornado_settings)
-
     template_path = Unicode(
         help="Path to search for custom jinja templates, before using the default templates.",
         config=True,
@@ -148,7 +141,7 @@ class CDSBuilder(Application):
 
     @default('template_path')
     def _template_path_default(self):
-        return os.path.join(HERE, 'templates')
+        return TEMPLATE_PATH
 
     tornado_settings = Dict(
         config=True,
@@ -364,11 +357,9 @@ class CDSBuilder(Application):
             'use_registry': self.use_registry,
             'traitlets_config': self.config,
             'registry': registry,
-            'build_pool': self.build_pool,
             'jinja2_env': jinja_env,
             'extra_footer_scripts': self.extra_footer_scripts,
             'dashboard': self.dashboard,
-            'builders': self.builders
             #'event_log': self.event_log,
             #'normalized_origin': self.normalized_origin
         })
