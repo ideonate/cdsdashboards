@@ -133,7 +133,10 @@ class DashboardEditHandler(DashboardBaseHandler):
         if len(thisspawners) == 1:
             spawner = thisspawners[0]
         else:
-            errors.spawner = 'Spawner {} not found'.format(spawner_name)
+            if spawner_name is None:
+                errors.spawner = 'Please select a source spawner'
+            else:
+                errors.spawner = 'Spawner {} not found'.format(spawner_name)
 
             # Pick the existing one again
             if dashboard is not None and dashboard.source_spawner is not None:
