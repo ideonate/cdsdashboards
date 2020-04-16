@@ -4,11 +4,9 @@ import functools
 import docker
 from docker.utils import kwargs_from_env
 from traitlets import Dict, Unicode, Any
-from tornado import gen, ioloop
+from tornado import ioloop
 from tornado.log import app_log
 from datetime import datetime
-
-from jupyterhub.user import User
 
 from cdsbuilder.builder.builders import Builder, BuildException
 

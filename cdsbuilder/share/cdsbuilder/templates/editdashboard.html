@@ -39,7 +39,7 @@
 
 
 
-                <h3>Choose a server:</h3>
+                <h3>Choose a source server:</h3>
 
                 {% for spawner in spawners %}
 
@@ -58,17 +58,7 @@
                 <p class="error">{{ errors.spawner | escape }}</p>
     
                 {% endif %}
-
-
-                <h3>Select Users:</h3>
-
-                {% for visitor_tuple in all_visitors %}
-
-                <p><label><input type="checkbox" name="all_visitors[]" value="{{ visitor_tuple[1].name | escape }}" {%if visitor_tuple[0] %}checked{% endif %}/>
-                     {{ visitor_tuple[1].name | escape }}</label></p>
-
-                {% endfor %}
-                
+               
                       
                 {% if errors.all %}
     

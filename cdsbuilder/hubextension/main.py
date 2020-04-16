@@ -1,7 +1,7 @@
 from tornado.web import authenticated
 
 from jupyterhub.handlers.base import BaseHandler
-from jupyterhub.orm import Group, User
+from jupyterhub.orm import Group
 
 from ..orm import Dashboard
 from .base import DashboardBaseMixin
@@ -119,10 +119,6 @@ class DashboardEditHandler(DashboardBaseHandler):
         elif not self.name_regex.match(dashboard_name):
             errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>. Max 100 chars.'
 
-        all_visitors = self.get_arguments('all_visitors[]')
-
-        all_visitors_users = self.db.query(User).filter(User.name.in_(all_visitors)).all()
-
         # Get Spawners
         
         spawner_name = self.get_argument('spawner_name', None)
@@ -142,8 +138,7 @@ class DashboardEditHandler(DashboardBaseHandler):
             # Pick the existing one again
             if dashboard is not None and dashboard.source_spawner is not None:
                 spawner_name=dashboard.source_spawner.name
-
-                
+  
         if len(errors) == 0:
             db = self.db
 
@@ -168,14 +163,11 @@ class DashboardEditHandler(DashboardBaseHandler):
                     
                 if group is None:
                     # Group could exist - what if it does? TODO
-                    group = Group(name=dashboard.groupname, users=all_visitors_users)
+                    group = Group(name=dashboard.groupname)
                     self.db.add(group)
                     dashboard.group = group
 
                 db.add(dashboard)
-
-                if self.sync_group(group, all_visitors_users):
-                    self.db.add(group)
                     
                 db.commit()
 
@@ -184,7 +176,7 @@ class DashboardEditHandler(DashboardBaseHandler):
                 builders_store = self.settings['cds_builders']
                 builder = builders_store[dashboard]
 
-                async def do_restart_build(f):
+                async def do_restart_build(_):
                     await self.maybe_start_build(dashboard, current_user, True)
                     self.log.debug('Force build start')
 
@@ -202,8 +194,6 @@ class DashboardEditHandler(DashboardBaseHandler):
                 errors.all = str(e)
 
         if len(errors):
-            # In case we have to display an error, we also need all these users
-            all_visitors = self.get_visitor_tuples(current_user.id, all_visitors_users)
 
             html = self.render_template(
                 "editdashboard.html",
@@ -213,7 +203,6 @@ class DashboardEditHandler(DashboardBaseHandler):
                 dashboard_description=dashboard_description,
                 spawner_name=spawner_name,
                 spawners=spawners,
-                all_visitors=all_visitors,
                 errors=errors,
                 current_user=current_user
             )
