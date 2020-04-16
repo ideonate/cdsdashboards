@@ -55,7 +55,7 @@
           
           <a id="launch" role="button" class="btn btn-lg btn-primary" 
           {% if dashboard.final_spawner %}
-            href="/user/{{ dashboard.user.name }}/{{ dashboard.final_spawner.name }}"
+            href="/user/{{ dashboard_user.name }}/{{ dashboard.final_spawner.name }}"
           {% else %}
             href="#"
             style="display: none"

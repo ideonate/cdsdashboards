@@ -14,23 +14,18 @@ from ..util import url_path_join
 class ProgressDashboardHandler(SpawnProgressAPIHandler):
 
     @authenticated
-    async def get(self, user_name, dashboard_urlname=''):
+    async def get(self, dashboard_urlname=''):
         self.set_header('Cache-Control', 'no-cache')
 
         current_user = await self.get_current_user()
 
-        dashboard_user = self.user_from_username(user_name)
-
         dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
 
-        if dashboard is None or dashboard_user is None:
+        if dashboard is None:
             raise HTTPError(404, 'No such dashboard or user')
 
-        if dashboard.user.name != dashboard_user.name:
-            raise HTTPError(404, 'Dashboard user {} does not match {}'.format(dashboard.user.name, dashboard_user.name))
-
         if not dashboard.is_orm_user_allowed(current_user.orm_user):
-            raise HTTPError(403, 'User {} not authorized to access dashboard {}'.format(current_user.name, dashboard_user.urlname))
+            raise HTTPError(403, 'User {} not authorized to access dashboard {}'.format(current_user.name, dashboard.urlname))
         
 
         # start sending keepalive to avoid proxies closing the connection
@@ -51,7 +46,7 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
             }
 
         failed_event = {'progress': 100, 'failed': True, 'message': "Build failed", 
-            'url': url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.user.name, dashboard.urlname, 'clear-error')
+            'url': url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.urlname, 'clear-error')
             }
 
 

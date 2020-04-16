@@ -30,14 +30,14 @@
                     <td>{{ dash.name | escape }} </td>
                     {# url #}
                     <td>
-                    <a class="dashboard-link" href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}">
-                        hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}
+                    <a class="dashboard-link" href="{{ base_url }}hub/dashboards/{{ dash.urlname }}">
+                        hub/dashboards/{{ dash.urlname }}
                     </a>
                     </td>
                     {# actions #}
                     <td>
                     <a role="button" class="edit-dashboard btn btn-xs btn-primary" id="edit-dash-{{ dash.urlname }}"
-                        href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}/edit">
+                        href="{{ base_url }}hub/dashboards/{{ dash.urlname }}/edit">
                         edit</a>
                     <a role="button" class="delete-dashboard btn btn-xs btn-danger" id="delete-dash-{{ dash.urlname }}">delete</a>
                     </td>
@@ -51,7 +51,7 @@
 
             <div class="row">
                 <div class="text-center">
-                    <a id="start" role="button" class="btn btn-lg btn-primary" href="dashboards/new">
+                    <a id="start" role="button" class="btn btn-lg btn-primary" href="dashboards-new">
                         New Dashboard
                     </a>
                 </div>
@@ -67,7 +67,7 @@
                 {% for dash in dashlist|sort(attribute='name') %}
 
                     <li>
-                        <a href="{{ base_url }}hub/dashboards/{{ dash.user.name }}/{{ dash.urlname }}">{{ dash.name | escape }}</a>
+                        <a href="{{ base_url }}hub/dashboards/{{ dash.urlname }}">{{ dash.name | escape }}</a>
                     </li>
 
                 {% endfor %}

@@ -36,7 +36,7 @@ class AllDashboardsHandler(DashboardBaseHandler):
 class DashboardEditHandler(DashboardBaseHandler):
 
     @authenticated
-    async def get(self, user_name=None, dashboard_urlname=None):
+    async def get(self, dashboard_urlname=None):
 
         current_user = await self.get_current_user()
 
@@ -44,15 +44,15 @@ class DashboardEditHandler(DashboardBaseHandler):
         dashboard_name = ''
         dashboard_description = ''
 
-        if user_name is not None and dashboard_urlname is not None:
-
-            if current_user.name != user_name:
-                return self.send_error(403)
+        if dashboard_urlname is not None:
 
             dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=current_user)
 
             if dashboard is None:
                 return self.send_error(404)
+
+            if current_user.name != dashboard.user.name: # Only allowed to edit your own dashboard
+                return self.send_error(403)
 
             dashboard_name = dashboard.name
             dashboard_description = dashboard.description
@@ -88,23 +88,23 @@ class DashboardEditHandler(DashboardBaseHandler):
         self.write(html)
 
     @authenticated
-    async def post(self, user_name=None, dashboard_urlname=None):
+    async def post(self, dashboard_urlname=None):
 
         current_user = await self.get_current_user()
 
         dashboard = None
         group = None
 
-        if user_name is not None and dashboard_urlname is not None:
+        if dashboard_urlname is not None:
             # Edit (not new)
-
-            if current_user.name != user_name:
-                return self.send_error(403)
 
             dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname, user=current_user)
 
             if dashboard is None:
                 return self.send_error(404)
+
+            if current_user.name != dashboard.user.name:
+                return self.send_error(403)
 
             group = dashboard.group
 
@@ -222,28 +222,25 @@ class DashboardEditHandler(DashboardBaseHandler):
             )
             return self.write(html)
         
-        self.redirect("{}hub/dashboards/{}/{}".format(self.settings['base_url'], current_user.name, dashboard.urlname))
+        self.redirect("{}hub/dashboards/{}".format(self.settings['base_url'], dashboard.urlname))
 
 
 class MainViewDashboardHandler(DashboardBaseHandler):
     
     @authenticated
-    async def get(self, user_name, dashboard_urlname=''):
+    async def get(self, dashboard_urlname=''):
 
         current_user = await self.get_current_user()
 
-        dashboard_user = self.user_from_username(user_name)
-
         dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
 
-        if dashboard is None or dashboard_user is None:
+        if dashboard is None:
             return self.send_error(404)
-
-        if dashboard.user.name != dashboard_user.name:
-            raise Exception('Dashboard user {} does not match {}'.format(dashboard.user.name, dashboard_user.name))
 
         if not dashboard.is_orm_user_allowed(current_user.orm_user):
             return self.send_error(403)
+
+        dashboard_user = self._user_from_orm(dashboard.user.name)
 
         status, need_follow_progress = await self.maybe_start_build(dashboard, dashboard_user)
 
@@ -256,7 +253,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             current_user=current_user,
             dashboard_user=dashboard_user,
             need_follow_progress=need_follow_progress,
-            progress_url=url_path_join(base_url, 'dashboards', dashboard_user.name, dashboard_urlname, 'progress'),
+            progress_url=url_path_join(base_url, 'hub', 'dashboards-api', dashboard_urlname, 'progress'),
             status=status
         )
         self.write(html)
@@ -265,19 +262,14 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 class ClearErrorDashboardHandler(DashboardBaseHandler):
     
     @authenticated
-    async def get(self, user_name, dashboard_urlname=''):
+    async def get(self, dashboard_urlname=''):
 
         current_user = await self.get_current_user()
 
-        dashboard_user = self.user_from_username(user_name)
-
         dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
 
-        if dashboard is None or dashboard_user is None:
+        if dashboard is None:
             pass # Redirect anyway, to let regular MainViewDashboardHandler handle the error
-
-        elif dashboard.user.name != dashboard_user.name:
-            pass
 
         elif dashboard.is_orm_user_allowed(current_user.orm_user):
             builders_store = self.settings['cds_builders']
@@ -287,6 +279,6 @@ class ClearErrorDashboardHandler(DashboardBaseHandler):
             if not builder.pending and builder._build_future and builder._build_future.done() and builder._build_future.exception():
                 builder._build_future = None
 
-        self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", user_name, dashboard_urlname))
+        self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname))
 
 

@@ -13,7 +13,6 @@ require(["jquery"], function($) {
     
     evtSource.onmessage = function(e) {
         var evt = JSON.parse(e.data);
-        console.log(evt);
 
         if (evt.progress !== undefined) {
             // update progress
