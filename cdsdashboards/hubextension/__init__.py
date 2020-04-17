@@ -51,6 +51,8 @@ class CDSConfig(SingletonConfigurable):
         config=True
     )
 
+    _dc = None
+
     @classmethod
     def set_config(cls, c):
         cls._dc = c
