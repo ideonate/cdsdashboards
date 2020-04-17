@@ -237,11 +237,6 @@ c.JupyterHub.default_url = '/hub/home'
 #
 #  The Hub prefix will be added, so `/my-page` will be served at `/hub/my-page`.
 
-c.JupyterHub.extra_handlers = cds_extra_handlers
-
-## Extra variables to be passed into jinja templates
-c.JupyterHub.template_vars = {'CDSConfig': CDSConfig}
-
 
 ## DEPRECATED: use output redirection instead, e.g.
 #
@@ -382,7 +377,8 @@ c.JupyterHub.template_vars = {'CDSConfig': CDSConfig}
 #c.JupyterHub.ip = ''
 
 ## Supply extra arguments that will be passed to Jinja environment.
-#c.JupyterHub.jinja_environment_options = {}
+
+#c.JupyterHub.jinja_environment_options = {'extensions': ['jinja2.ext.debug']}
 
 ## Interval (in seconds) at which to update last-activity timestamps.
 #c.JupyterHub.last_activity_interval = 300
