@@ -58,11 +58,7 @@
 ## Allow named single-user servers per user
 c.JupyterHub.allow_named_servers = True
 
-from cdsdashboards.hubextension import CDSConfig, cds_extra_handlers
-
-CDSConfig.set_config(c)
-c.CDSConfig.jh_show_user_named_servers = True
-c.CDSConfig.jh_show_user_dashboard_servers = True
+from cdsdashboards.hubextension import cds_extra_handlers
 
 ## Register extra tornado Handlers for jupyterhub.
 #
@@ -74,7 +70,8 @@ c.JupyterHub.extra_handlers = cds_extra_handlers
 
 ## Extra variables to be passed into jinja templates
 
-c.JupyterHub.template_vars = {'CDSConfig': CDSConfig}
+# Special flags for custom home.html - defaults are False
+c.JupyterHub.template_vars = {'cds_hide_user_named_servers': False, 'cds_hide_user_dashboard_servers': False}
 
 ## Answer yes to any questions (e.g. confirm overwrite)
 #c.JupyterHub.answer_yes = False
