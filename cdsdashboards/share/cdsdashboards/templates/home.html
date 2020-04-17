@@ -58,7 +58,7 @@
         </tr>
         {% endmacro %}
 
-        {% if CDSConfig._instance.jh_show_user_named_servers %}
+        {% if CDSConfig.get_template_vars()['cds_jh_show_user_named_servers'] %}
 
         <h2>
         Named Servers
@@ -105,10 +105,10 @@
             {% endfor %}
         {% endif %}
 
-        {% if ns.non_dashboard_count != named_spawners|length %}
+        {% if CDSConfig.get_template_vars()['cds_jh_show_user_dashboard_servers'] and ns.non_dashboard_count != named_spawners|length %}
 
         <h2>
-        Dashboard Servers {{non_dashboard_count}}
+        Dashboard Servers
         </h2>
 
         <p>

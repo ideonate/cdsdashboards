@@ -60,8 +60,21 @@ c.JupyterHub.allow_named_servers = True
 
 from cdsdashboards.hubextension import CDSConfig, cds_extra_handlers
 
+CDSConfig.set_config(c)
 c.CDSConfig.jh_show_user_named_servers = True
+c.CDSConfig.jh_show_user_dashboard_servers = True
 
+## Register extra tornado Handlers for jupyterhub.
+#
+#  Should be of the form ``("<regex>", Handler)``
+#
+#  The Hub prefix will be added, so `/my-page` will be served at `/hub/my-page`.
+
+c.JupyterHub.extra_handlers = cds_extra_handlers
+
+## Extra variables to be passed into jinja templates
+
+c.JupyterHub.template_vars = {'CDSConfig': CDSConfig}
 
 ## Answer yes to any questions (e.g. confirm overwrite)
 #c.JupyterHub.answer_yes = False
