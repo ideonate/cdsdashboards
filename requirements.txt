@@ -1,10 +1,4 @@
 tornado
 traitlets
-#docker
-jinja2
-#prometheus_client
-#python-json-logger
+docker
 jupyterhub
-#jsonschema
-pycurl
-escapism

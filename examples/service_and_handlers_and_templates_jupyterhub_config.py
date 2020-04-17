@@ -219,9 +219,9 @@ c.JupyterHub.default_url = '/hub/home'
 #
 #  The Hub prefix will be added, so `/my-page` will be served at `/hub/my-page`.
 
-from cdsbuilder.hubextension import extra_handlers as cdsbuilder_extra_handlers
+from cdsdashboards.hubextension import extra_handlers as cdsdashboards_extra_handlers
 
-c.JupyterHub.extra_handlers = cdsbuilder_extra_handlers
+c.JupyterHub.extra_handlers = cdsdashboards_extra_handlers
 
 ## DEPRECATED: use output redirection instead, e.g.
 #
@@ -448,9 +448,9 @@ c.JupyterHub.service_check_interval = 6000
 #
 #  Allows ahead-of-time generation of API tokens for use by externally managed
 #  services.
-c.JupyterHub.service_tokens = {
-    'cdsbuilder-api-token': 'cdsbuilder'
-}
+#c.JupyterHub.service_tokens = {
+#    'cdsbuilder-api-token': 'cdsbuilder'
+#}
 
 ## List of service specification dictionaries.
 #
@@ -574,10 +574,10 @@ c.ConfigurableHTTPProxy.auth_token = "CONFIGPROXY_AUTH_TOKEN"
 #c.JupyterHub.subdomain_host = ''
 
 ## Paths to search for jinja templates, before using the default templates.
-from cdsbuilder.app import TEMPLATE_PATH as CDSBUILDER_TEMPLATE_PATH, cdsbuilder_tornado_settings
+from cdsdashboards.app import TEMPLATE_PATH as CDSDASHBOARDS_TEMPLATE_PATH, cdsbuilder_tornado_settings
 
 c.JupyterHub.template_paths = [
-    CDSBUILDER_TEMPLATE_PATH
+    CDSDASHBOARDS_TEMPLATE_PATH
 ]
 
 ## Extra variables to be passed into jinja templates

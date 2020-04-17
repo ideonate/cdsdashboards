@@ -8,7 +8,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
-from traitlets import Unicode, Integer, Bool, Dict, validate, Any, Type, Instance, default, observe
+from traitlets import Unicode, Integer, Bool, Dict, validate, Any, Type, default, observe
 from traitlets.config import Application, catch_config_error
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
@@ -32,21 +32,21 @@ TEMPLATE_PATH = os.path.join(DATA_FILES_PATH, 'templates')
 
 common_aliases = {
     'log-level': 'Application.log_level',
-    'f': 'CDSBuilder.config_file',
-    'config': 'CDSBuilder.config_file',
-    'db': 'CDSBuilder.db_url',
+    'f': 'CDSDashboards.config_file',
+    'config': 'CDSDashboards.config_file',
+    'db': 'CDSDashboards.db_url',
 }
 
 class UpgradeDB(Application):
-    """Upgrade the CDSBuilder database schema."""
+    """Upgrade the CDSDashboards database schema."""
 
-    name = 'cdsbuilder-upgrade-db'
+    name = 'cdsdashboards-upgrade-db'
     version = __jh_version__
-    description = """Upgrade the CDSBuilder database to the current schema.
+    description = """Upgrade the CDSDashboards database to the current schema.
 
     Usage:
 
-        cdsbuilder upgrade-db
+        cdsdashboards upgrade-db
     """
     aliases = common_aliases
     classes = []
@@ -54,7 +54,7 @@ class UpgradeDB(Application):
     def start(self):
         self.log.debug('Starting upgrade-db')
 
-        hub = CDSBuilder(parent=self)
+        hub = CDSDashboards(parent=self)
         hub.load_config_file(hub.config_file)
         self.log = hub.log
 
@@ -67,13 +67,13 @@ class UpgradeDB(Application):
         self.log.debug('Finished upgrade-db')
 
 
-class CDSBuilder(Application):
+class CDSDashboards(Application):
     """An Application for starting a builder."""
 
     subcommands = {
         'upgrade-db': (
             UpgradeDB,
-            "Upgrade your CDSBuilder state database to the current version.",
+            "Upgrade your CDSDashboards state database to the current version.",
         ),
     }
 
@@ -109,7 +109,7 @@ class CDSBuilder(Application):
     )
 
     config_file = Unicode(
-        'cdsbuilder_config.py',
+        'cdsdashboards_config.py',
         help="""
         Config file to load.
 
@@ -290,6 +290,9 @@ class CDSBuilder(Application):
         except jhorm.DatabaseSchemaMismatch as e:
             self.exit(e)
 
+    def _check_db_path(self, *args, **kwargs):
+        raise Exception('Not yet implemented')
+
     @catch_config_error
     def initialize(self, *args, **kwargs):
         """Load configuration settings."""
@@ -425,7 +428,7 @@ class CDSBuilder(Application):
             self.subapp.start()
             return
 
-        self.log.info("CDSBuilder starting on port %i", self.port)
+        self.log.info("CDSDashboards starting on port %i", self.port)
         self.http_server = HTTPServer(
             self.tornado_app,
             xheaders=True,
@@ -442,9 +445,9 @@ class CDSBuilder(Application):
         #self.build_pool.shutdown()
 
 
-UpgradeDB.classes.append(CDSBuilder)
+UpgradeDB.classes.append(CDSDashboards)
 
-main = CDSBuilder.launch_instance
+main = CDSDashboards.launch_instance
 
 
 
@@ -455,7 +458,7 @@ def builder_factory(dashboard):
 
 builders_store = BuildersDict(builder_factory)
 
-cdsbuilder_tornado_settings = {
+cdsdashboards_tornado_settings = {
     'cds_builders': builders_store,
 }
 

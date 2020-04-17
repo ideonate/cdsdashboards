@@ -2,7 +2,7 @@
 
 
 def get_data_files():
-    """Walk up until we find share/cdsbuilder"""
+    """Walk up until we find share/cdsdashboards"""
     import sys
     from os.path import join, abspath, dirname, exists, split
 
@@ -11,12 +11,12 @@ def get_data_files():
     if not path.startswith(sys.prefix):
         starting_points.append(sys.prefix)
     for path in starting_points:
-        # walk up, looking for prefix/share/cdsbuilder
+        # walk up, looking for prefix/share/cdsdashboards
         while path != '/':
-            share_cdsbuilder = join(path, 'share', 'cdsbuilder')
-            static = join(share_cdsbuilder, 'static')
+            share_cdsdashboards = join(path, 'share', 'cdsdashboards')
+            static = join(share_cdsdashboards, 'static')
             if all(exists(join(static, f)) for f in ['components', 'css']):
-                return share_cdsbuilder
+                return share_cdsdashboards
             path, _ = split(path)
     # didn't find it, give up
     return ''

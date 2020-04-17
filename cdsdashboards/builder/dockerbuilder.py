@@ -8,7 +8,7 @@ from tornado import ioloop
 from tornado.log import app_log
 from datetime import datetime
 
-from cdsbuilder.builder.builders import Builder, BuildException
+from .builders import Builder, BuildException
 
 
 class DockerBuilder(Builder):
