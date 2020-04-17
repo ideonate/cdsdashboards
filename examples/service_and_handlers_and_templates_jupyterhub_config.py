@@ -449,7 +449,7 @@ c.JupyterHub.service_check_interval = 6000
 #  Allows ahead-of-time generation of API tokens for use by externally managed
 #  services.
 #c.JupyterHub.service_tokens = {
-#    'cdsbuilder-api-token': 'cdsbuilder'
+#    'cdsdashboards-api-token': 'cdsdashboards'
 #}
 
 ## List of service specification dictionaries.
@@ -479,12 +479,12 @@ c.JupyterHub.service_check_interval = 6000
 
 #c.JupyterHub.services = [
 #    {
-#        'name': 'cdsbuilder',
+#        'name': 'cdsdashboards',
 #        'url': 'http://127.0.0.1:8585',
-#        'api_token': 'cdsbuilder-api-token',
+#        'api_token': 'cdsdashboards-api-token',
 #        'admin': True,
 #        'oauth_no_confirm': False,
-#        'oauth_redirect_uri': "http://127.0.0.1:8000/services/cdsbuilder/oauth_callback",
+#        'oauth_redirect_uri': "http://127.0.0.1:8000/services/cdsdashboards/oauth_callback",
 #        'oauth_client_id': "testjhclientid"
 #    }
 #]
@@ -574,7 +574,7 @@ c.ConfigurableHTTPProxy.auth_token = "CONFIGPROXY_AUTH_TOKEN"
 #c.JupyterHub.subdomain_host = ''
 
 ## Paths to search for jinja templates, before using the default templates.
-from cdsdashboards.app import TEMPLATE_PATH as CDSDASHBOARDS_TEMPLATE_PATH, cdsbuilder_tornado_settings
+from cdsdashboards.app import TEMPLATE_PATH as CDSDASHBOARDS_TEMPLATE_PATH, cdsdashboards_tornado_settings
 
 c.JupyterHub.template_paths = [
     CDSDASHBOARDS_TEMPLATE_PATH
@@ -585,7 +585,7 @@ c.JupyterHub.template_paths = [
 
 ## Extra settings overrides to pass to the tornado application.
 
-c.JupyterHub.tornado_settings = cdsbuilder_tornado_settings
+c.JupyterHub.tornado_settings = cdsdashboards_tornado_settings
 
 ## Trust user-provided tokens (via JupyterHub.service_tokens) to have good
 #  entropy.
