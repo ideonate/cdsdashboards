@@ -23,6 +23,10 @@ class AllDashboardsHandler(DashboardBaseHandler):
 
         visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
 
+        from cdsdashboards.hubextension import CDSConfig
+
+        t = CDSConfig.get_template_vars()
+
         html = self.render_template(
             "alldashboards.html",
             base_url=self.settings['base_url'],

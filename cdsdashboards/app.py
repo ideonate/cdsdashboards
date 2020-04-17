@@ -28,7 +28,7 @@ from .builder.builders import BuildersDict, Builder
 from .builder.dockerbuilder import DockerBuilder
 from ._data import DATA_FILES_PATH
 
-TEMPLATE_PATH = os.path.join(DATA_FILES_PATH, 'templates')
+CDS_TEMPLATE_PATH = os.path.join(DATA_FILES_PATH, 'templates')
 
 common_aliases = {
     'log-level': 'Application.log_level',
@@ -141,7 +141,7 @@ class CDSDashboards(Application):
 
     @default('template_path')
     def _template_path_default(self):
-        return TEMPLATE_PATH
+        return CDS_TEMPLATE_PATH
 
     tornado_settings = Dict(
         config=True,
@@ -458,7 +458,7 @@ def builder_factory(dashboard):
 
 builders_store = BuildersDict(builder_factory)
 
-cdsdashboards_tornado_settings = {
+cds_tornado_settings = {
     'cds_builders': builders_store,
 }
 

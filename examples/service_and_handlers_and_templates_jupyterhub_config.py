@@ -58,6 +58,11 @@
 ## Allow named single-user servers per user
 c.JupyterHub.allow_named_servers = True
 
+from cdsdashboards.hubextension import CDSConfig, cds_extra_handlers
+
+c.CDSConfig.jh_show_user_named_servers = True
+
+
 ## Answer yes to any questions (e.g. confirm overwrite)
 #c.JupyterHub.answer_yes = False
 
@@ -219,9 +224,11 @@ c.JupyterHub.default_url = '/hub/home'
 #
 #  The Hub prefix will be added, so `/my-page` will be served at `/hub/my-page`.
 
-from cdsdashboards.hubextension import extra_handlers as cdsdashboards_extra_handlers
+c.JupyterHub.extra_handlers = cds_extra_handlers
 
-c.JupyterHub.extra_handlers = cdsdashboards_extra_handlers
+## Extra variables to be passed into jinja templates
+c.JupyterHub.template_vars = {'CDSConfig': CDSConfig}
+
 
 ## DEPRECATED: use output redirection instead, e.g.
 #
@@ -574,18 +581,15 @@ c.ConfigurableHTTPProxy.auth_token = "CONFIGPROXY_AUTH_TOKEN"
 #c.JupyterHub.subdomain_host = ''
 
 ## Paths to search for jinja templates, before using the default templates.
-from cdsdashboards.app import TEMPLATE_PATH as CDSDASHBOARDS_TEMPLATE_PATH, cdsdashboards_tornado_settings
+from cdsdashboards.app import CDS_TEMPLATE_PATH, cds_tornado_settings
 
 c.JupyterHub.template_paths = [
-    CDSDASHBOARDS_TEMPLATE_PATH
+    CDS_TEMPLATE_PATH
 ]
-
-## Extra variables to be passed into jinja templates
-#c.JupyterHub.template_vars = {}
 
 ## Extra settings overrides to pass to the tornado application.
 
-c.JupyterHub.tornado_settings = cdsdashboards_tornado_settings
+c.JupyterHub.tornado_settings = cds_tornado_settings
 
 ## Trust user-provided tokens (via JupyterHub.service_tokens) to have good
 #  entropy.

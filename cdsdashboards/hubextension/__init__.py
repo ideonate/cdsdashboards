@@ -1,12 +1,17 @@
 import os
+
+from traitlets import Bool
+from traitlets.config import SingletonConfigurable
+
 from jupyterhub.handlers.static import CacheControlStaticFilesHandler
+
 from .main import AllDashboardsHandler, DashboardEditHandler, MainViewDashboardHandler, ClearErrorDashboardHandler
 from .events import ProgressDashboardHandler
 from .._data import DATA_FILES_PATH
 from .api import DashboardAPIHandler
 
 
-extra_handlers = [
+cds_extra_handlers = [
     
     (r'dashboards-new', DashboardEditHandler),
 
@@ -21,3 +26,24 @@ extra_handlers = [
     (r'dashboards-api/(?P<dashboard_urlname>[^/]+?)', DashboardAPIHandler),
     (r'dashboards-api/(?P<dashboard_urlname>[^/]+?)/progress', ProgressDashboardHandler),
 ]
+
+class CDSConfig(SingletonConfigurable):
+
+    # Settings really for JupyterHub entry point
+
+    jh_show_user_named_servers = Bool(
+        False,
+        help="""
+        Show the user their regular named servers table on home page.
+        Since c.JupyterHub.allow_named_servers should be set to True, so admins can control all servers if needed, 
+        you can use this flag to hide the named servers section from users.
+        """,
+        config=True
+    )
+
+    @classmethod
+    def get_template_vars(cls):
+        conf = cls.instance()
+        return {'cds_jh_show_user_named_servers' : conf.jh_show_user_named_servers}     
+
+__all__ = ['CDSConfig', 'cds_extra_handlers']

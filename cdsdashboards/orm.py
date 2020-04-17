@@ -1,8 +1,7 @@
-__all__ = ['Dashboard']
-
 from datetime import datetime
 
-from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Group, User, backref, Boolean
+from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Group, User, Boolean
+from sqlalchemy.orm import backref
 
 
 class Dashboard(Base):
@@ -16,7 +15,7 @@ class Dashboard(Base):
 
     # Which spawner/server is being cloned
     source_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    source_spawner = relationship(Spawner, foreign_keys=[source_spawner_id],  backref=backref('dashboard_source_for', uselist=False))
+    source_spawner = relationship(Spawner, foreign_keys=[source_spawner_id], backref=backref('dashboard_source_for', uselist=False))
 
     state = Column(JSONDict)
     name = Column(Unicode(255))

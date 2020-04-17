@@ -58,6 +58,8 @@
         </tr>
         {% endmacro %}
 
+        {% if CDSConfig._instance.jh_show_user_named_servers %}
+
         <h2>
         Named Servers
         </h2>
@@ -94,6 +96,14 @@
             {% endfor %}
         </tbody>
         </table>
+
+        {% else %}
+            {% for spawner in named_spawners %}
+                {% if not spawner.orm_spawner.dashboard_final_of %}
+                    {% set ns.non_dashboard_count = ns.non_dashboard_count + 1 %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
 
         {% if ns.non_dashboard_count != named_spawners|length %}
 
