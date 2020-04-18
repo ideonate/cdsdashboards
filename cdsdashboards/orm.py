@@ -10,14 +10,13 @@ class Dashboard(Base):
     __tablename__ = 'dashboards'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship(User, backref=backref("dashboards_own", uselist=True))
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    user = relationship(User, backref=backref("dashboards_own", uselist=True, cascade='all, delete-orphan'))
 
     # Which spawner/server is being cloned
     source_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    source_spawner = relationship(Spawner, foreign_keys=[source_spawner_id], backref=backref('dashboard_source_for', uselist=False))
+    source_spawner = relationship(Spawner, foreign_keys=[source_spawner_id], backref=backref('dashboard_source_for', uselist=True))
 
-    state = Column(JSONDict)
     name = Column(Unicode(255))
     description = Column(Unicode(255), default='')
     urlname = Column(Unicode(255), index=True, unique=True, nullable=False)
@@ -32,10 +31,12 @@ class Dashboard(Base):
     
     # The resulting spawner displaying the finished dashboard, once ready
     final_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    final_spawner = relationship(Spawner, cascade="all", foreign_keys=[final_spawner_id], backref=backref('dashboard_final_of', uselist=False))
+    final_spawner = relationship(Spawner, foreign_keys=[final_spawner_id], backref=backref('dashboard_final_of', uselist=False))
 
     group_id = Column(Integer, ForeignKey('groups.id', ondelete='SET NULL'))
-    group = relationship(Group, cascade="all", foreign_keys=[group_id], backref=backref('dashboard_visitors_for', uselist=False))
+    group = relationship(Group, foreign_keys=[group_id], backref=backref('dashboard_visitors_for', uselist=False))
+
+    options = Column(JSONDict)
 
     @property
     def groupname(self):
