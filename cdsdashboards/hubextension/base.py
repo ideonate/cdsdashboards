@@ -91,7 +91,8 @@ class DashboardBaseMixin:
         user_dashboard_groups = defaultdict(list)
 
         for dash in orm_dashboards:
-            user_dashboard_groups[dash.user.name].append(dash)
+            if dash.user: # Just in case it's null due to db corruption
+                user_dashboard_groups[dash.user.name].append(dash)
 
         return user_dashboard_groups
 

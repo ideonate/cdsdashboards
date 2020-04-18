@@ -72,3 +72,11 @@ class Dashboard(Base):
                 return False
         return True
 
+    def __iter__(self):
+        """
+        Fix for bug in JH 1.1, which was fixed in JH 1.2 by:
+        https://github.com/jupyterhub/jupyterhub/commit/84acdd5a7ffb3d79ca04aa86ffcea7e067cce6ee#diff-ea603eff790f5d20b768e093b5340908
+        (Actually, the real fix was a little bit earlier, but this is the right place).
+        Without this, delete dashboard causes an error when corresponding relationships were expired.
+        """
+        return iter([self])
