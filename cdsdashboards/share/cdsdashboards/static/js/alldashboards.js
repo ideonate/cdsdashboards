@@ -8,17 +8,16 @@ require(["jquery", "jhapi", "utils"], function($, JHAPI, utils) {
         return d1;
     };
 
-    JHAPI.prototype.delete_dashboard = function(user, dashboard_name, options) {
+    JHAPI.prototype.delete_dashboard = function(dashboard_name, options) {
         options = options || {};
         options = update(options, { type: "DELETE", dataType: null });
         this.api_request(
-            utils.url_path_join("..", "hub", "dashboards-api", user, dashboard_name),
+            utils.url_path_join("..", "hub", "dashboards-api", dashboard_name),
             options
         );
     };
 
     var base_url = window.jhdata.base_url;
-    var user = window.jhdata.user;
     var api = new JHAPI(base_url);
 
     function getRow(element) {
@@ -41,7 +40,7 @@ require(["jquery", "jhapi", "utils"], function($, JHAPI, utils) {
     
         disableRow(row);
     
-        api.delete_dashboard(user, dashboardName, {
+        api.delete_dashboard(dashboardName, {
             success: function() {
               row.remove();
 

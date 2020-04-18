@@ -13,20 +13,17 @@ class DashboardBaseAPIHandler(APIHandler, DashboardBaseMixin):
 class DashboardAPIHandler(DashboardBaseAPIHandler):
 
     @authenticated
-    async def delete(self, user_name, dashboard_urlname):
+    async def delete(self, dashboard_urlname):
 
         current_user = await self.get_current_user()
-
-        if current_user.name != user_name:
-            raise HTTPError(400, "Dashboard does not belong to current user.")
 
         dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
 
         if dashboard is None:
             raise HTTPError(404, "Dashboard does not exist.")
 
-        if dashboard.user.name != current_user.name: # Shouldn't really happen, trapped above unless db corrupt
-            raise HTTPError(400, 'Dashboard user {} does not match {}'.format(dashboard.user.name, current_user.name))
+        if dashboard.user.name != current_user.name:
+            raise HTTPError(403, 'This is not your dashboard: dashboard user {} does not match you ({})'.format(dashboard.user.name, current_user.name))
 
         # options = self.get_json_body()
 
