@@ -2,11 +2,7 @@
 
 cd "${0%/*}"
 
-cd voila-public
-
-docker build -t ideonate/jh-voila-public-singleuser:singleuser-1.2 .
-
-cd ../voila-oauth
+cd voila-oauth
 
 docker build -t ideonate/jh-voila-oauth-singleuser:singleuser-1.2 .
 
