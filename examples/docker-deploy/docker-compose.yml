@@ -53,7 +53,7 @@ services:
     env_file:
       - secrets/postgres.env
     command: >
-      jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+      jupyterhub -f /srv/jupyterhub/jupyterhub_config.py --debug
 
 volumes:
   data:
