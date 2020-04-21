@@ -14,6 +14,7 @@ Basic requirements:
 
 - JupyterHub 1.0+
 - DockerSpawner 0.11.0+
+- Python 3.7+
 
 You should be able to use any authenticator for users to login - for example, corporate Google email sign in, or LDAP.
 
@@ -31,7 +32,7 @@ pip install cdsdashboards
 
 ### Generic Changes to jupyterhub_config.py
 
-Ensure you enable named servers, and also check that DockerSpawner has a naming convention compatible with named servers:
+Ensure you enable [named servers](https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers), and also check that DockerSpawner has a naming convention compatible with named servers:
 
 ```
 c.JupyterHub.allow_named_servers = True
