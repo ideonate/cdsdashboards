@@ -134,6 +134,27 @@ class DashboardBaseMixin:
 
                 async def do_build():
 
+                    # This section would be better if it was inside dockerbuilder, but we want 
+                    # to make use of self.spawn_single_user without repeating the code
+                    if dashboard.source_spawner and dashboard.source_spawner.name:
+
+                        # Get source spawner
+                        source_spawner = dashboard_user.spawners[dashboard.source_spawner.name]
+
+                        if source_spawner.ready:
+                            self.log.debug('Source spawner is already ready')
+                        elif source_spawner.pending in ['spawn', 'check']:
+                            builder.add_progress_event({'progress': 15, 'message': 'Attacheding to pending source server for Dashboard'})
+                            self.log.debug('Source spawner is pending - await')
+                            spawn_future = final_spawner.getattr('_{}_future'.format(final_spawner.pending), None)
+                            if spawn_future:
+                                await spawn_future
+                        else:
+                            builder.add_progress_event({'progress': 10, 'message': 'Starting up source server for Dashboard'})
+                            self.log.debug('Source spawner needs a full start')
+                            await self.spawn_single_user(dashboard_user, dashboard.source_spawner.name)
+
+                    # Delete existing final spawner if it exists
                     await self.maybe_delete_existing_server(dashboard.final_spawner, dashboard_user)
 
                     (new_server_name, new_server_options) =  await builder.start(dashboard, dashboard_user, self.db)

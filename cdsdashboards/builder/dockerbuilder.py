@@ -7,7 +7,6 @@ from traitlets import Dict, Unicode, Any
 from tornado import ioloop
 from tornado.log import app_log
 from datetime import datetime
-
 from .builders import Builder, BuildException
 
 
@@ -85,26 +84,29 @@ class DockerBuilder(Builder):
 
         self._build_pending = True
 
-        source_spawner = dashboard.source_spawner
+        source_spawner_orm = dashboard.source_spawner
 
-        if source_spawner is None:
-            raise BuildException('The source server does not exist')
+        if source_spawner_orm is None:
+            raise BuildException('No source server is set for this dashboard')
+
+        source_spawner_name = source_spawner_orm.name
+
+        #if source_spawner_name not in dashboard_user.spawners:
+        #    raise BuildException('The source server is not currently available for this dashboard')
+
+        source_spawner = dashboard_user.spawners[source_spawner_name]
 
         app_log.debug('source_spawner {}'.format(source_spawner))
 
-        if source_spawner.state is None:
-            raise BuildException('Source server has never been run, so there is nothing to clone!')
+        #if source_spawner.state is None:
+        #    raise BuildException('Source server has never been run, so there is nothing to clone!')
 
-        object_id = source_spawner.state.get('object_id', None)
-        if object_id is None:
-            object_id = source_spawner.state.get('container_id', None) 
-            # Older versions of dockerspawner called it container_id
-            # https://github.com/jupyterhub/dockerspawner/commit/3a836662aa97808979470ba8b4d6dd5c467fad4e
+        object_id = source_spawner.object_id #source_spawner.state.get('object_id', None)
 
         app_log.debug('Docker object_id is {}'.format(object_id))
 
         if object_id is None:
-            raise BuildException('No docker object specified in spawner state')
+            raise BuildException('No docker object specified in spawner state - maybe the source server has never been run')
 
         source_container = await self.docker('inspect_container', object_id)
 
@@ -131,7 +133,9 @@ class DockerBuilder(Builder):
 
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
-        #for i in range(2):
+        ## Sometimes for debugging, slow things down
+        #from tornado import gen
+        #for i in range(5):
         #    self.log.debug('Waiting in builder {}'.format(i))
         #    self.add_progress_event({'progress': 60, 'message': 'Waiting in builder {}'.format(i)})
         #    await gen.sleep(1)

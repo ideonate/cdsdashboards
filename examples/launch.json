@@ -5,11 +5,44 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "JupyterHub main",
+            "name": "cdsdashboards server",
+            "type": "python",
+            "request": "launch",
+            "module": "cdsdashboards",
+            "args": ["--log-level=DEBUG"],
+            "env": {
+                "JUPYTERHUB_CLIENT_ID": "testjhclientid",
+                "JUPYTERHUB_SERVICE_PREFIX": "/services/cdsdashboards/",
+                "JUPYTERHUB_API_TOKEN": "cdsdashboards-api-token",
+                "JUPYTERHUB_OAUTH_CALLBACK_URL": "http://127.0.0.1:8000/services/cdsdashboards/oauth_callback",
+                "JUPYTERHUB_API_URL": "http://192.168.0.69:8081/hub/api/"
+            }
+        },
+        {
+            "name": "cdsdashboards upgrade-db",
+            "type": "python",
+            "request": "launch",
+            "module": "cdsdashboards",
+            "args": ["upgrade-db", "--log-level=DEBUG", "--config=/Users/dan/Dev/cdslive/jupyterhub_config.py"],
+        },
+        {
+            "name": "Hub main",
             "type": "python",
             "request": "launch",
             "module": "jupyterhub.app",
-            "args": ["--log-level=DEBUG"],
+            "args": ["-f", "./examples/service_and_handlers_and_templates_jupyterhub_config.py", "--log-level=DEBUG"],
+            "justMyCode": false
+        },
+        {
+            "name": "Hub SSL",
+            "type": "python",
+            "request": "launch",
+            "module": "jupyterhub.app",
+            "args": ["-f", "./examples/ssl_domain_jupyterhub_config.py", "--log-level=DEBUG"],
+            "env": {
+                "SSL_CERT": "./examples/myjupyterhub.net/myjupyterhub.net.crt",
+                "SSL_KEY": "./examples/myjupyterhub.net/myjupyterhub.net.key"
+            },
             "justMyCode": false
         }
     ]
