@@ -14,7 +14,7 @@ Basic requirements:
 
 - JupyterHub 1.0+
 - DockerSpawner 0.11.0+
-- Python 3.7+
+- Python 3.6+
 
 You should be able to use any authenticator for users to login - for example, corporate Google email sign in, or LDAP.
 
@@ -50,16 +50,10 @@ The following options in your config file will install the extension. Please not
 
 ```
 from cdsdashboards.app import CDS_TEMPLATE_PATH, cds_tornado_settings
-
 from cdsdashboards.hubextension import cds_extra_handlers
 
-
-c.JupyterHub.template_paths = [
-    CDS_TEMPLATE_PATH
-]
-
+c.JupyterHub.template_paths = [ CDS_TEMPLATE_PATH ]
 c.JupyterHub.tornado_settings = cds_tornado_settings
-
 c.JupyterHub.extra_handlers = cds_extra_handlers
 ```
 

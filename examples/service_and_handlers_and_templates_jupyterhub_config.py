@@ -196,7 +196,7 @@ c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
 #c.JupyterHub.db_url = 'sqlite:///jupyterhub.sqlite'
 
 ## log all database transactions. This has A LOT of output
-c.JupyterHub.debug_db = True
+#c.JupyterHub.debug_db = False
 
 ## DEPRECATED since version 0.8: Use ConfigurableHTTPProxy.debug
 #c.JupyterHub.debug_proxy = False
