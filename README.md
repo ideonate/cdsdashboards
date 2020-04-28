@@ -16,16 +16,29 @@ secure interactive [Voila](https://voila.readthedocs.io/en/stable/) web apps. An
 - Click to launch as a server, using OAuth to gain access
 - User sees a safe user-friendly Voila version of the original notebook
 
+
+_Data scientist creates a Jupyter Notebook as normal_
+
 ![Original Jupyter Notebook](./screenshots/1_Original_Jupyter_Notebook.png "Original Jupyter Notebook")
 
+_Data scientist creates a new Dashboard to clone their Jupyter server_
 
 ![Create New Dashboard](./screenshots/2_Create_New_Dashboard.png "Create New Dashboard")
 
+
+_Other logged-in JupyterHub users see the dashboard in their list_
+
 ![Other User sees dashboard](./screenshots/3_Other_User_sees_dashboard.png "Other User sees dashboard")
+
+_Click to launch as a server_
 
 ![Dashboard Voila built automatically](./screenshots/4_Dashboard_Voila_built_automatically.png "Dashboard Voila built automatically")
 
+_Uses OAuth to gain access_
+
 ![Other user OAuths](./screenshots/5_Other_user_OAuths.png "Other user OAuths")
+
+_Other user sees a safe user-friendly Voila version of the original notebook_
 
 ![Voila Dashboard](./screenshots/6_Voila_Dashboard.png "Voila Dashboard")
 
