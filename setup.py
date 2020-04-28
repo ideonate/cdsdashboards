@@ -1,19 +1,35 @@
 import os
+pjoin = os.path.join
 
 from setuptools import setup
 
 here = os.path.dirname(__file__)
 
-with open(os.path.join(here, 'requirements.txt')) as f:
+with open(pjoin(here, 'requirements.txt')) as f:
     requirements = [
         l.strip() for l in f.readlines()
         if not l.strip().startswith('#')
     ]
 
+# Data files e.g. templates and static js
+
+here = os.path.abspath(os.path.dirname(__file__))
+share_cdsdashboards = pjoin(here, 'share', 'cdsdashboards')
+
+def get_data_files():
+    """Get data files in share/cdsdashboards"""
+
+    data_files = []
+    ntrim = len(here + os.path.sep)
+
+    for (d, dir, filenames) in os.walk(share_cdsdashboards):
+        data_files.append((d[ntrim:], [pjoin(d, f)[ntrim:] for f in filenames]))
+    return data_files
+
 setup(
     name='cdsdashboards',
     packages=['cdsdashboards'],
-    version='0.0.3',
+    version='0.0.5',
     python_requires='>=3.6',
     author='Ideonate',
     author_email='dan@containds.com',
@@ -31,6 +47,6 @@ setup(
     ],
     platforms="Linux, Mac OS X",
     description="ContainDS Dashboards extension for JupyterHub",
-    include_package_data=True,
+    data_files=get_data_files(),
     install_requires=requirements,
 )
