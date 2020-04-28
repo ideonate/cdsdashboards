@@ -1,7 +1,7 @@
 import os
 pjoin = os.path.join
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 here = os.path.dirname(__file__)
 
@@ -28,8 +28,8 @@ def get_data_files():
 
 setup(
     name='cdsdashboards',
-    packages=['cdsdashboards'],
-    version='0.0.5',
+    packages=find_packages(),
+    version='0.0.6',
     python_requires='>=3.6',
     author='Ideonate',
     author_email='dan@containds.com',

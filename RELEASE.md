@@ -4,6 +4,8 @@ Update setup.py to the new version
 
 delete dist folder
 
+delete cdsdashboards.egg-info
+
 `python setup.py sdist`
 
 `twine upload dist/*`

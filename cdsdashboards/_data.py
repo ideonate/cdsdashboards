@@ -15,7 +15,7 @@ def get_data_files():
         while path != '/':
             share_cdsdashboards = join(path, 'share', 'cdsdashboards')
             static = join(share_cdsdashboards, 'static')
-            if all(exists(join(static, f)) for f in ['components', 'css']):
+            if all(exists(join(static, f)) for f in ['js', 'css']):
                 return share_cdsdashboards
             path, _ = split(path)
     # didn't find it, give up
