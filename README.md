@@ -16,6 +16,7 @@ secure interactive [Voila](https://voila.readthedocs.io/en/stable/) web apps. An
 - Click to launch as a server, using OAuth to gain access
 - User sees a safe user-friendly Voila version of the original notebook
 
+All of this works through a new Dashboards menu item added to JupyterHub's header.
 
 _Data scientist creates a Jupyter Notebook as normal_
 
