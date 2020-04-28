@@ -8,6 +8,28 @@ dashboards to share with non-technical colleagues.
 This open source package allows users to create interactive Jupyter notebooks that can be instantly and reliably published as 
 secure interactive [Voila](https://voila.readthedocs.io/en/stable/) web apps. Any authorised JupyterHub user can view the dashboard.
 
+## How it works
+
+- Data scientist creates a Jupyter Notebook as normal
+- Data scientist creates a new Dashboard to clone their Jupyter server
+- Other logged-in JupyterHub users see the dashboard in their list
+- Click to launch as a server, using OAuth to gain access
+- User sees a safe user-friendly Voila version of the original notebook
+
+![Original Jupyter Notebook](./screenshots/1_Original_Jupyter_Notebook.png "Original Jupyter Notebook")
+
+
+![Create New Dashboard](./screenshots/2_Create_New_Dashboard.png "Create New Dashboard")
+
+![Other User sees dashboard](./screenshots/3_Other_User_sees_dashboard.png "Other User sees dashboard")
+
+![Dashboard Voila built automatically](./screenshots/4_Dashboard_Voila_built_automatically.png "Dashboard Voila built automatically")
+
+![Other user OAuths](./screenshots/5_Other_user_OAuths.png "Other user OAuths")
+
+![Voila Dashboard](./screenshots/6_Voila_Dashboard.png "Voila Dashboard")
+
+
 ## Requirements
 
 Basic requirements:
