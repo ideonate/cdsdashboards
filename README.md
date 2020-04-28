@@ -82,7 +82,7 @@ The image used for the single-user servers must have voila and jhsingle-native-p
 
 ### Enabling Dashboards in jupyterhub_config.py
 
-The following options in your config file will install the extension. Please note they may override existing customisations, in which case you could try merging them instead.
+The following options in your config file will install the extension. Please note if you have existing customisations you may need to merge these with your existing settings.
 
 ```
 from cdsdashboards.app import CDS_TEMPLATE_PATH, cds_tornado_settings
@@ -109,7 +109,7 @@ c.JupyterHub.template_vars = {
 
 The image you use for the single-user server should have voila and jhsingle-native-proxy installed, plus a second 'entrypoint' at `/opt/conda/bin/voila-entrypoint.sh` to run the Voila server.
 
-Please see [docker-singleuser-images](./docker-singleuser-images) for an example, or use the ones created already.
+Please see [docker-singleuser-images](./docker-singleuser-images) for an example, or use the ones created for you already, e.g. [jh-voila-oauth-singleuser:scipy-dc9744740e12](https://hub.docker.com/r/ideonate/jh-voila-oauth-singleuser).
 
 ## Contact and Support
 
