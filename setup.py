@@ -22,14 +22,17 @@ def get_data_files():
     data_files = []
     ntrim = len(here + os.path.sep)
 
-    for (d, dir, filenames) in os.walk(share_cdsdashboards):
+    for (d, _, filenames) in os.walk(share_cdsdashboards):
         data_files.append((d[ntrim:], [pjoin(d, f)[ntrim:] for f in filenames]))
     return data_files
+
+with open('README.md', encoding="utf8") as f:
+    readme = f.read()
 
 setup(
     name='cdsdashboards',
     packages=find_packages(),
-    version='0.0.6',
+    version='0.0.7',
     python_requires='>=3.6',
     author='Ideonate',
     author_email='dan@containds.com',
@@ -45,6 +48,12 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
     ],
+    project_urls={
+        'Source': 'https://github.com/ideonate/cdsdashboards',
+        'Tracker': 'https://github.com/ideonate/cdsdashboards/issues'
+    },
+    long_description=readme,
+    long_description_content_type='text/markdown',
     platforms="Linux, Mac OS X",
     description="ContainDS Dashboards extension for JupyterHub",
     data_files=get_data_files(),
