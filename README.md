@@ -78,7 +78,7 @@ c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 c.DockerSpawner.image = 'ideonate/jh-voila-oauth-singleuser:scipy-dc9744740e12'
 ```
 
-The image used for the single-user servers must have voila and jhsingle-native-proxy installed - see details below, or try the image listed above.
+The image used for the single-user servers must have [Voila](https://github.com/voila-dashboards/voila) and [jhsingle-native-proxy](https://github.com/ideonate/jhsingle-native-proxy) installed - see details below, or try the image listed above.
 
 ### Enabling Dashboards in jupyterhub_config.py
 
@@ -107,7 +107,7 @@ c.JupyterHub.template_vars = {
 
 ## Image
 
-The image you use for the single-user server should have voila and jhsingle-native-proxy installed, plus a second 'entrypoint' at `/opt/conda/bin/voila-entrypoint.sh` to run the Voila server.
+The image you use for the single-user server should have [Voila](https://github.com/voila-dashboards/voila) and [jhsingle-native-proxy](https://github.com/ideonate/jhsingle-native-proxy) installed, plus a second 'entrypoint' at `/opt/conda/bin/voila-entrypoint.sh` to run the Voila server.
 
 Please see [docker-singleuser-images](./docker-singleuser-images) for an example, or use the ones created for you already, e.g. [jh-voila-oauth-singleuser:scipy-dc9744740e12](https://hub.docker.com/r/ideonate/jh-voila-oauth-singleuser).
 
@@ -116,5 +116,7 @@ Please see [docker-singleuser-images](./docker-singleuser-images) for an example
 This software is an alpha version. Please see LICENSE for details.
 
 Please do get in touch if you try out the package, or would like to but need some support. I would be very interested to find out how it can be used, and to work (without charge) to help you get it running. The project needs feedback in order to develop further!
+
+For more background on this project and our related ContainDS Desktop product, please see our website: [containds.com](https://containds.com/).
 
 Contact [support@containds.com](mailto:support@containds.com) with any comments or questions at all. Thank you.
