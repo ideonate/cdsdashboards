@@ -75,7 +75,7 @@ c.JupyterHub.allow_named_servers = True
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-c.DockerSpawner.image = 'ideonate/jh-voila-oauth-singleuser:scipy-dc9744740e12'
+c.DockerSpawner.image = 'ideonate/jh-voila-oauth-scipy:latest'
 ```
 
 The image used for the single-user servers must have [Voila](https://github.com/voila-dashboards/voila) and [jhsingle-native-proxy](https://github.com/ideonate/jhsingle-native-proxy) installed - see details below, or try the image listed above.
@@ -109,7 +109,14 @@ c.JupyterHub.template_vars = {
 
 The image you use for the single-user server should have [Voila](https://github.com/voila-dashboards/voila) and [jhsingle-native-proxy](https://github.com/ideonate/jhsingle-native-proxy) installed, plus a second 'entrypoint' at `/opt/conda/bin/voila-entrypoint.sh` to run the Voila server.
 
-Please see [docker-singleuser-images](./docker-singleuser-images) for an example, or use the ones created for you already, e.g. [jh-voila-oauth-singleuser:scipy-dc9744740e12](https://hub.docker.com/r/ideonate/jh-voila-oauth-singleuser).
+Please see [docker-singleuser-images](./docker-singleuser-images) for an example, or use the ones created for you already:
+
+- [jh-voila-oauth-singleuser:latest](https://hub.docker.com/r/ideonate/jh-voila-oauth-singleuser)
+- [jh-voila-oauth-scipy:latest](https://hub.docker.com/r/ideonate/jh-voila-oauth-scipy)
+- [jh-voila-oauth-r:latest](https://hub.docker.com/r/ideonate/jh-voila-oauth-r)
+- [jh-voila-oauth-datascience:latest](https://hub.docker.com/r/ideonate/jh-voila-oauth-datascience)
+
+These are based on the similarly-named [Jupyter Docker Stacks](https://jupyter-docker-stacks.readthedocs.io/en/latest/) images, just with extra support for Voila and ContainDS Dashboards. The ContainDS Dockerfile versions are on [GitHub here](https://github.com/ideonate/cdsdashboards-jupyter-docker).
 
 ## Contact and Support
 
