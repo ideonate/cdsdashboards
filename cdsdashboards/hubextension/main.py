@@ -165,9 +165,10 @@ class DashboardEditHandler(DashboardBaseHandler):
                     dashboard.source_spawner = spawner.orm_spawner
                     
                 if group is None:
-                    # Group could exist - what if it does? TODO
-                    group = Group(name=dashboard.groupname)
-                    self.db.add(group)
+                    group = Group.find(db, dashboard.groupname)
+                    if group is None:
+                        group = Group(name=dashboard.groupname)
+                        self.db.add(group)
                     dashboard.group = group
 
                 db.add(dashboard)
