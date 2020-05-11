@@ -1,3 +1,5 @@
+import sys
+
 from tornado.web import authenticated
 
 from jupyterhub.handlers.base import BaseHandler
@@ -6,6 +8,8 @@ from jupyterhub.orm import Group
 from ..orm import Dashboard
 from .base import DashboardBaseMixin
 from ..util import DefaultObjDict, url_path_join
+from .. import hookimpl
+from ..pluggymanager import pm
 
 
 class DashboardBaseHandler(BaseHandler, DashboardBaseMixin):
@@ -33,7 +37,7 @@ class AllDashboardsHandler(DashboardBaseHandler):
         self.write(html)
 
 
-class DashboardEditHandler(DashboardBaseHandler):
+class BasicDashboardEditHandler(DashboardBaseHandler):
 
     @authenticated
     async def get(self, dashboard_urlname=None):
@@ -271,3 +275,13 @@ class ClearErrorDashboardHandler(DashboardBaseHandler):
         self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname))
 
 
+
+# Register plugin hooks so we use the Basic handlers by default, unless overridden
+
+@hookimpl
+def get_hubextension_main_DashboardEditHandler():
+    return BasicDashboardEditHandler
+
+pm.register(sys.modules[__name__])
+
+DashboardEditHandler = pm.hook.get_hubextension_main_DashboardEditHandler()[0]
