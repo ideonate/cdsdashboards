@@ -47,6 +47,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         dashboard = None
         dashboard_name = ''
         dashboard_description = ''
+        dashboard_options = {}
 
         if dashboard_urlname is not None:
 
@@ -60,6 +61,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             dashboard_name = dashboard.name
             dashboard_description = dashboard.description
+            dashboard_options = dashboard.options
 
         # Get List of possible visitor users
         existing_group_users = None
@@ -79,17 +81,23 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         html = self.render_template(
             "editdashboard.html",
+            **self.template_vars(dict(
             base_url=self.settings['base_url'],
             dashboard=dashboard,
             dashboard_name=dashboard_name,
             dashboard_description=dashboard_description,
+            dashboard_options=dashboard_options,
             spawner_name=spawner_name,
             current_user=current_user,
             spawners=spawners,
             all_visitors=all_visitors,
-            errors=errors
+            errors=errors)
+            )
         )
         self.write(html)
+
+    def template_vars(self, d):
+        return d
 
     @authenticated
     async def post(self, dashboard_urlname=None):
@@ -123,33 +131,20 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         elif not self.name_regex.match(dashboard_name):
             errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>. Max 100 chars.'
 
-        # Get Spawners
-        
-        spawner_name = self.get_argument('spawner_name', None)
+        dashboard_options = self.read_options(dashboard, errors)
 
         spawners = self.get_source_spawners(current_user)
 
-        self.log.debug('Got spawner_name {}.'.format(spawner_name))
-
-        spawner = None
-        thisspawners = [spawner for spawner in spawners if spawner.name == spawner_name]
-
-        if len(thisspawners) == 1:
-            spawner = thisspawners[0]
-        else:
-            if spawner_name is None:
-                errors.spawner = 'Please select a source spawner'
-            else:
-                errors.spawner = 'Spawner {} not found'.format(spawner_name)
-
-            # Pick the existing one again
-            if dashboard is not None and dashboard.source_spawner is not None:
-                spawner_name=dashboard.source_spawner.name
+        spawner, spawner_name = self.read_spawner(dashboard, spawners, dashboard_options, errors)
   
         if len(errors) == 0:
             db = self.db
 
             try:
+
+                orm_spawner = None
+                if spawner:
+                    orm_spawner = spawner.orm_spawner
 
                 if dashboard is None:
 
@@ -159,14 +154,16 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
                     dashboard = Dashboard(
                         name=dashboard_name, urlname=urlname, user=current_user.orm_user, 
-                        description=dashboard_description, source_spawner=spawner.orm_spawner
+                        description=dashboard_description, source_spawner=orm_spawner,
+                        options=dashboard_options
                         )
                     self.log.debug('dashboard urlname '+dashboard.urlname+', main name '+dashboard.name)
 
                 else:
                     dashboard.name = dashboard_name
                     dashboard.description = dashboard_description
-                    dashboard.source_spawner = spawner.orm_spawner
+                    dashboard.source_spawner = orm_spawner
+                    dashboard.options = dashboard_options
                     
                 if group is None:
                     group = Group.find(db, dashboard.groupname)
@@ -205,18 +202,50 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             html = self.render_template(
                 "editdashboard.html",
+                **self.template_vars(dict(
                 base_url=self.settings['base_url'],
                 dashboard=dashboard,
                 dashboard_name=dashboard_name,
                 dashboard_description=dashboard_description,
+                dashboard_options=dashboard_options,
                 spawner_name=spawner_name,
                 spawners=spawners,
                 errors=errors,
-                current_user=current_user
+                current_user=current_user))
             )
             return self.write(html)
         
         self.redirect("{}hub/dashboards/{}".format(self.settings['base_url'], dashboard.urlname))
+
+    def read_options(self, dashboard, errors):
+        if dashboard:
+            return dashboard.options
+        return dict()
+
+    def read_spawner(self, dashboard, spawners, dashboard_options, errors):
+
+        # Get Spawners
+        
+        spawner_name = self.get_argument('spawner_name', None)
+
+        self.log.debug('Got spawner_name {}.'.format(spawner_name))
+
+        spawner = None
+        thisspawners = [spawner for spawner in spawners if spawner.name == spawner_name]
+
+        if len(thisspawners) == 1:
+            spawner = thisspawners[0]
+        else:
+            if spawner_name is None:
+                errors.spawner = 'Please select a source spawner'
+            else:
+                errors.spawner = 'Spawner {} not found'.format(spawner_name)
+
+            # Pick the existing one again
+            if dashboard is not None and dashboard.source_spawner is not None:
+                spawner_name=dashboard.source_spawner.name
+
+        return spawner, spawner_name
 
 
 class MainViewDashboardHandler(DashboardBaseHandler):
