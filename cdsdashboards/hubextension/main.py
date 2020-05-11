@@ -80,7 +80,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         html = self.render_template(
             "editdashboard.html",
             base_url=self.settings['base_url'],
-            banner=self.get_banner(),
             dashboard=dashboard,
             dashboard_name=dashboard_name,
             dashboard_description=dashboard_description,
@@ -91,9 +90,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             errors=errors
         )
         self.write(html)
-
-    def get_banner(self):
-        return ''
 
     @authenticated
     async def post(self, dashboard_urlname=None):
