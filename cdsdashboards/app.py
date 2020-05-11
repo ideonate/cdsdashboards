@@ -2,8 +2,7 @@
 Application for configuring and building the app environments.
 """
 
-import os
-import re
+import os, re, sys
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
@@ -27,8 +26,19 @@ from jupyterhub import orm as jhorm
 from .builder.builders import BuildersDict, Builder
 from .builder.dockerbuilder import DockerBuilder
 from ._data import DATA_FILES_PATH
+from .pluggymanager import pm
+from . import hookimpl
+
 
 CDS_TEMPLATE_PATH = os.path.join(DATA_FILES_PATH, 'templates')
+
+@hookimpl
+def get_hubextension_app_template_paths():
+    return CDS_TEMPLATE_PATH
+
+pm.register(sys.modules[__name__])
+
+CDS_TEMPLATE_PATHS = pm.hook.get_hubextension_app_template_paths()
 
 common_aliases = {
     'log-level': 'Application.log_level',

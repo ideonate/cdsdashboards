@@ -85,10 +85,10 @@ The image used for the single-user servers must have [Voila](https://github.com/
 The following options in your config file will install the extension. Please note if you have existing customisations you may need to merge these with your existing settings.
 
 ```
-from cdsdashboards.app import CDS_TEMPLATE_PATH, cds_tornado_settings
+from cdsdashboards.app import CDS_TEMPLATE_PATHS, cds_tornado_settings
 from cdsdashboards.hubextension import cds_extra_handlers
 
-c.JupyterHub.template_paths = [ CDS_TEMPLATE_PATH ]
+c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
 c.JupyterHub.tornado_settings = cds_tornado_settings
 c.JupyterHub.extra_handlers = cds_extra_handlers
 ```

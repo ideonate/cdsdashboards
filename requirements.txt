@@ -3,3 +3,4 @@ traitlets
 docker
 jupyterhub>=1.0.0
 dockerspawner>=0.11.0
+pluggy

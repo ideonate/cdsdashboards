@@ -1,0 +1,20 @@
+
+                <h3>Choose a source server:</h3>
+
+                {% for spawner in spawners %}
+
+                <p>
+                    <input type="radio" name="spawner_name" id="spawner-{{ spawner.name }}" 
+                        value="{{ spawner.name }}"
+                        {% if spawner_name == spawner.name %}checked{% endif %}/>
+                    <label for="spawner-{{ spawner.name }}">{{ spawner.name | default('Default Server', true) | escape }} 
+                        {% if spawner.active %} (ACTIVE) {% endif %}</label>
+                </p>
+
+                {% endfor %}
+
+                {% if errors.spawner %}
+    
+                <p class="error">{{ errors.spawner | escape }}</p>
+    
+                {% endif %}

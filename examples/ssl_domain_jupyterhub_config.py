@@ -58,7 +58,7 @@
 ## Allow named single-user servers per user
 c.JupyterHub.allow_named_servers = True
 
-from cdsdashboards.hubextension import cds_extra_handlers
+#from cdsdashboards.hubextension import cds_extra_handlers
 
 ## Register extra tornado Handlers for jupyterhub.
 #
@@ -66,7 +66,11 @@ from cdsdashboards.hubextension import cds_extra_handlers
 #
 #  The Hub prefix will be added, so `/my-page` will be served at `/hub/my-page`.
 
-c.JupyterHub.extra_handlers = cds_extra_handlers
+#c.JupyterHub.extra_handlers = cds_extra_handlers
+
+from cdsdashboards.hubextension import config_for_dashboards
+
+config_for_dashboards(c)
 
 ## Extra variables to be passed into jinja templates
 
@@ -600,15 +604,14 @@ c.JupyterHub.ssl_key = os.environ['SSL_KEY']
 #c.JupyterHub.subdomain_host = ''
 
 ## Paths to search for jinja templates, before using the default templates.
-from cdsdashboards.app import CDS_TEMPLATE_PATH, cds_tornado_settings
+#from cdsdashboards.app import CDS_TEMPLATE_PATHS, cds_tornado_settings
 
-c.JupyterHub.template_paths = [
-    CDS_TEMPLATE_PATH
-]
+#c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
+
 
 ## Extra settings overrides to pass to the tornado application.
 
-c.JupyterHub.tornado_settings = cds_tornado_settings
+#c.JupyterHub.tornado_settings = cds_tornado_settings
 
 ## Trust user-provided tokens (via JupyterHub.service_tokens) to have good
 #  entropy.

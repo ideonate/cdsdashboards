@@ -27,4 +27,18 @@ cds_extra_handlers = [
     (r'dashboards-api/(?P<dashboard_urlname>[^/]+?)/progress', ProgressDashboardHandler),
 ]
 
-__all__ = ['cds_extra_handlers']
+def config_for_dashboards(c):
+    """
+    Add the required configuration to the Configurable object to enable Dashboards
+    TODO extend any settings that are already present in c
+    """
+
+    from ..app import CDS_TEMPLATE_PATHS, cds_tornado_settings
+
+    c.JupyterHub.extra_handlers = cds_extra_handlers
+    c.JupyterHub.tornado_settings = cds_tornado_settings
+    c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
+
+    return c
+
+__all__ = ['cds_extra_handlers', 'config_for_dashboards']
