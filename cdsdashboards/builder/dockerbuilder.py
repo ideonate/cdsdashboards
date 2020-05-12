@@ -1,3 +1,4 @@
+import sys
 from concurrent.futures import ThreadPoolExecutor
 import functools
 
@@ -8,9 +9,11 @@ from tornado import ioloop
 from tornado.log import app_log
 from datetime import datetime
 from .builders import Builder, BuildException
+from .. import hookimpl
+from ..pluggymanager import pm
 
 
-class DockerBuilder(Builder):
+class BasicDockerBuilder(Builder):
 
     user = Any()
 
@@ -84,54 +87,10 @@ class DockerBuilder(Builder):
 
         self._build_pending = True
 
-        source_spawner_orm = dashboard.source_spawner
-
-        if source_spawner_orm is None:
-            raise BuildException('No source server is set for this dashboard')
-
-        source_spawner_name = source_spawner_orm.name
-
-        #if source_spawner_name not in dashboard_user.spawners:
-        #    raise BuildException('The source server is not currently available for this dashboard')
-
-        source_spawner = dashboard_user.spawners[source_spawner_name]
-
-        app_log.debug('source_spawner {}'.format(source_spawner))
-
-        #if source_spawner.state is None:
-        #    raise BuildException('Source server has never been run, so there is nothing to clone!')
-
-        object_id = source_spawner.object_id #source_spawner.state.get('object_id', None)
-
-        app_log.debug('Docker object_id is {}'.format(object_id))
-
-        if object_id is None:
-            raise BuildException('No docker object specified in spawner state - maybe the source server has never been run')
-
-        source_container = await self.docker('inspect_container', object_id)
-
-        if source_container is None:
-            raise BuildException('No docker object returned as source container')
-
-        # Commit image of current server
-
-        reponame = '{}/{}'.format(self.repo_prefix, dashboard.urlname)
-
         tag = datetime.today().strftime('%Y%m%d-%H%M%S')
 
-        image_name = '{}:{}'.format(reponame, tag)
+        image_name = await self.build_image(dashboard, dashboard_user, tag)
 
-        app_log.info('Committing Docker image {}'.format(image_name))
-
-        dockerfile_changes="\n".join([
-            'CMD ["voila-entrypoint.sh"]',
-            'ENV JUPYTERHUB_GROUP {}'.format(dashboard.groupname),
-            'ENV JUPYTERHUB_ANYONE {}'.format(dashboard.allow_all and '1' or '0')
-        ])
-
-        await self.docker('commit', object_id, repository=reponame, tag=tag, changes=dockerfile_changes)
-
-        self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
         ## Sometimes for debugging, slow things down
         #from tornado import gen
@@ -176,9 +135,71 @@ class DockerBuilder(Builder):
     allow_named_servers = True # TODO take from main app config
     named_server_limit_per_user = 10
 
+    async def build_image(self, dashboard, dashboard_user, tag):
+        source_spawner_orm = dashboard.source_spawner
+
+        if source_spawner_orm is None:
+            raise BuildException('No source server is set for this dashboard')
+
+        source_spawner_name = source_spawner_orm.name
+
+        #if source_spawner_name not in dashboard_user.spawners:
+        #    raise BuildException('The source server is not currently available for this dashboard')
+
+        source_spawner = dashboard_user.spawners[source_spawner_name]
+
+        app_log.debug('source_spawner {}'.format(source_spawner))
+
+        #if source_spawner.state is None:
+        #    raise BuildException('Source server has never been run, so there is nothing to clone!')
+
+        object_id = source_spawner.object_id #source_spawner.state.get('object_id', None)
+
+        app_log.debug('Docker object_id is {}'.format(object_id))
+
+        if object_id is None:
+            raise BuildException('No docker object specified in spawner state - maybe the source server has never been run')
+
+        source_container = await self.docker('inspect_container', object_id)
+
+        if source_container is None:
+            raise BuildException('No docker object returned as source container')
+
+        # Commit image of current server
+
+        reponame = '{}/{}'.format(self.repo_prefix, dashboard.urlname)
+
+        image_name = '{}:{}'.format(reponame, tag)
+
+        app_log.info('Committing Docker image {}'.format(image_name))
+
+        dockerfile_changes="\n".join([
+            'CMD ["voila-entrypoint.sh"]',
+            'ENV JUPYTERHUB_GROUP {}'.format(dashboard.groupname),
+            'ENV JUPYTERHUB_ANYONE {}'.format(dashboard.allow_all and '1' or '0')
+        ])
+
+        await self.docker('commit', object_id, repository=reponame, tag=tag, changes=dockerfile_changes)
+
+        self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
+
+        return image_name
+
     async def stop(self, now=False):
         """Stop the build process - not currently called
         """
         raise NotImplementedError(
             "Override in subclass. Must be a Tornado gen.coroutine."
         )
+
+
+DockerBuilder = BasicDockerBuilder
+# Register plugin hooks so we use the Basic handlers by default, unless overridden
+
+@hookimpl
+def get_builder_DockerBuilder():
+    return BasicDockerBuilder
+
+pm.register(sys.modules[__name__])
+
+DockerBuilder = pm.hook.get_builder_DockerBuilder()[0]
