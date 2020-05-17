@@ -6,7 +6,11 @@ Add myjupyterhub.net to /etc/hosts (on mac)
 
 In ~/.ssh:
 
-openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
+openssl genrsa -des3 -out myCA.key 2048
+
+openssl req -x509 -new -nodes -key myCA.key -sha256 -days 365 -out myCA.pem
+
+(Certs must now be ~12 months validity)
 
 Add to Keychain:
 https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
@@ -27,7 +31,7 @@ subjectAltName = @alt_names
 DNS.1 = myjupyterhub.net
 ```
 
-openssl x509 -req -in myjupyterhub.net.csr -CA ~/.ssh/myCA.pem -CAkey ~/.ssh/myCA.key -CAcreateserial -out myjupyterhub.net.crt -days 1825 -sha256 -extfile myjupyterhub.net.ext 
+openssl x509 -req -in myjupyterhub.net.csr -CA ~/.ssh/myCA.pem -CAkey ~/.ssh/myCA.key -CAcreateserial -out myjupyterhub.net.crt -days 365 -sha256 -extfile myjupyterhub.net.ext 
 
 
 
