@@ -133,7 +133,7 @@ class BasicDockerBuilder(Builder):
         return (new_server_name, new_server_options)
         
     allow_named_servers = True # TODO take from main app config
-    named_server_limit_per_user = 10
+    named_server_limit_per_user = 0
 
     async def build_image(self, dashboard, dashboard_user, tag):
         source_spawner_orm = dashboard.source_spawner

@@ -36,4 +36,4 @@ destport=$((port + 1))
 
 echo "Using internal port $destport"
 
-jhsingle-native-proxy --destport $destport --authtype oauth voila /home/jovyan {--}port={port} {--}no-browser {--}Voila.base_url={base_url}/ {--}Voila.server_url=/ --port $port
+jhsingle-native-proxy --destport $destport --authtype oauth voila `pwd` {--}port={port} {--}no-browser {--}Voila.base_url={base_url}/ {--}Voila.server_url=/ --port $port

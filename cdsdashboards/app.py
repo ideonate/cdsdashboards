@@ -463,8 +463,7 @@ main = CDSDashboards.launch_instance
 
 def builder_factory(dashboard):
     tornado.log.app_log.debug("Builder factory for key {}".format(dashboard.id))
-    return DockerBuilder(dashboard=dashboard)
-
+    return Builder(dashboard=dashboard) # or DockerBuilder 
 
 builders_store = BuildersDict(builder_factory)
 
