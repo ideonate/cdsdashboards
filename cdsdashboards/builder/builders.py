@@ -1,17 +1,7 @@
 from asyncio import sleep
-from datetime import datetime
-
 from traitlets.config import LoggingConfigurable
-from tornado.ioloop import PeriodicCallback
+from traitlets import Any, Bool, Integer
 from tornado.log import app_log
-from traitlets import Any
-from traitlets import Bool
-from traitlets import Float
-from traitlets import Integer
-from traitlets import List
-from datetime import datetime
-from jupyterhub.utils import exponential_backoff
-from jupyterhub.utils import maybe_future
 
 
 class Builder(LoggingConfigurable):
@@ -101,14 +91,13 @@ class Builder(LoggingConfigurable):
         super().__init_subclass__()
 
         missing = []
-        for attr in ('start', 'stop'):
+        for attr in ('start',):
             if getattr(Builder, attr) is getattr(cls, attr):
                 missing.append(attr)
 
         if missing:
             raise NotImplementedError(
-                "class `{}` needs to redefine the `start`,"
-                "`stop` and `poll` methods. `{}` not redefined.".format(
+                "class `{}` needs to redefine the `start` method(s). `{}` not redefined.".format(
                     cls.__name__, '`, `'.join(missing)
                 )
             )
@@ -218,58 +207,6 @@ class Builder(LoggingConfigurable):
         Returns:
           (str, int): the (ip, port) where the Hub can connect to the server.
 
-        """
-
-        app_log.info('Starting LocalProcess Builder start function')
-
-        self.event_queue = []
-
-        self.add_progress_event({'progress': 10, 'message': 'Starting builder'})
-
-        self._build_pending = True
-
-        tag = datetime.today().strftime('%Y%m%d-%H%M%S')
-
-        new_server_name = '{}-{}'.format(dashboard.urlname, tag)
-
-        if not self.allow_named_servers:
-            raise BuildException(400, "Named servers are not enabled.")
-        if (
-            self.named_server_limit_per_user > 0
-            and new_server_name not in dashboard_user.orm_spawners
-        ):
-            named_spawners = list(dashboard_user.all_spawners(include_default=False))
-            if self.named_server_limit_per_user <= len(named_spawners):
-                raise BuildException(
-                    "User {} already has the maximum of {} named servers."
-                    "  One must be deleted before a new server can be created".format(
-                        dashboard_user.name, self.named_server_limit_per_user
-                    ),
-                )
-        spawner = dashboard_user.spawners[new_server_name] # Could be orm_spawner or Spawner wrapper
-
-        if spawner.ready:
-            # include notify, so that a server that died is noticed immediately
-            # set _spawn_pending flag to prevent races while we wait
-            spawner._spawn_pending = True
-            try:
-                state = await spawner.poll_and_notify()
-            finally:
-                spawner._spawn_pending = False
-
-        new_server_options = {
-            'presentation_type': 'voila',
-            'cmd': 'jhsingle-native-proxy',
-            'environment': {
-                'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
-                'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)
-                }
-            }
-
-        return (new_server_name, new_server_options)
-
-    async def stop(self, now=False):
-        """Stop the builder. Not currently used.
         """
         raise NotImplementedError(
             "Override in subclass. Must be a Tornado gen.coroutine."

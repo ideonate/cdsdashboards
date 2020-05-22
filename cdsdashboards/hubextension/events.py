@@ -9,6 +9,7 @@ from jupyterhub.utils import iterate_until
 
 from ..orm import Dashboard
 from ..util import url_path_join
+from ..app import BuildersStore
 
 
 class ProgressDashboardHandler(SpawnProgressAPIHandler):
@@ -50,7 +51,7 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
             }
 
 
-        builders_store = self.settings['cds_builders']
+        builders_store = BuildersStore.get_instance(self.settings['config'])
 
         builder = builders_store[dashboard]
 

@@ -8,7 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
 from traitlets import Unicode, Integer, Bool, Dict, validate, Any, Type, default, observe
-from traitlets.config import Application, catch_config_error
+from traitlets.config import Application, catch_config_error, SingletonConfigurable
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
 import tornado.ioloop
@@ -19,6 +19,7 @@ from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jupyterhub.services.auth import HubOAuthCallbackHandler
 from jupyterhub import __version__ as __jh_version__
 from jupyterhub import dbutil
+from jupyterhub.traitlets import EntryPointType
 
 from .dashboard import DashboardRepr
 from .util import url_path_join
@@ -46,6 +47,22 @@ common_aliases = {
     'config': 'CDSDashboards.config_file',
     'db': 'CDSDashboards.db_url',
 }
+
+class CDSDashboardsConfig(SingletonConfigurable):
+
+    builder_class = EntryPointType(
+        default_value='cdsdashboards.builder.processbuilder.ProcessBuilder',
+        klass=Builder,
+        entry_point_group="cdsdashboards.builders",
+        help="""The class to use for building dashboard servers.
+
+        Should be a subclass of :class:`cdsdashboards.builder.builders.Builder`.
+
+        May be registered via entry points,
+            e.g. `c.cdsdashboards.builders = 'localprocess'`
+        """,
+    ).tag(config=True)
+
 
 class UpgradeDB(Application):
     """Upgrade the CDSDashboards database schema."""
@@ -460,15 +477,32 @@ UpgradeDB.classes.append(CDSDashboards)
 main = CDSDashboards.launch_instance
 
 
+class BuildersStore():
 
-def builder_factory(dashboard):
-    tornado.log.app_log.debug("Builder factory for key {}".format(dashboard.id))
-    return Builder(dashboard=dashboard) # or DockerBuilder 
+    _instance = None
 
-builders_store = BuildersDict(builder_factory)
+    @classmethod
+    def get_instance(cls, config):
+        """
+        Supply a config object to get the singleton instance - only normally available from web handlers
+        """
+        if cls._instance:
+            return cls._instance
+        
+        cdsconfig = CDSDashboardsConfig(config=config)
+
+        builder_class = cdsconfig.builder_class
+
+        def builder_factory(dashboard):
+            tornado.log.app_log.debug("Builder factory for key {}".format(dashboard.id))
+            return builder_class(dashboard=dashboard)
+
+        cls._instance = BuildersDict(builder_factory)
+        return cls._instance
+
 
 cds_tornado_settings = {
-    'cds_builders': builders_store,
+    #'cds_builders': builders_store,
 }
 
 if __name__ == '__main__':

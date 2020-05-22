@@ -12,6 +12,7 @@ from jupyterhub.utils import iterate_until
 
 from ..util import maybe_future
 from ..orm import Dashboard
+from ..app import BuildersStore
 
 
 class DashboardBaseMixin:
@@ -111,7 +112,7 @@ class DashboardBaseMixin:
 
     async def maybe_start_build(self, dashboard, dashboard_user, force_start=False):
 
-        builders_store = self.settings['cds_builders']
+        builders_store = BuildersStore.get_instance(self.settings['config'])
 
         builder = builders_store[dashboard]
 

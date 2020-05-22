@@ -4,6 +4,7 @@ from jupyterhub.apihandlers.base import APIHandler
 
 from ..orm import Dashboard
 from .base import DashboardBaseMixin
+from ..app import BuildersStore
 
 
 class DashboardBaseAPIHandler(APIHandler, DashboardBaseMixin):
@@ -27,7 +28,7 @@ class DashboardAPIHandler(DashboardBaseAPIHandler):
 
         # options = self.get_json_body()
 
-        builders_store = self.settings['cds_builders']
+        builders_store = BuildersStore.get_instance(self.settings['config'])
 
         builder = builders_store[dashboard]
 

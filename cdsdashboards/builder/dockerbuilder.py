@@ -185,13 +185,6 @@ class BasicDockerBuilder(Builder):
 
         return image_name
 
-    async def stop(self, now=False):
-        """Stop the build process - not currently called
-        """
-        raise NotImplementedError(
-            "Override in subclass. Must be a Tornado gen.coroutine."
-        )
-
 
 DockerBuilder = BasicDockerBuilder
 # Register plugin hooks so we use the Basic handlers by default, unless overridden

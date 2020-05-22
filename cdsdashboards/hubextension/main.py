@@ -10,6 +10,7 @@ from .base import DashboardBaseMixin
 from ..util import DefaultObjDict, url_path_join
 from .. import hookimpl
 from ..pluggymanager import pm
+from ..app import BuildersStore
 
 
 class DashboardBaseHandler(BaseHandler, DashboardBaseMixin):
@@ -178,7 +179,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
                 # Now cancel any existing build and force a rebuild
                 # TODO delete existing final_spawner
-                builders_store = self.settings['cds_builders']
+                builders_store = BuildersStore.get_instance(self.settings['config'])
                 builder = builders_store[dashboard]
 
                 async def do_restart_build(_):
@@ -294,7 +295,7 @@ class ClearErrorDashboardHandler(DashboardBaseHandler):
             pass # Redirect anyway, to let regular MainViewDashboardHandler handle the error
 
         elif dashboard.is_orm_user_allowed(current_user.orm_user):
-            builders_store = self.settings['cds_builders']
+            builders_store = BuildersStore.get_instance(self.settings['config'])
 
             builder = builders_store[dashboard]
 

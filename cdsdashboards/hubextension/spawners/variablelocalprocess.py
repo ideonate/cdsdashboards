@@ -11,6 +11,13 @@ class VariableLocalProcessSpawner(LocalProcessSpawner):
         Whether to run as voila ('voila') or regular jupyterhub singleuser ('')
         """,
     ).tag(config=True)
+
+    voila_template = Unicode(
+        'materialstream',
+        help="""
+        --template argument to pass to Voila. Default is materialstream
+        """,
+    ).tag(config=True)
     
     def load_state(self, state):
         if 'user_options' in state:
@@ -65,6 +72,10 @@ class VariableLocalProcessSpawner(LocalProcessSpawner):
 
         args.append('{--}Voila.base_url={base_url}/')
         args.append('{--}Voila.server_url=/')
+
+        template = self.voila_template
+        if template != '':
+            args.append('='.join(('{--}template', template)))
 
         #if self.default_url:
         #    default_url = self.format_string(self.default_url)

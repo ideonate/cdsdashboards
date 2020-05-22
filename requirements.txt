@@ -11,3 +11,4 @@ docker
 # LocalProcess Spawners
 jhsingle-native-proxy
 # voila
+# voila-materialstream
