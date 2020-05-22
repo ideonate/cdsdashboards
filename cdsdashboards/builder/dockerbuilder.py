@@ -177,7 +177,7 @@ class BasicDockerBuilder(Builder):
             'CMD ["voila-entrypoint.sh"]',
             'ENV JUPYTERHUB_GROUP {}'.format(dashboard.groupname),
             'ENV JUPYTERHUB_ANYONE {}'.format(dashboard.allow_all and '1' or '0'),
-            'ENV JUPYTERHUB_CDS_PRESENTATION_PATH {}'.format(dashboard.path or ''),
+            'ENV JUPYTERHUB_CDS_PRESENTATION_PATH "{}"'.format(dashboard.path or ''),
         ])
 
         await self.docker('commit', object_id, repository=reponame, tag=tag, changes=dockerfile_changes)
