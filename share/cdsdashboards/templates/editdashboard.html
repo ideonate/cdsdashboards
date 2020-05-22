@@ -14,7 +14,7 @@
             </h2>
             
 
-            <form method="post">
+            <form method="post" class="dashboard-edit-form">
 
                 <p><label for="name">Dashboard name:</label></p>
     
@@ -37,9 +37,24 @@
     
                 {% endif %}
 
+                <hr />
+
 
 
                 {% include "cdssource.html" %}
+
+
+                <hr />
+
+                <p><label for="path">Path to a file or folder (optional):</label></p>
+    
+                <p><input type="text" name="path" value="{{ dashboard_path | escape }}" /></p>
+    
+                {% if errors.path %}
+    
+                <p class="error">{{ errors.path | escape }}</p>
+    
+                {% endif %}
                
                       
                 {% if errors.all %}
@@ -48,7 +63,11 @@
     
                 {% endif %}
 
-                <input type="submit" value="Save" /> or <a href='{{ base_url }}hub/dashboards'>Cancel</a>
+                <div class="dashboard-buttons">
+
+                    <input type="submit" value="Save" /> or <a href='{{ base_url }}hub/dashboards'>Cancel</a>
+
+                </div>
 
                 </form>
 

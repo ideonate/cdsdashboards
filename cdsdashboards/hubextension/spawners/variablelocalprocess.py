@@ -1,3 +1,5 @@
+import os.path
+
 from traitlets import Unicode
 
 from jupyterhub.spawner import LocalProcessSpawner, _quote_safe
@@ -9,6 +11,13 @@ class VariableLocalProcessSpawner(LocalProcessSpawner):
         '',
         help="""
         Whether to run as voila ('voila') or regular jupyterhub singleuser ('')
+        """,
+    ).tag(config=True)
+
+    presentation_path = Unicode(
+        '',
+        help="""
+        Any specific file or folder to run in voila
         """,
     ).tag(config=True)
 
@@ -60,11 +69,19 @@ class VariableLocalProcessSpawner(LocalProcessSpawner):
 
         args.append('voila')
 
+        notebook_dir = ''
         if self.notebook_dir:
             notebook_dir = self.format_string(self.notebook_dir)
-            args.append(_quote_safe(notebook_dir))
         else:
-            args.append('`pwd`')
+            notebook_dir = '`pwd`' # TODO Change this
+
+        if self.presentation_path != '':
+            presentation_path = self.presentation_path
+            if presentation_path.startswith("/"):
+                presentation_path = presentation_path[1:]
+            notebook_dir = os.path.join(notebook_dir, presentation_path)
+
+        args.append(_quote_safe(notebook_dir))
 
         args.append('{--}port={port}')
 

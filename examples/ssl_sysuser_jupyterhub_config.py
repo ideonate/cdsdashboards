@@ -523,6 +523,9 @@ c.JupyterHub.spawner_class = 'dockerspawner.SystemUserSpawner'
 
 c.SystemUserSpawner.host_homedir_format_string = '/Users/dan/Dev/sysjupyter/jupyter-{username}'
 
+c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'
+
+
 from jupyter_client.localinterfaces import public_ips
 
 c.JupyterHub.hub_ip = public_ips()[0]

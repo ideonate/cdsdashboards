@@ -2,3 +2,16 @@
 .error {
     color: red;
 }
+
+.dashboard-buttons {
+    margin-top: 30px;
+}
+
+.dashboard-edit-form input[type="text"] {
+    width: 300px;
+}
+
+.dashboard-edit-form textarea {
+    width: 300px;
+    height: 60px;
+}

@@ -2,38 +2,64 @@
 
 # For a command line such as:
 # "/home/jovyan/entrypoint.sh jupyter notebook --ip 0.0.0.0 --port 59537 --NotebookApp.custom_display_url=http://127.0.0.1:59537"
-# strip out most args, just pass on the port
+# strip out most args, just pass on the port and notebook_dir
+#
+# Requires bash v4+
 
 
-collect_port=0
 port="8888"
+
+echo "Command line: $@"
+
+# Iterate through cmd line arguments, picking out args
+declare -A args
+
 delim='='
+collect_next=''
 
 for var in "$@"
 do
-    echo "$var"
 
-    if [ "$collect_port" == "1" ]; then
-       echo "Collecting external port $var"
-       port=$var
-       collect_port=0
-    fi
+  if [ ! -z "$collect_next" ]; then
+    echo "Collecting $collect_next $var"
+    args[$collect_next]=$var
+    collect_next=''
+  else
 
     splitarg=${var%%$delim*}
 
-    if [ "$splitarg" == "--port" ]; then
-       if [ ${#splitarg} == ${#var} ]; then
-         collect_port=1
-       else
-         port=${var#*$delim}
-         echo "Setting external port $port"
-       fi
+    if [ "${splitarg:0:2}" == "--" ]; then
+      if [ ${#splitarg} == ${#var} ]; then # There is no = in this argument
+        collect_next="${splitarg:2}"
+      else
+        args["${splitarg:2}"]=${var#*$delim}
+        echo "Setting ${splitarg:2} ${var#*$delim}"
+      fi
     fi
+  fi
+
 done
 
+# Update port if found in args
+if [ ! -z ${args["port"]} ]; then
+  port=${args["port"]}
+fi
 
+# Starting folder or file
+notebook=`pwd`
+if [ ! -z ${args["notebook-dir"]} ]; then
+  notebook=${args["notebook-dir"]}
+fi
+
+if [ ! -z "$JUPYTERHUB_CDS_PRESENTATION_PATH" ]; then
+  notebook="$notebook/$JUPYTERHUB_CDS_PRESENTATION_PATH"
+fi
+
+# Calculate a reasonable port for the sub-process
 destport=$((port + 1))
 
 echo "Using internal port $destport"
+echo "Using file/folder location $notebook"
 
-jhsingle-native-proxy --destport $destport --authtype oauth voila `pwd` {--}port={port} {--}no-browser {--}Voila.base_url={base_url}/ {--}Voila.server_url=/ --port $port
+# Run the proxy process
+jhsingle-native-proxy --destport $destport --authtype oauth voila "$notebook" {--}port={port} {--}no-browser {--}Voila.base_url={base_url}/ {--}Voila.server_url=/ --port $port

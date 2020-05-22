@@ -523,6 +523,9 @@ from dockerspawner import DockerSpawner
 
 c.JupyterHub.spawner_class = DockerSpawner
 
+c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'
+
+
 from jupyter_client.localinterfaces import public_ips
 
 c.JupyterHub.hub_ip = public_ips()[0]
