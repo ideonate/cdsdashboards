@@ -137,7 +137,11 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         elif not self.name_regex.match(dashboard_name):
             errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>. Max 100 chars.'
 
-        # TODO validate path
+        if '..' in dashboard_path:
+            errors.path = 'Path must not contain ..'
+        elif not self.path_regex.match(dashboard_path):
+            errors.path = 'Please enter valid URL path characters'
+        
 
         dashboard_options = self.read_options(dashboard, errors)
 

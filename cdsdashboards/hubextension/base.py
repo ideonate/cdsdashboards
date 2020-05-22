@@ -22,6 +22,8 @@ class DashboardBaseMixin:
     trailingdash_regex = re.compile(r'\-+$')
 
     name_regex = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_\- \!\@\$\(\)\*\+\?\<\>\.]{0,99}$')
+
+    path_regex = re.compile(r'^[A-Za-z0-9\-\._~\:\/\?#\[\]@\!\$\&\(\)\*\+ ,;\%\=]*$')
     
     def calc_urlname(self, dashboard_name):
         base_urlname = re.sub(self.unsafe_regex, '-', dashboard_name).lower()[:35]

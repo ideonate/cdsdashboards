@@ -75,7 +75,8 @@ class VariableLocalProcessSpawner(LocalProcessSpawner):
         else:
             notebook_dir = '`pwd`' # TODO Change this
 
-        if self.presentation_path != '':
+        if self.presentation_path != '' and not '..' in self.presentation_path:
+            # Should have been validated when dashboard created, but .. is particularly dangerous
             presentation_path = self.presentation_path
             if presentation_path.startswith("/"):
                 presentation_path = presentation_path[1:]
