@@ -27,12 +27,13 @@ ContainDS Dashboards currently works on single-server JupyterHubs (not Kubernete
 
 It expects your JupyterHub to be configured with either the default LocalProcessSpawner or DockerSpawner (or similar).
 
-:ref:`setup`
+To continue installation please see :ref:`setup`
 
+Documentation Contents
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. toctree::
    :maxdepth: 3
-   :caption: Documentation Contents:
 
    chapters/overview
    chapters/setup/setup
