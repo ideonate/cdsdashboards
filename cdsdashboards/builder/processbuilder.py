@@ -50,7 +50,7 @@ class ProcessBuilder(Builder):
 
         new_server_options = {
             'presentation_type': 'voila',
-            'presentation_path': dashboard.path,
+            'presentation_path': dashboard.start_path,
             'cmd': 'jhsingle-native-proxy',
             'environment': {
                 'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),

@@ -46,13 +46,13 @@
 
                 <hr />
 
-                <p><label for="path">Path to a file or folder (optional):</label></p>
+                <p><label for="start_path">Path to a file or folder (optional):</label></p>
     
-                <p><input type="text" name="path" value="{{ dashboard_path | escape }}" /></p>
+                <p><input type="text" name="start_path" value="{{ dashboard_start_path | escape }}" /></p>
     
-                {% if errors.path %}
+                {% if errors.start_path %}
     
-                <p class="error">{{ errors.path | escape }}</p>
+                <p class="error">{{ errors.start_path | escape }}</p>
     
                 {% endif %}
                

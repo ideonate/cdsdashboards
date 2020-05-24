@@ -48,7 +48,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         dashboard = None
         dashboard_name = ''
         dashboard_description = ''
-        dashboard_path = ''
+        dashboard_start_path = ''
         dashboard_options = {}
 
         if dashboard_urlname is not None:
@@ -63,7 +63,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             dashboard_name = dashboard.name
             dashboard_description = dashboard.description
-            dashboard_path = dashboard.path
+            dashboard_start_path = dashboard.start_path
             dashboard_options = dashboard.options
 
         # Get List of possible visitor users
@@ -89,7 +89,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard=dashboard,
             dashboard_name=dashboard_name,
             dashboard_description=dashboard_description,
-            dashboard_path=dashboard_path,
+            dashboard_start_path=dashboard_start_path,
             dashboard_options=dashboard_options,
             spawner_name=spawner_name,
             current_user=current_user,
@@ -128,7 +128,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         dashboard_description = self.get_argument('description').strip()
 
-        dashboard_path = self.get_argument('path').strip()
+        dashboard_start_path = self.get_argument('start_path').strip()
 
         errors = DefaultObjDict()
 
@@ -137,10 +137,10 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         elif not self.name_regex.match(dashboard_name):
             errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>. Max 100 chars.'
 
-        if '..' in dashboard_path:
-            errors.path = 'Path must not contain ..'
-        elif not self.path_regex.match(dashboard_path):
-            errors.path = 'Please enter valid URL path characters'
+        if '..' in dashboard_start_path:
+            errors.start_path = 'Path must not contain ..'
+        elif not self.start_path_regex.match(dashboard_start_path):
+            errors.start_path = 'Please enter valid URL path characters'
         
 
         dashboard_options = self.read_options(dashboard, errors)
@@ -166,7 +166,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
                     dashboard = Dashboard(
                         name=dashboard_name, urlname=urlname, user=current_user.orm_user, 
-                        description=dashboard_description, path=dashboard_path, source_spawner=orm_spawner,
+                        description=dashboard_description, start_path=dashboard_start_path, source_spawner=orm_spawner,
                         options=dashboard_options
                         )
                     self.log.debug('dashboard urlname '+dashboard.urlname+', main name '+dashboard.name)
@@ -174,7 +174,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 else:
                     dashboard.name = dashboard_name
                     dashboard.description = dashboard_description
-                    dashboard.path = dashboard_path
+                    dashboard.start_path = dashboard_start_path
                     dashboard.source_spawner = orm_spawner
                     dashboard.options = dashboard_options
                     
@@ -220,7 +220,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard=dashboard,
                 dashboard_name=dashboard_name,
                 dashboard_description=dashboard_description,
-                dashboard_path=dashboard_path,
+                dashboard_start_path=dashboard_start_path,
                 dashboard_options=dashboard_options,
                 spawner_name=spawner_name,
                 spawners=spawners,
