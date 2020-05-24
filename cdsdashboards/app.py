@@ -63,6 +63,14 @@ class CDSDashboardsConfig(SingletonConfigurable):
         """,
     ).tag(config=True)
 
+    server_name_template = Unicode(
+        '{urlname}-{date}-{time}',
+        help="""
+        How to name the final user server that runs the dashboard. Template vars will be expanded:
+
+        """
+    ).tag(config=True)
+
 
 class UpgradeDB(Application):
     """Upgrade the CDSDashboards database schema."""
@@ -495,7 +503,7 @@ class BuildersStore():
 
         def builder_factory(dashboard):
             tornado.log.app_log.debug("Builder factory for key {}".format(dashboard.id))
-            return builder_class(dashboard=dashboard)
+            return builder_class(dashboard=dashboard, cdsconfig=cdsconfig)
 
         cls._instance = BuildersDict(builder_factory)
         return cls._instance

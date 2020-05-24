@@ -75,7 +75,7 @@ class BasicDockerBuilder(Builder):
         """Start the dashboard
 
         Returns:
-          (str, int): the (ip, port) where the Hub can connect to the server.
+          (str, str): the (new_server_name, new_server_options) of the new dashboard server.
 
         """
 
@@ -87,7 +87,9 @@ class BasicDockerBuilder(Builder):
 
         self._build_pending = True
 
-        tag = datetime.today().strftime('%Y%m%d-%H%M%S')
+        ns = self.template_namespace()
+
+        tag = self.format_string('{date}-{time}', ns=ns)
 
         image_name = await self.build_image(dashboard, dashboard_user, tag)
 
@@ -101,7 +103,7 @@ class BasicDockerBuilder(Builder):
 
         ### Start a new server
 
-        new_server_name = '{}-{}'.format(dashboard.urlname, tag)
+        new_server_name = self.format_string(self.cdsconfig.server_name_template, ns=ns)
 
         if not self.allow_named_servers:
             raise BuildException(400, "Named servers are not enabled.")

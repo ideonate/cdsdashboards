@@ -1,4 +1,6 @@
 from asyncio import sleep
+from datetime import datetime
+
 from traitlets.config import LoggingConfigurable
 from traitlets import Any, Bool, Integer
 from tornado.log import app_log
@@ -16,7 +18,7 @@ class Builder(LoggingConfigurable):
 
     dashboard = None
 
-    server = None # TODO not currently used
+    cdsconfig = None
 
     # private attributes for tracking status
     _build_pending = False
@@ -101,6 +103,12 @@ class Builder(LoggingConfigurable):
                     cls.__name__, '`, `'.join(missing)
                 )
             )
+
+    def __init__(self, dashboard, cdsconfig, config=None):
+        super().__init__(config=config)
+
+        self.dashboard = dashboard
+        self.cdsconfig = cdsconfig
 
     @property
     def last_activity(self):
@@ -205,7 +213,7 @@ class Builder(LoggingConfigurable):
         """Start the dashboard
 
         Returns:
-          (str, int): the (ip, port) where the Hub can connect to the server.
+          (str, str): the (new_server_name, new_server_options) of the new dashboard server.
 
         """
         raise NotImplementedError(
@@ -214,6 +222,53 @@ class Builder(LoggingConfigurable):
 
     allow_named_servers = True # TODO take from main app config
     named_server_limit_per_user = 0
+
+    def template_namespace(self):
+        """Return the template namespace for format-string formatting.
+
+        Currently used on default_url and notebook_dir.
+
+        Subclasses may add items to the available namespace.
+
+        The default implementation includes::
+
+            {
+              'urlname': dashboard.urlname,
+              'date': <current date in YYmmdd format>,
+              'time': <current date in HHMMSS format>,
+            }
+
+        Returns:
+
+            ns (dict): namespace for string formatting.
+        """
+        date = datetime.today().strftime('%Y%m%d')
+        time = datetime.today().strftime('%H%M%S')
+        d = {
+            'urlname': self.dashboard.urlname,
+            'date': date,
+            'time': time
+            }
+        return d
+
+    def format_string(self, s, ns=None):
+        """Render a Python format string
+
+        Uses :meth:`Builder.template_namespace` to populate format namespace, based on self.dashboard.
+
+        Optionally provide the namespace as ns.
+
+        Args:
+
+            s (str): Python format-string to be formatted.
+
+        Returns:
+
+            str: Formatted string, rendered
+        """
+        if ns is None:
+            ns = self.template_namespace()
+        return s.format(**ns)
 
 
 class BuildersDict(dict):

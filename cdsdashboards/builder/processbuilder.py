@@ -1,4 +1,3 @@
-from datetime import datetime
 from tornado.log import app_log
 
 from .builders import Builder, BuildException
@@ -10,7 +9,7 @@ class ProcessBuilder(Builder):
         """Start the dashboard
 
         Returns:
-          (str, int): the (ip, port) where the Hub can connect to the server.
+          (str, str): the (new_server_name, new_server_options) of the new dashboard server.
 
         """
 
@@ -22,9 +21,7 @@ class ProcessBuilder(Builder):
 
         self._build_pending = True
 
-        tag = datetime.today().strftime('%Y%m%d-%H%M%S')
-
-        new_server_name = '{}-{}'.format(dashboard.urlname, tag)
+        new_server_name = self.format_string(self.cdsconfig.server_name_template)
 
         if not self.allow_named_servers:
             raise BuildException(400, "Named servers are not enabled.")

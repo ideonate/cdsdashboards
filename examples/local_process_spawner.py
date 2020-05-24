@@ -16,6 +16,7 @@ c.ConfigurableHTTPProxy.debug = True
 c.JupyterHub.allow_named_servers = True
 
 
+c.CDSDashboardsConfig.server_name_template = 'dash-{urlname}'
 
 from cdsdashboards.app import CDS_TEMPLATE_PATHS, cds_tornado_settings
 from cdsdashboards.hubextension import cds_extra_handlers
