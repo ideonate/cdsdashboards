@@ -49,7 +49,6 @@ _Other user sees a safe user-friendly Voila version of the original notebook_
 Basic requirements:
 
 - JupyterHub 1.0+
-- DockerSpawner 0.11.0+
 - Python 3.6+
 
 You should be able to use any authenticator for users to login - for example, corporate Google email sign in, or LDAP.

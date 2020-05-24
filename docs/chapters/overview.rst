@@ -15,7 +15,7 @@ ContainDS Solutions will:
 - Eliminate IT security threats from data science teams hosting web apps and sensitive data in arbitrary insecure cloud locations.
 - Empower data scientists to use their dashboarding framework of choice while unifying your team’s approach to publishing.
 
-ContainDS Dashboards is an extension for JupyterHub that allows users to instantly publish notebooks and other sourc code files 
+ContainDS Dashboards is an extension for JupyterHub that allows users to instantly publish notebooks and other source code files 
 as user-friendly interactive dashboards to share with non-technical colleagues.
 
 Any authorised JupyterHub user can view the dashboard. This means that you can protect the dashboard through any authentication that works 
