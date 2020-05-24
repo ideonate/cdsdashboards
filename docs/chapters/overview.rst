@@ -1,18 +1,70 @@
 .. _overview:
 
-Overview
----------
+ContainDS Dashboards Overview
+-----------------------------
 
-A Dashboard publishing solution for Data Science teams to share results with decision makers.
+`ContainDS <https://containds.com/>`__ is a data science platform for teams working on discrete projects. 
+It provides simple infrastructure to share prototypes and dashboards based on any open source frameworks.
 
-Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish notebooks as user-friendly interactive 
-dashboards to share with non-technical colleagues.
+Your data scientists will always use their preferred development environments.
 
-This open source package allows users to create interactive Jupyter notebooks that can be instantly and reliably published as 
-secure interactive `Voila <https://voila.readthedocs.io/en/stable/>`__ web apps. Any authorised JupyterHub user can view the dashboard.
+ContainDS Solutions will:
+
+- Grant decision makers and clients easy access to actionable insights helping them move projects forward quickly and with confidence.
+- Save time and reduce errors for your Data Science team, allowing them to focus on their core roles.
+- Eliminate IT security threats from data science teams hosting web apps and sensitive data in arbitrary insecure cloud locations.
+- Empower data scientists to use their dashboarding framework of choice while unifying your team’s approach to publishing.
+
+ContainDS Dashboards is an extension for JupyterHub that allows users to instantly publish notebooks and other sourc code files 
+as user-friendly interactive dashboards to share with non-technical colleagues.
+
+Any authorised JupyterHub user can view the dashboard. This means that you can protect the dashboard through any authentication that works 
+with JupyterHub - including single-sign-on through corporate email accounts or LDAP.
+
+How it works
+~~~~~~~~~~~~
+
+- Data scientist creates a Jupyter Notebook as normal
+- Data scientist creates a new Dashboard to clone their Jupyter server
+- Other logged-in JupyterHub users see the dashboard in their list
+- Click to launch as a server, using OAuth to gain access
+- User sees a safe user-friendly Voila version of the original notebook
+
+All of this works through a new Dashboards menu item added to JupyterHub's header.
+
+Data scientist creates a Jupyter Notebook as normal
+
+.. figure:: ../../_static/screenshots/1_Original_Jupyter_Notebook.png
+   :alt: Screenshot of Original Jupyter Notebook
+
+   
+Data scientist creates a new Dashboard to clone their Jupyter server
+
+.. figure:: ../../_static/screenshots/2_Create_New_Dashboard.png
+   :alt: Screenshot of Create New Dashboard
 
 
-.. figure:: ../_static/screenshots/4_Dashboard_Voila_built_automatically.png
-   :alt: Screenshot of a Dashboard starting
+Other logged-in JupyterHub users see the dashboard in their list
 
-   Screenshot of a Dashboard starting
+.. figure:: ../../_static/screenshots/3_Other_User_sees_dashboard.png
+   :alt: Screenshot of Other User sees dashboard
+
+
+Click to launch as a server - Dashboard Voila built automatically
+
+.. figure:: ../../_static/screenshots/4_Dashboard_Voila_built_automatically.png
+   :alt: Screenshot of Dashboard Voila built automatically
+
+
+Uses OAuth to gain access
+
+.. figure:: ../../_static/screenshots/5_Other_user_OAuths.png
+   :alt: Screenshot of Uses OAuth to gain access
+
+
+Other user sees a safe user-friendly Voila version of the original notebook
+
+.. figure:: ../../_static/screenshots/6_Voila_Dashboard.png
+   :alt: Screenshot of Voila Dashboard
+
+

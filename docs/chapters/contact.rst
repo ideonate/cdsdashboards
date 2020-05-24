@@ -1,3 +1,6 @@
+.. _contact:
+
+
 Contact for Feedback
 --------------------
 

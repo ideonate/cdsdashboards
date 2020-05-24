@@ -543,8 +543,8 @@ c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-#c.DockerSpawner.image = 'ideonate/jh-voila-oauth-scipy:latest'
-c.DockerSpawner.image = 'jh-voila-oauth-singleuser:latest'
+c.DockerSpawner.image = 'ideonate/jh-voila-oauth-scipy:20200524-110326'
+#c.DockerSpawner.image = 'jh-voila-oauth-singleuser:latest'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
 
