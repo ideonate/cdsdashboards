@@ -64,9 +64,13 @@ class CDSDashboardsConfig(SingletonConfigurable):
     ).tag(config=True)
 
     server_name_template = Unicode(
-        '{urlname}-{date}-{time}',
+        'dash-{urlname}',
         help="""
         How to name the final user server that runs the dashboard. Template vars will be expanded:
+
+        {urlname} : dashboard URL-safe name
+        {date} : <current date in YYmmdd format>
+        {time} : <current date in HHMMSS format>
 
         """
     ).tag(config=True)
