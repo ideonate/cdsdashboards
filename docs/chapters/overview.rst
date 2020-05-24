@@ -9,7 +9,7 @@ Run a private on-premise or cloud-based JupyterHub with extensions to instantly 
 dashboards to share with non-technical colleagues.
 
 This open source package allows users to create interactive Jupyter notebooks that can be instantly and reliably published as 
-secure interactive [Voila](https://voila.readthedocs.io/en/stable/) web apps. Any authorised JupyterHub user can view the dashboard.
+secure interactive `Voila <https://voila.readthedocs.io/en/stable/>`__ web apps. Any authorised JupyterHub user can view the dashboard.
 
 
 .. figure:: ../_static/screenshots/4_Dashboard_Voila_built_automatically.png
