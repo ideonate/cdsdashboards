@@ -27,17 +27,6 @@ class VariableLocalProcessSpawner(LocalProcessSpawner):
         --template argument to pass to Voila. Default is materialstream
         """,
     ).tag(config=True)
-    
-    def load_state(self, state):
-        if 'user_options' in state:
-            self.user_options = state['user_options']
-        super().load_state(state)
-
-    def get_state(self):
-        state = super().get_state()
-        if self.user_options:
-            state['user_options'] = self.user_options
-        
 
     async def start(self):
         if self.user_options:
