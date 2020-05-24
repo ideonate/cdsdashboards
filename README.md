@@ -20,28 +20,28 @@ All of this works through a new Dashboards menu item added to JupyterHub's heade
 
 _Data scientist creates a Jupyter Notebook as normal_
 
-![Original Jupyter Notebook](./screenshots/1_Original_Jupyter_Notebook.png "Original Jupyter Notebook")
+![Original Jupyter Notebook](./docs/_static/screenshots/1_Original_Jupyter_Notebook.png "Original Jupyter Notebook")
 
 _Data scientist creates a new Dashboard to clone their Jupyter server_
 
-![Create New Dashboard](./screenshots/2_Create_New_Dashboard.png "Create New Dashboard")
+![Create New Dashboard](./docs/_static/screenshots/2_Create_New_Dashboard.png "Create New Dashboard")
 
 
 _Other logged-in JupyterHub users see the dashboard in their list_
 
-![Other User sees dashboard](./screenshots/3_Other_User_sees_dashboard.png "Other User sees dashboard")
+![Other User sees dashboard](./docs/_static/screenshots/3_Other_User_sees_dashboard.png "Other User sees dashboard")
 
 _Click to launch as a server_
 
-![Dashboard Voila built automatically](./screenshots/4_Dashboard_Voila_built_automatically.png "Dashboard Voila built automatically")
+![Dashboard Voila built automatically](./docs/_static/screenshots/4_Dashboard_Voila_built_automatically.png "Dashboard Voila built automatically")
 
 _Uses OAuth to gain access_
 
-![Other user OAuths](./screenshots/5_Other_user_OAuths.png "Other user OAuths")
+![Other user OAuths](./docs/_static/screenshots/5_Other_user_OAuths.png "Other user OAuths")
 
 _Other user sees a safe user-friendly Voila version of the original notebook_
 
-![Voila Dashboard](./screenshots/6_Voila_Dashboard.png "Voila Dashboard")
+![Voila Dashboard](./docs/_static/screenshots/6_Voila_Dashboard.png "Voila Dashboard")
 
 
 ## Requirements
