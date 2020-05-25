@@ -58,6 +58,11 @@ Change or add the following in your jupyterhub_config.py file.
     # Replacement for SystemdSpawner
     #c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableSystemdSpawner'
 
+    # OR...
+
+    # Replacement for UserCreatingSpawner (a simple extension of SystemdSpawner) - The Littlest JupyterHub's default spawner
+    #c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variableusercreating.VariableUserCreatingSpawner'
+
 
     c.JupyterHub.allow_named_servers = True
 
@@ -77,8 +82,9 @@ they are really servers just like the original Jupyter notebook servers, but run
 Instead of the original LocalProcessSpawner, you actually need to use a slightly enhanced version of that spawner called VariableLocalProcessSpawner 
 - that is set by assigning to c.JupyterHub.spawner_class as above. 
 If using SystemdSpawner, comment out the line containing VariableSystemdSpawner instead.
+VariableUserCreatingSpawner should be used in a default The Littlest JupyterHub (TLJH) installation.
 
-If you are using The Littlest JupyterHub, you can copy the settings above into a new file called 
+If you are using TLJH, you can copy the settings above into a new file called 
 /opt/tljh/config/jupyterhub_config.d/cdsdashboards_config.py, although ideally you would set allow_named_servers and spawner_class through 
 tljh-config (but that doesn't matter if you're just trying it out).
 

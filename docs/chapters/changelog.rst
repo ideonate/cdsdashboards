@@ -4,6 +4,14 @@
 Changelog
 ---------
 
+Version 0.0.9
+~~~~~~~~~~~~~
+
+Released 25 May 2020
+
+- VariableUserCreatingSpawner for use in place of the default spawner in TLJH.
+
+
 Version 0.0.8
 ~~~~~~~~~~~~~
 
