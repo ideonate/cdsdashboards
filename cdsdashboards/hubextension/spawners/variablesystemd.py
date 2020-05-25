@@ -1,13 +1,13 @@
-from jupyterhub.spawner import LocalProcessSpawner
+from systemdspawner import SystemdSpawner
 from traitlets import Unicode
 
 from .variablemixin import VariableMixin
 
 
-class VariableLocalProcessSpawner(LocalProcessSpawner, VariableMixin):
-    
+class VariableSystemdSpawner(SystemdSpawner, VariableMixin):
+
     voila_template = Unicode(
-        'materialstream',
+        '',
         help="""
         --template argument to pass to Voila. Default is materialstream
         """,
