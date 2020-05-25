@@ -1,7 +1,7 @@
 .. _overview:
 
-ContainDS Dashboards Overview
------------------------------
+Overview
+--------
 
 `ContainDS <https://containds.com/>`__ is a data science platform for teams working on discrete projects. 
 It provides simple infrastructure to share prototypes and dashboards based on any open source frameworks.

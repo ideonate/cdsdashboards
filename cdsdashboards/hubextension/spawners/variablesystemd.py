@@ -38,3 +38,4 @@ class VariableSystemdSpawner(SystemdSpawner, VariableMixin):
           Also needs to preserve --, port, and base_url to pass on to jhsingle-native-proxy
         """
         return string.replace('{USERNAME}', self.user.name).replace('{USERID}', str(self.user.id))
+
