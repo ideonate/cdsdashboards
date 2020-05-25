@@ -603,15 +603,11 @@ c.JupyterHub.ssl_key = os.environ['SSL_KEY']
 #c.JupyterHub.subdomain_host = ''
 
 ## Paths to search for jinja templates, before using the default templates.
-from cdsdashboards.app import CDS_TEMPLATE_PATH, cds_tornado_settings
+from cdsdashboards.app import CDS_TEMPLATE_PATHS
 
-c.JupyterHub.template_paths = [
-    CDS_TEMPLATE_PATH
-]
+c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
 
 ## Extra settings overrides to pass to the tornado application.
-
-c.JupyterHub.tornado_settings = cds_tornado_settings
 
 ## Trust user-provided tokens (via JupyterHub.service_tokens) to have good
 #  entropy.

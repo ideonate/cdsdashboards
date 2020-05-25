@@ -38,6 +38,7 @@ Documentation Contents
    chapters/overview
    chapters/setup/setup
    chapters/requirements
+   chapters/changelog
    chapters/contact
    chapters/license
 
