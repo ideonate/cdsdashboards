@@ -51,7 +51,7 @@ common_aliases = {
 class CDSDashboardsConfig(SingletonConfigurable):
 
     builder_class = EntryPointType(
-        default_value='cdsdashboards.builder.processbuilder.ProcessBuilder',
+        default_value='cdsdashboards.builder.builders.Builder',
         klass=Builder,
         entry_point_group="cdsdashboards.builders",
         help="""The class to use for building dashboard servers.
@@ -217,9 +217,6 @@ class CDSDashboards(Application):
         """,
         config=True
     )
-
-    # TODO This builder_class config is not currently used - always just does DockerBuilder
-    builder_class = Type(default_value=DockerBuilder, klass=Builder).tag(config=True)
 
     hub_api_token = Unicode(
         help="""API token for talking to the JupyterHub API""",

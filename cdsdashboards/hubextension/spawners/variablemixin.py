@@ -34,11 +34,9 @@ class VariableMixin():
 
         args.append('voila')
 
-        notebook_dir = ''
+        notebook_dir = '.'
         if self.notebook_dir:
             notebook_dir = self.format_string(self.notebook_dir)
-        else:
-            notebook_dir = '`pwd`' # TODO Change this
 
         if presentation_path != '' and not '..' in presentation_path:
             # Should have been validated when dashboard created, but .. is particularly dangerous

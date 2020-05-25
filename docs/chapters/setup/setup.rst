@@ -14,12 +14,14 @@ Or try `The Littlest JupyterHub <http://tljh.jupyter.org/en/latest/>`__.
 During JupyterHub configuration, you may need to choose a 'spawner' type - the way in which new Jupyter notebook environments are run for new users 
 
 
-Your setup can use the default LocalProcessSpawner, or you can choose to use DockerSpawner.
+Your setup can use the default LocalProcessSpawner, SystemdSpawner, or you can choose to use DockerSpawner.
+
+It should be possible to use other spawner types and configurations - please :ref:`contact us<contact>` for assistance.
 
 The Docker alternative means your users' computing environments are cleanly containerised (so separate from the rest of your server). It also means 
 that the user's file tree can be easily cloned into a new dashboard.
 
-Once JupyterHub is running, using either DockerSpawner or LocalProcessSpawner (or similar), please continue based on the spawner type you are using:
+Once JupyterHub is running, please continue based on the spawner type you are using:
 
 .. toctree::
    :maxdepth: 1

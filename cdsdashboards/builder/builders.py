@@ -12,7 +12,6 @@ class Builder(LoggingConfigurable):
     Subclass this, and override the following methods:
 
     - start
-    - stop
 
     """
 
@@ -217,7 +216,7 @@ class Builder(LoggingConfigurable):
 
         """
         raise NotImplementedError(
-            "Override in subclass. Must be a Tornado gen.coroutine."
+            "You must specify a c.CDSDashboardsConfig.builder_class in your JupyterHub jupyterhub_config.py file."
         )
 
     allow_named_servers = True # TODO take from main app config

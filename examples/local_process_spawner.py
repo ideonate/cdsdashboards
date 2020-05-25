@@ -2,7 +2,8 @@
 c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
 
 c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableLocalProcessSpawner'
-#c.JupyterHub.spawner_class = 'jupyterhub.spawner.LocalProcessSpawner'
+
+c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.processbuilder.ProcessBuilder'
 
 c.LocalProcessSpawner.debug = True
 
