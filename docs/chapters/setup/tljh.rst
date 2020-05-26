@@ -1,23 +1,26 @@
-.. _localprocess:
+.. _tljh:
 
 
-LocalProcessSpawner or SystemdSpawner
-=====================================
+The Littlest JupyterHub
+=======================
 
-JupyterHub's default spawner (method of starting new Jupyter environments for individual users) is called 
-`LocalProcessSpawner <https://jupyterhub.readthedocs.io/en/stable/api/spawner.html#localprocessspawner>`__. 
-It simply runs 'jupyter notebook' as a new process on the server.
+There is a nice easy distribution of JupyterHub that is a great way to get started on a single-server computer.
 
-`SystemdSpawner <https://github.com/jupyterhub/systemdspawner>`__ is very similar but offers tighter control over the processes being 
-run since it uses systemd, a system and service manager.
+These instructions take you through setting up ContainDS Dashboards on a standard install of The Littlest JupyterHub (TLJH).
 
-If you are using The Littlest JupyterHub - a nice simple distribution that will get you started on a single server - please 
-:ref:`see specific TLJH instructions<tljh>`.
+First of all, `set up your TLJH <http://tljh.jupyter.org/en/latest/install/index.html>`__ - on the cloud, in your own server, 
+or just on a laptop in a VM.
+
+
+Python environments
+~~~~~~~~~~~~~~~~~~~
 
 Note that you may have two different Python environments: the 'hub' environment and the 'user' environment. The hub environment is where 
 JupyterHub itself is running, serving the main web framework for login and managing Jupyter servers on your JupyterHub website. The user 
 environment is where individual's Jupyter notebooks are running.
 
+For example, in The Littlest JupyterHub, the two environments are usually located in /opt/tljh/hub (for the hub environment) and /opt/tljh/user 
+(for the user environment).
 
 Installing cdsdashboards
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,14 +29,14 @@ Install the cdsdashboards package in the hub environment:
 
 ::
 
-    pip install cdsdashboards
+    sudo -E /opt/tljh/hub/bin/python3 -m pip install cdsdashboards
 
 
 Also install in the user environment:
 
 ::
 
-    pip install cdsdashboards
+    sudo -E /opt/tljh/user/bin/python3 -m pip install cdsdashboards
 
 
 Not all dependencies are strictly required in both environments - work is underway to split these out into separate installation tracks.
@@ -44,17 +47,16 @@ as the 'presentation package' - Voila, which is a user-friendly and safe way to 
 Changes to jupyterhub_config.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Change or add the following in your jupyterhub_config.py file.
+Change or add the following in your JupyterHub config.
+
+You can copy the settings above into a new file called 
+/opt/tljh/config/jupyterhub_config.d/cdsdashboards_config.py, although ideally you would set allow_named_servers and spawner_class through 
+tljh-config (but that doesn't matter if you're just trying it out).
 
 ::
 
-    # Replacement for LocalProcessSpawner
-    c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableLocalProcessSpawner'
-
-    # OR...
-
-    # Replacement for SystemdSpawner
-    #c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableSystemdSpawner'
+    # Replacement for UserCreatingSpawner (a simple extension of SystemdSpawner) - The Littlest JupyterHub's default spawner
+    c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variableusercreating.VariableUserCreatingSpawner'
 
 
     c.JupyterHub.allow_named_servers = True
@@ -72,9 +74,14 @@ The allow_named_servers option is a standard JupyterHub option where every user 
 They can add extra environments by specifying a name. ContainDS Dashboards makes use of this by running the presentation servers as named servers - 
 they are really servers just like the original Jupyter notebook servers, but running Voila or another system instead.
 
-Instead of the original LocalProcessSpawner, you actually need to use a slightly enhanced version of that spawner called VariableLocalProcessSpawner 
-- that is set by assigning to c.JupyterHub.spawner_class as above. 
-If using SystemdSpawner, comment out the line containing VariableSystemdSpawner instead.
+Instead of the original UserCreatingSpawner, you actually need to use a slightly enhanced version of that spawner called VariableUserCreatingSpawner 
+- that is set by assigning to c.JupyterHub.spawner_class as above.
+
+Reload the TLJH servers:
+
+::
+
+    sudo tljh-config reload
 
 
 Options
