@@ -10,7 +10,7 @@ from .base import DashboardBaseMixin
 from ..util import DefaultObjDict, url_path_join
 from .. import hookimpl
 from ..pluggymanager import pm
-from ..app import BuildersStore
+from ..app import BuildersStore, CDSConfigStore
 
 
 class DashboardBaseHandler(BaseHandler, DashboardBaseMixin):
@@ -84,6 +84,10 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         errors = DefaultObjDict()
 
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+        
+        presentation_types = cdsconfig.presentation_types
+
         html = self.render_template(
             "editdashboard.html",
             **self.template_vars(dict(
@@ -94,6 +98,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_start_path=dashboard_start_path,
             dashboard_presentation_type=dashboard_presentation_type,
             dashboard_options=dashboard_options,
+            presentation_types=presentation_types,
             spawner_name=spawner_name,
             current_user=current_user,
             spawners=spawners,
@@ -146,7 +151,13 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             errors.start_path = 'Path must not contain ..'
         elif not self.start_path_regex.match(dashboard_start_path):
             errors.start_path = 'Please enter valid URL path characters'
+
+        presentation_types = CDSConfigStore.get_instance(self.settings['config']).presentation_types
         
+        if not dashboard_presentation_type in presentation_types:
+            errors.presentation_type = 'Framework %s invalid - it must be one of the allowed types: %s'.format(
+                dashboard_presentation_type, ', '.join(presentation_types)
+                )
 
         dashboard_options = self.read_options(dashboard, errors)
 
@@ -231,6 +242,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_start_path=dashboard_start_path,
                 dashboard_presentation_type=dashboard_presentation_type,
                 dashboard_options=dashboard_options,
+                presentation_types=presentation_types,
                 spawner_name=spawner_name,
                 spawners=spawners,
                 errors=errors,

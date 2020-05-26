@@ -50,10 +50,17 @@
 
                 <p><label for="presentation_type">Framework:</label>
                     <select name="presentation_type" id="presentation_type">
-                        <option value="voila" {% if dashboard_presentation_type == 'voila' %}selected{% endif %}>Voila</option>
-                        <option value="streamlit" {% if dashboard_presentation_type == 'streamlit' %}selected{% endif %}>Streamlit</option>
+                        {% for pt in presentation_types %}
+                        <option value="{{pt}}" {% if dashboard_presentation_type == pt %}selected{% endif %}>{{pt}}</option>
+                        {% endfor %}
                     </select>
                 </p>
+
+                {% if errors.presentation_type %}
+    
+                <p class="error">{{ errors.presentation_type | escape }}</p>
+    
+                {% endif %}
 
 
                 <p><label for="start_path">Path to a file or folder (optional):</label></p>

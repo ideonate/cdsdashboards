@@ -7,7 +7,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
-from traitlets import Unicode, Integer, Bool, Dict, validate, Any, Type, default, observe
+from traitlets import Unicode, Integer, Bool, Dict, validate, Any, default, observe, List
 from traitlets.config import Application, catch_config_error, SingletonConfigurable
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
@@ -25,7 +25,6 @@ from .dashboard import DashboardRepr
 from .util import url_path_join
 from jupyterhub import orm as jhorm
 from .builder.builders import BuildersDict, Builder
-from .builder.dockerbuilder import DockerBuilder
 from ._data import DATA_FILES_PATH
 from .pluggymanager import pm
 from . import hookimpl
@@ -47,6 +46,8 @@ common_aliases = {
     'config': 'CDSDashboards.config_file',
     'db': 'CDSDashboards.db_url',
 }
+
+_all_allowed_presentation_types = ['voila', 'streamlit',]
 
 class CDSDashboardsConfig(SingletonConfigurable):
 
@@ -74,6 +75,25 @@ class CDSDashboardsConfig(SingletonConfigurable):
 
         """
     ).tag(config=True)
+
+    presentation_types = List(
+        trait=Unicode,
+        default_value=_all_allowed_presentation_types,
+        minlen=1,
+        help="""
+        Allowed presentation types for Dashboards. A list, allowed strings are: %s.
+        There must be at least one valid entry. Any that aren't in the allowed list will be removed.
+        Default value is all the allowed presentation types.
+        """.format(_all_allowed_presentation_types)
+    ).tag(config=True)
+
+    @validate('presentation_types')
+    def _valid_presentation_types(self, proposal):
+        presentation_types = []
+        for t in proposal['value']:
+            if t in _all_allowed_presentation_types:
+                presentation_types.append(t)
+        return presentation_types
 
 
 class UpgradeDB(Application):
@@ -486,6 +506,23 @@ UpgradeDB.classes.append(CDSDashboards)
 main = CDSDashboards.launch_instance
 
 
+class CDSConfigStore():
+
+    _instance = None
+
+    @classmethod
+    def get_instance(cls, config):
+        """
+        Supply a config object to get the singleton CDSDashboardsConfig instance - only normally available from web handlers
+        """
+        if cls._instance:
+            return cls._instance
+        
+        cls._instance = CDSDashboardsConfig(config=config)
+
+        return cls._instance
+
+
 class BuildersStore():
 
     _instance = None
@@ -498,7 +535,7 @@ class BuildersStore():
         if cls._instance:
             return cls._instance
         
-        cdsconfig = CDSDashboardsConfig(config=config)
+        cdsconfig = CDSConfigStore.get_instance(config)
 
         builder_class = cdsconfig.builder_class
 
