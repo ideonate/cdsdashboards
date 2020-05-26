@@ -194,6 +194,7 @@ c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
 
 ## url for the database. e.g. `sqlite:///jupyterhub.sqlite`
 #c.JupyterHub.db_url = 'sqlite:///jupyterhub.sqlite'
+c.JupyterHub.db_url = 'sqlite:///examples/sqlitedbs/service_and_handlers_and_templates_jupyterhub_config.sqlite'
 
 ## log all database transactions. This has A LOT of output
 #c.JupyterHub.debug_db = False

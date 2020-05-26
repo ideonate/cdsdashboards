@@ -1,3 +1,4 @@
+c.JupyterHub.db_url = 'sqlite:///examples/sqlitedbs/local_process_spawner.sqlite'
 
 c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
 

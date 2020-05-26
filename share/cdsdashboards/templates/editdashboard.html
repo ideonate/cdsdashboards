@@ -46,6 +46,16 @@
 
                 <hr />
 
+                <h3>Details</h3>
+
+                <p><label for="presentation_type">Framework:</label>
+                    <select name="presentation_type" id="presentation_type">
+                        <option value="voila" {% if dashboard_presentation_type == 'voila' %}selected{% endif %}>Voila</option>
+                        <option value="streamlit" {% if dashboard_presentation_type == 'streamlit' %}selected{% endif %}>Streamlit</option>
+                    </select>
+                </p>
+
+
                 <p><label for="start_path">Path to a file or folder (optional):</label></p>
     
                 <p><input type="text" name="start_path" value="{{ dashboard_start_path | escape }}" /></p>

@@ -197,7 +197,7 @@ c.JupyterHub.bind_url = 'https://0.0.0.0:443'
 #c.JupyterHub.db_kwargs = {}
 
 ## url for the database. e.g. `sqlite:///jupyterhub.sqlite`
-#c.JupyterHub.db_url = 'sqlite:///jupyterhub.sqlite'
+c.JupyterHub.db_url = 'sqlite:///examples/sqlitedbs/ssl_domain_jupyterhub_config.sqlite'
 
 ## log all database transactions. This has A LOT of output
 #c.JupyterHub.debug_db = False

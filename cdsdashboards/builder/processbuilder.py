@@ -49,7 +49,7 @@ class ProcessBuilder(Builder):
                 spawner._spawn_pending = False
 
         new_server_options = {
-            'presentation_type': 'voila',
+            'presentation_type': dashboard.presentation_type or 'voila',
             'presentation_path': dashboard.start_path,
             'cmd': 'jhsingle-native-proxy',
             'environment': {

@@ -26,7 +26,9 @@ class Dashboard(Base):
 
     started = Column(DateTime)
 
-    start_path = Column(Unicode(255)) # E.g. which ipynb file should Voila display (not yet implemented)
+    start_path = Column(Unicode(255)) # E.g. which ipynb file should Voila display
+
+    presentation_type = Column(Unicode(255), default='') # Code for framework: voila, streamlit, dash etc
 
     allow_all = Column(Boolean, index=True, default=True)
     

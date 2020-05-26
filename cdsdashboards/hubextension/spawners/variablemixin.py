@@ -19,12 +19,9 @@ class VariableMixin():
 
         presentation_path = self.user_options.get('presentation_path', '')
 
-        voila_template = getattr(self, 'voila_template', '')
-
         args = ['--destport=0']
 
         # jhsingle-native-proxy --destport $destport --authtype oauth voila `pwd` {--}port={port} {--}no-browser {--}Voila.base_url={base_url}/ {--}Voila.server_url=/ --port $port
-
 
         if self.ip:
             args.append('--ip=%s' % _quote_safe(self.ip))
@@ -32,7 +29,6 @@ class VariableMixin():
         if self.port:
             args.append('--port=%i' % self.port)
 
-        args.append('voila')
 
         notebook_dir = '.'
         if self.notebook_dir:
@@ -44,26 +40,42 @@ class VariableMixin():
                 presentation_path = presentation_path[1:]
             notebook_dir = os.path.join(notebook_dir, presentation_path)
 
-        args.append(_quote_safe(notebook_dir))
 
-        args.append('{--}port={port}')
+        voila_template = getattr(self, 'voila_template', '')
 
-        args.append('{--}no-browser')
+        if presentation_type == 'voila':
 
-        args.append('{--}Voila.base_url={base_url}/')
-        args.append('{--}Voila.server_url=/')
+            args.append('voila')
 
-        if voila_template != '':
-            args.append('='.join(('{--}template', voila_template)))
+            args.append(_quote_safe(notebook_dir))
 
-        #if self.default_url:
-        #    default_url = self.format_string(self.default_url)
-        #    args.append('--NotebookApp.default_url=%s' % _quote_safe(default_url))
+            args.append('{--}port={port}')
+
+            args.append('{--}no-browser')
+
+            args.append('{--}Voila.base_url={base_url}/')
+            args.append('{--}Voila.server_url=/')
+
+            if voila_template != '':
+                args.append('='.join(('{--}template', voila_template)))
+
+        elif presentation_type == 'streamlit':
+
+            args.extend(('streamlit', 'run'))
+
+            args.append(_quote_safe(notebook_dir))
+
+            args.append('{--}server.port={port}')
+
+            args.append('{--}server.headless=True')
+
+            args.append('{--}server.enableCORS=False')
+
 
         if self.debug:
             args.append('--debug')
-        #if self.disable_user_config:
-        #    args.append('--disable-user-config')
+
+
         args.extend(self.args)
         return args
 
