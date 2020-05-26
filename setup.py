@@ -32,7 +32,7 @@ with open('README.md', encoding="utf8") as f:
 setup(
     name='cdsdashboards',
     packages=find_packages(),
-    version='0.0.10',
+    version='0.0.11',
     python_requires='>=3.6',
     author='Ideonate',
     author_email='dan@containds.com',

@@ -58,7 +58,7 @@ tljh-config (but that doesn't matter if you're just trying it out).
     # Replacement for UserCreatingSpawner (a simple extension of SystemdSpawner) - The Littlest JupyterHub's default spawner
     c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variableusercreating.VariableUserCreatingSpawner'
 
-    c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}-{SERVERNAMESU}'
+    c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}{DASHSERVERNAME}'
 
     c.JupyterHub.allow_named_servers = True
 
