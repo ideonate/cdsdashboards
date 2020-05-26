@@ -58,6 +58,7 @@ tljh-config (but that doesn't matter if you're just trying it out).
     # Replacement for UserCreatingSpawner (a simple extension of SystemdSpawner) - The Littlest JupyterHub's default spawner
     c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variableusercreating.VariableUserCreatingSpawner'
 
+    c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}-{SERVERNAMESU}'
 
     c.JupyterHub.allow_named_servers = True
 
@@ -74,8 +75,9 @@ The allow_named_servers option is a standard JupyterHub option where every user 
 They can add extra environments by specifying a name. ContainDS Dashboards makes use of this by running the presentation servers as named servers - 
 they are really servers just like the original Jupyter notebook servers, but running Voila or another system instead.
 
-Instead of the original UserCreatingSpawner, you actually need to use a slightly enhanced version of that spawner called VariableUserCreatingSpawner 
-- that is set by assigning to c.JupyterHub.spawner_class as above.
+Instead of the original UserCreatingSpawner, you actually need to use a slightly enhanced version of that spawner called  
+- that is set by assigning to c.JupyterHub.spawner_class as above. At the time of writing, the default SystemdSpawner does not work correctly with 
+named servers, and a workaround is provided through VariableUserCreatingSpawner and a new unit_name_template, as seen above.
 
 Reload the TLJH servers:
 
