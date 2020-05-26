@@ -55,7 +55,7 @@ Change or add the following in your jupyterhub_config.py file.
 
     # Replacement for SystemdSpawner
     #c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableSystemdSpawner'
-
+    #c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}{DASHSERVERNAME}'
 
     c.JupyterHub.allow_named_servers = True
 
@@ -74,7 +74,11 @@ they are really servers just like the original Jupyter notebook servers, but run
 
 Instead of the original LocalProcessSpawner, you actually need to use a slightly enhanced version of that spawner called VariableLocalProcessSpawner 
 - that is set by assigning to c.JupyterHub.spawner_class as above. 
-If using SystemdSpawner, comment out the line containing VariableSystemdSpawner instead.
+
+If using SystemdSpawner, comment out the line containing VariableSystemdSpawner instead, and the unit_name_template line beneath it. 
+At the time of writing, the default SystemdSpawner does not work correctly with 
+named servers, and a workaround is provided through VariableUserCreatingSpawner and a new unit_name_template, as seen above. This may 
+not be consistent with your existing unit names.
 
 
 Options
