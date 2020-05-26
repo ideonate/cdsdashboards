@@ -8,7 +8,11 @@ RUN conda install --quiet --yes -c conda-forge voila
 
 RUN pip install jhsingle-native-proxy==0.1.0 voila-materialstream
 
+RUN pip install streamlit
+
 COPY voila-entrypoint.sh /opt/conda/bin
+
+COPY streamlit-entrypoint.sh /opt/conda/bin
 
 
 USER $NB_UID

@@ -176,7 +176,7 @@ class BasicDockerBuilder(Builder):
         app_log.info('Committing Docker image {}'.format(image_name))
 
         dockerfile_changes="\n".join([
-            'CMD ["voila-entrypoint.sh"]',
+            'CMD ["{}-entrypoint.sh"]'.format(dashboard.presentation_type),
             'ENV JUPYTERHUB_GROUP {}'.format(dashboard.groupname),
             'ENV JUPYTERHUB_ANYONE {}'.format(dashboard.allow_all and '1' or '0'),
             'ENV JUPYTERHUB_CDS_PRESENTATION_PATH "{}"'.format(dashboard.start_path or ''),
