@@ -1,7 +1,7 @@
 tornado
 traitlets
-
 jupyterhub>=1.0.0
+alembic
 pluggy
 
 # Docker Spawners:

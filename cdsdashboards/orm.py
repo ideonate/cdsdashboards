@@ -1,7 +1,13 @@
 from datetime import datetime
+import alembic.command
+import alembic.config
+from alembic.script import ScriptDirectory
+from tornado.log import app_log
 
 from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Group, User, Boolean
 from sqlalchemy.orm import backref
+
+my_table_names = set('dashboards')
 
 
 class Dashboard(Base):
@@ -83,3 +89,65 @@ class Dashboard(Base):
         Without this, delete dashboard causes an error when corresponding relationships were expired.
         """
         return iter([self])
+
+
+class DatabaseSchemaMismatch(Exception):
+    """Exception raised when the database schema version does not match
+
+    the current version of JupyterHub.
+    """
+
+
+def check_db_revision(engine):
+    """Check the JupyterHub database revision
+
+    After calling this function, an alembic tag is guaranteed to be stored in the db.
+
+    - Checks the alembic tag and raises a ValueError if it's not the current revision
+    - If no tag is stored (Bug in Hub prior to 0.8),
+      guess revision based on db contents and tag the revision.
+    - Empty databases are tagged with the current revision
+    """
+    # Check database schema version
+    current_table_names = set(engine.table_names())
+
+    from .dbutil import _temp_alembic_ini
+
+    with _temp_alembic_ini(engine.url) as ini:
+        cfg = alembic.config.Config(ini)
+        scripts = ScriptDirectory.from_config(cfg)
+        head = scripts.get_heads()[0]
+        base = scripts.get_base()
+
+        if not my_table_names.intersection(current_table_names):
+            # no tables have been created, stamp with current revision
+            app_log.debug("Stamping empty dashboards database with alembic revision %s", head)
+            alembic.command.stamp(cfg, head)
+            return
+
+        if 'cds_alembic_version' not in current_table_names:
+            # Has not been tagged or upgraded before.
+            # we didn't start tagging revisions correctly except during `upgrade-db`
+            # until 0.8
+            # This should only occur for databases created prior to JupyterHub 0.8
+            msg_t = "Database dashboards schema version not found."
+            rev = base
+            app_log.debug("Stamping dashboards database schema version %s", rev)
+            alembic.command.stamp(cfg, rev)
+
+    # check database schema version
+    # it should always be defined at this point
+    alembic_revision = engine.execute(
+        'SELECT version_num FROM cds_alembic_version'
+    ).first()[0]
+    if alembic_revision == head:
+        app_log.debug("database dashboards schema version found: %s", alembic_revision)
+        pass
+    else:
+        raise DatabaseSchemaMismatch(
+            "Found database schema version {found} != {head}. "
+            "Backup your database and run `jupyterhub upgrade-db`"
+            " to upgrade to the latest schema.".format(
+                found=alembic_revision, head=head
+            )
+        )

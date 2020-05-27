@@ -1,4 +1,4 @@
-"""First alembic base
+"""Presentation Type added
 
 Revision ID: 2478e08b1ba2
 Revises: 
@@ -17,8 +17,8 @@ depends_on = None
 
 
 def upgrade():
-    pass
+    op.add_column('dashboards', sa.Column('presentation_type', sa.Unicode(255), default=''))
 
 
 def downgrade():
-    pass
+    op.drop_column('dashboards', 'presentation_type')
