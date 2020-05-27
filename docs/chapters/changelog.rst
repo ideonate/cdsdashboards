@@ -4,6 +4,14 @@
 Changelog
 ---------
 
+Version 0.0.11
+~~~~~~~~~~~~~~
+
+Released 26 May 2020
+
+- VariableSystemdSpawner (and VariableUserCreatingSpawner) allows {DASHSERVERNAME} in the unit_name_template configuration, 
+so it can work with named servers.
+
 Version 0.0.9
 ~~~~~~~~~~~~~
 

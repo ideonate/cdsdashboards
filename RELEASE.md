@@ -19,6 +19,14 @@ git add and git commit
 `git push --tags`
 
 
+## Remove tags
+
+# delete local tag '123'
+git tag -d 123
+# delete remote tag '123'
+git push origin :refs/tags/123
+
+
 ## Docker dev tips
 
 Remove all containers:
