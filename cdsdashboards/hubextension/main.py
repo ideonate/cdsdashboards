@@ -6,7 +6,7 @@ from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Group
 
 from ..orm import Dashboard
-from .base import DashboardBaseMixin
+from .base import DashboardBaseMixin, check_database_upgrade
 from ..util import DefaultObjDict, url_path_join
 from .. import hookimpl
 from ..pluggymanager import pm
@@ -20,6 +20,7 @@ class DashboardBaseHandler(BaseHandler, DashboardBaseMixin):
 class AllDashboardsHandler(DashboardBaseHandler):
 
     @authenticated
+    @check_database_upgrade
     async def get(self):
 
         current_user = await self.get_current_user()
@@ -339,6 +340,11 @@ class ClearErrorDashboardHandler(DashboardBaseHandler):
         self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname))
 
 
+class UpgradeDashboardsHandler(DashboardBaseHandler):
+
+    @authenticated
+    async def get(self, dashboard_urlname=''):
+        self.write('Please Upgrade DB')
 
 # Register plugin hooks so we use the Basic handlers by default, unless overridden
 

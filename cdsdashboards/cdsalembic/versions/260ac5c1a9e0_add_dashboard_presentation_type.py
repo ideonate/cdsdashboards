@@ -1,8 +1,8 @@
-"""Presentation Type added
+"""add dashboard presentation type
 
-Revision ID: 2478e08b1ba2
-Revises: 
-Create Date: 2020-05-24 10:20:18.384756
+Revision ID: 260ac5c1a9e0
+Revises: 2478e08b1ba2
+Create Date: 2020-05-27 16:55:34.391858
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2478e08b1ba2'
-down_revision = None
+revision = '260ac5c1a9e0'
+down_revision = '2478e08b1ba2'
 branch_labels = None
 depends_on = None
 

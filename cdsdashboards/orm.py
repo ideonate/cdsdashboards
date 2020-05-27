@@ -7,7 +7,7 @@ from tornado.log import app_log
 from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Group, User, Boolean
 from sqlalchemy.orm import backref
 
-my_table_names = set('dashboards')
+my_table_names = {'dashboards'}
 
 
 class Dashboard(Base):
@@ -34,7 +34,7 @@ class Dashboard(Base):
 
     start_path = Column(Unicode(255)) # E.g. which ipynb file should Voila display
 
-    presentation_type = Column(Unicode(255), default='') # Code for framework: voila, streamlit, dash etc
+    #presentation_type = Column(Unicode(255), default='') # Code for framework: voila, streamlit, dash etc
 
     allow_all = Column(Boolean, index=True, default=True)
     
@@ -127,10 +127,7 @@ def check_db_revision(engine):
 
         if 'cds_alembic_version' not in current_table_names:
             # Has not been tagged or upgraded before.
-            # we didn't start tagging revisions correctly except during `upgrade-db`
-            # until 0.8
-            # This should only occur for databases created prior to JupyterHub 0.8
-            msg_t = "Database dashboards schema version not found."
+            # This should only occur for databases created on cdsdashboards 0.0.11 or earlier
             rev = base
             app_log.debug("Stamping dashboards database schema version %s", rev)
             alembic.command.stamp(cfg, rev)

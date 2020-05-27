@@ -13,6 +13,15 @@ from jupyterhub.utils import iterate_until
 from ..util import maybe_future
 from ..orm import Dashboard
 from ..app import BuildersStore
+from ..dbutil import is_upgrade_needed
+
+def check_database_upgrade(f):
+    def handler(self, *args, **kwargs):
+        engine = self.db.get_bind()
+        if is_upgrade_needed(engine):
+            return self.redirect("{}hub/dashboards-db-upgrade".format(self.settings['base_url']))
+        return f(self, *args, **kwargs)
+    return handler
 
 
 class DashboardBaseMixin:
@@ -24,7 +33,7 @@ class DashboardBaseMixin:
     name_regex = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_\- \!\@\$\(\)\*\+\?\<\>\.]{0,99}$')
 
     start_path_regex = re.compile(r'^[A-Za-z0-9\-\._~\:\/\?#\[\]@\!\$\&\(\)\*\+ ,;\%\=]*$')
-    
+
     def calc_urlname(self, dashboard_name):
         base_urlname = re.sub(self.unsafe_regex, '-', dashboard_name).lower()[:35]
 

@@ -105,26 +105,38 @@ def backup_db_file(db_file, log=None):
 _already_checked_db_version = False
 _needs_db_upgrade = False
 
-def upgrade_if_needed(db_url, backup=True, log=None):
+def is_upgrade_needed(engine):
+    global _needs_db_upgrade
+    global _already_checked_db_version
+
+    if _already_checked_db_version:
+        return _needs_db_upgrade
+
+    # run check-db-revision first
+    try:
+        orm.check_db_revision(engine)
+    except orm.DatabaseSchemaMismatch:
+        # ignore mismatch error because that's what we are here for!
+        _needs_db_upgrade = True
+    else:
+        # nothing to do
+        _needs_db_upgrade = False
+
+    _already_checked_db_version = True
+    return _needs_db_upgrade
+
+def upgrade_if_needed(engine, backup=True, log=None):
     """Upgrade a database if needed
 
     If the database is sqlite, a backup file will be created with a timestamp.
     Other database systems should perform their own backups prior to calling this.
     """
 
-    if _already_checked_db_version:
-        return _needs_db_upgrade
+    if not is_upgrade_needed(engine):
+        return False
 
-    # run check-db-revision first
-    engine = create_engine(db_url)
-    try:
-        orm.check_db_revision(engine)
-    except orm.DatabaseSchemaMismatch:
-        # ignore mismatch error because that's what we are here for!
-        pass
-    else:
-        # nothing to do
-        return
+    # Need to upgrade dashboards database
+    db_url = engine.url
     urlinfo = urlparse(db_url)
     if urlinfo.password:
         # avoid logging the database password
