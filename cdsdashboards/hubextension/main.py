@@ -42,6 +42,7 @@ class AllDashboardsHandler(DashboardBaseHandler):
 class BasicDashboardEditHandler(DashboardBaseHandler):
 
     @authenticated
+    @check_database_upgrade
     async def get(self, dashboard_urlname=None):
 
         current_user = await self.get_current_user()
@@ -113,6 +114,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         return d
 
     @authenticated
+    @check_database_upgrade
     async def post(self, dashboard_urlname=None):
 
         current_user = await self.get_current_user()
@@ -287,6 +289,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 class MainViewDashboardHandler(DashboardBaseHandler):
     
     @authenticated
+    @check_database_upgrade
     async def get(self, dashboard_urlname=''):
 
         current_user = await self.get_current_user()
@@ -320,6 +323,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 class ClearErrorDashboardHandler(DashboardBaseHandler):
     
     @authenticated
+    @check_database_upgrade
     async def get(self, dashboard_urlname=''):
 
         current_user = await self.get_current_user()
