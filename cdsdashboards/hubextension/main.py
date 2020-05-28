@@ -343,8 +343,21 @@ class ClearErrorDashboardHandler(DashboardBaseHandler):
 class UpgradeDashboardsHandler(DashboardBaseHandler):
 
     @authenticated
-    async def get(self, dashboard_urlname=''):
-        self.write('Please Upgrade DB')
+    async def get(self):
+
+        current_user = await self.get_current_user()
+
+        manual_command = ''
+
+        if current_user.admin:
+            manual_command = 'python -m cdsdashboards.dbutil alembic upgrade head'
+
+        html = self.render_template(
+            "upgrade-db.html",
+            is_admin=current_user.admin,
+            base_url=self.settings['base_url']
+        )
+        self.write(html)
 
 # Register plugin hooks so we use the Basic handlers by default, unless overridden
 
