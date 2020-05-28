@@ -1,0 +1,48 @@
+{% extends "page.html" %}
+
+{% block main %}
+<div id="main" class="container">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+        
+            <h2>Database Upgrade Required</h2>
+
+            <p>A recent upgrade to ContainDS Dashboards requires your database to be upgraded.</p>
+
+            {% if is_admin %}
+
+                {% if error %}
+
+                    <p class="error">There was a problem upgrading the database:</p>
+
+                    <pre>{{ error | escape }}</pre>
+
+                {% endif %}
+
+                
+                {% if success %}
+
+                    <p>Database upgrade successful!</p>
+
+                {% else %}
+
+                    <form method="post" class="dashboard-edit-form">
+
+                    <p>Please back up your database (sqlite databases will be backed up automatically) and then click the button below.</p>
+
+                    <input type="submit" value="Upgrade Database" />
+
+                    </form>
+
+                {% endif %}
+
+            {% else %}
+
+            <p>Please ask an admin user to visit this page where they will be able to perform the upgrade.</p>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock main %}

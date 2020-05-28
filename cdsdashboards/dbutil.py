@@ -136,7 +136,7 @@ def upgrade_if_needed(engine, backup=True, log=None):
         return False
 
     # Need to upgrade dashboards database
-    db_url = engine.url
+    db_url = str(engine.url)
     urlinfo = urlparse(db_url)
     if urlinfo.password:
         # avoid logging the database password
@@ -153,7 +153,11 @@ def upgrade_if_needed(engine, backup=True, log=None):
     if backup and db_url.startswith('sqlite:///'):
         db_file = db_url.split(':///', 1)[1]
         backup_db_file(db_file, log=log)
+    
     upgrade(db_url)
+
+    global _needs_db_upgrade
+    _needs_db_upgrade = False
 
 
 def shell(args=None):

@@ -320,8 +320,7 @@ class CDSDashboards(Application):
         else:
             db_log_url = self.db_url
         self.log.debug("Connecting to db: %s", db_log_url)
-        if self.upgrade_db:
-            dbutil.upgrade_if_needed(self.db_url, log=self.log)
+
 
         try:
             self.session_factory = jhorm.new_session_factory(

@@ -1,6 +1,6 @@
 import sys
 
-from tornado.web import authenticated
+from tornado.web import authenticated, HTTPError
 
 from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Group
@@ -345,19 +345,52 @@ class UpgradeDashboardsHandler(DashboardBaseHandler):
     @authenticated
     async def get(self):
 
+        from ..dbutil import is_upgrade_needed
+
+        engine = self.db.get_bind()
+        if not is_upgrade_needed(engine):
+            return self.redirect("{}".format(self.settings['base_url']))
+
         current_user = await self.get_current_user()
-
-        manual_command = ''
-
-        if current_user.admin:
-            manual_command = 'python -m cdsdashboards.dbutil alembic upgrade head'
 
         html = self.render_template(
             "upgrade-db.html",
             is_admin=current_user.admin,
+            base_url=self.settings['base_url'],
+            error='',
+            success=False
+        )
+        self.write(html)
+
+    @authenticated
+    async def post(self):
+
+        current_user = await self.get_current_user()
+
+        if not current_user.admin:
+            return self.send_error(403)
+
+        error = ''
+        success = True
+
+        from ..dbutil import upgrade_if_needed
+
+        try:
+            engine = self.db.get_bind()
+            upgrade_if_needed(engine, log=self.log)
+        except Exception as e:
+            success = False
+            error = str(e)
+
+        html = self.render_template(
+            "upgrade-db.html",
+            is_admin=current_user.admin,
+            error=error,
+            success=success,
             base_url=self.settings['base_url']
         )
         self.write(html)
+
 
 # Register plugin hooks so we use the Basic handlers by default, unless overridden
 
