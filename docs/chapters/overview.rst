@@ -34,37 +34,37 @@ All of this works through a new Dashboards menu item added to JupyterHub's heade
 
 Data scientist creates a Jupyter Notebook as normal
 
-.. figure:: ../../_static/screenshots/1_Original_Jupyter_Notebook.png
+.. figure:: ../_static/screenshots/1_Original_Jupyter_Notebook.png
    :alt: Screenshot of Original Jupyter Notebook
 
    
 Data scientist creates a new Dashboard to clone their Jupyter server
 
-.. figure:: ../../_static/screenshots/2_Create_New_Dashboard.png
+.. figure:: ../_static/screenshots/2_Create_New_Dashboard.png
    :alt: Screenshot of Create New Dashboard
 
 
 Other logged-in JupyterHub users see the dashboard in their list
 
-.. figure:: ../../_static/screenshots/3_Other_User_sees_dashboard.png
+.. figure:: ../_static/screenshots/3_Other_User_sees_dashboard.png
    :alt: Screenshot of Other User sees dashboard
 
 
 Click to launch as a server - Dashboard Voila built automatically
 
-.. figure:: ../../_static/screenshots/4_Dashboard_Voila_built_automatically.png
+.. figure:: ../_static/screenshots/4_Dashboard_Voila_built_automatically.png
    :alt: Screenshot of Dashboard Voila built automatically
 
 
 Uses OAuth to gain access
 
-.. figure:: ../../_static/screenshots/5_Other_user_OAuths.png
+.. figure:: ../_static/screenshots/5_Other_user_OAuths.png
    :alt: Screenshot of Uses OAuth to gain access
 
 
 Other user sees a safe user-friendly Voila version of the original notebook
 
-.. figure:: ../../_static/screenshots/6_Voila_Dashboard.png
+.. figure:: ../_static/screenshots/6_Voila_Dashboard.png
    :alt: Screenshot of Voila Dashboard
 
 

@@ -30,6 +30,7 @@ Once JupyterHub is running, please continue based on the spawner type you are us
    localprocess
    docker
    tljh
+   options
 
 
 

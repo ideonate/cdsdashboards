@@ -2,9 +2,10 @@
 
 
 Options
-~~~~~~~
+-------
 
-There are extra options that can be added to your jupyterhub_config.py file.
+There are extra options that can be added to your jupyterhub_config.py file. 
+(See `here <http://tljh.jupyter.org/en/latest/topic/escape-hatch.html>`__ for how to add config on The Littlest JupyterHub.)
 
 Named Server display
 ~~~~~~~~~~~~~~~~~~~~
@@ -39,3 +40,32 @@ one of their Jupyter servers similarly).
 
 Using e.g. '{urlname}-{date}-{time}' will mean older dashboard servers 'expire' when replaced, which may be important to your use case. 
 If using DockerSpawner, it is easier to match urlname-date-time against the commit of the docker image used to create the dashboard server.
+
+Presentation Types
+~~~~~~~~~~~~~~~~~~
+
+By default, all supported presentation frameworks will be available for new dashboards. 
+`Voila <https://github.com/voila-dashboards/voila>`__ (for user-friendly display of Jupyter notebooks) or 
+`Streamlit <https://www.streamlit.io/>`__ are the supported frameworks for dashboards.
+
+To change the available set - for example, to remove streamlit as a possible selection for your users on the New Dashboard page, add the following 
+to your jupyterhub_config.py:
+
+::
+
+    c.CDSDashboardsConfig.presentation_types = ['voila']
+
+Or 
+
+::
+
+    c.CDSDashboardsConfig.presentation_types = ['streamlit']
+
+to allow only streamlit, and not voila.
+
+The default, for both Voila and Streamlit is:
+
+::
+
+    c.CDSDashboardsConfig.presentation_types = ['voila', 'streamlit']
+

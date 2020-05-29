@@ -61,6 +61,9 @@ class VariableMixin():
             if voila_template != '':
                 args.append('='.join(('{--}template', voila_template)))
 
+            if self.debug:
+                args.append('{--}debug')
+
         elif presentation_type == 'streamlit':
 
             args.extend(['streamlit', 'run'])
@@ -73,7 +76,11 @@ class VariableMixin():
                 '{--}server.enableCORS=False'
             ])
 
+            if self.debug:
+                args.append('{--}log_level=debug')
+
         if self.debug:
+            # jhsingle-native-proxy debug
             args.append('--debug')
 
         args.extend(self.args)

@@ -37,6 +37,8 @@ Documentation Contents
 
    chapters/overview
    chapters/setup/setup
+   chapters/userguide/userguide
+   chapters/troubleshooting
    chapters/requirements
    chapters/changelog
    chapters/contact
