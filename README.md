@@ -2,17 +2,19 @@
 
 A Dashboard publishing solution for Data Science teams to share results with decision makers.
 
-Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish notebooks as user-friendly interactive 
-dashboards to share with non-technical colleagues.
+Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish Jupyter notebooks or Streamlit apps as 
+user-friendly interactive dashboards to share with non-technical colleagues.
 
 This open source package allows users to create interactive Jupyter notebooks that can be instantly and reliably published as 
-secure interactive [Voila](https://voila.readthedocs.io/en/stable/) web apps. Any authorised JupyterHub user can view the dashboard.
+secure interactive [Voila](https://voila.readthedocs.io/en/stable/) web apps.
+
+Any authorised JupyterHub user can view the dashboard.
 
 See [full documentation](https://cdsdashboards.readthedocs.io/en/stable/).
 
 ## How it works
 
-- Data scientist creates a Jupyter Notebook as normal
+- Data scientist creates a Jupyter Notebook as normal or uploads Streamlit Python files
 - Data scientist creates a new Dashboard to clone their Jupyter server
 - Other logged-in JupyterHub users see the dashboard in their list
 - Click to launch as a server, using OAuth to gain access
@@ -44,6 +46,10 @@ _Uses OAuth to gain access_
 _Other user sees a safe user-friendly Voila version of the original notebook_
 
 ![Voila Dashboard](./docs/_static/screenshots/6_Voila_Dashboard.png "Voila Dashboard")
+
+_Or a Streamlit app_
+
+![Streamlit App](./docs/_static/screenshots/7_Streamlit_App.png "Streamlit App")
 
 
 ## Requirements

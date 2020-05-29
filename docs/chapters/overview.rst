@@ -18,17 +18,22 @@ ContainDS Solutions will:
 ContainDS Dashboards is an extension for JupyterHub that allows users to instantly publish notebooks and other source code files 
 as user-friendly interactive dashboards to share with non-technical colleagues.
 
-Any authorised JupyterHub user can view the dashboard. This means that you can protect the dashboard through any authentication that works 
+Currently supports:
+
+- Jupyter notebooks (`Voila <https://github.com/voila-dashboards/voila>`__)
+- `Streamlit <https://streamlit.io/>`__ apps
+
+Any authorised JupyterHub user can view the dashboard. This means that you can protect the dashboard with any authentication that works 
 with JupyterHub - including single-sign-on through corporate email accounts or LDAP.
 
 How it works
 ~~~~~~~~~~~~
 
-- Data scientist creates a Jupyter Notebook as normal
+- Data scientist creates a Jupyter Notebook as normal, or uploads Streamlit python files to Jupyter
 - Data scientist creates a new Dashboard to clone their Jupyter server
 - Other logged-in JupyterHub users see the dashboard in their list
 - Click to launch as a server, using OAuth to gain access
-- User sees a safe user-friendly Voila version of the original notebook
+- User sees a safe user-friendly version of the original notebook
 
 All of this works through a new Dashboards menu item added to JupyterHub's header.
 
@@ -67,4 +72,4 @@ Other user sees a safe user-friendly Voila version of the original notebook
 .. figure:: ../_static/screenshots/6_Voila_Dashboard.png
    :alt: Screenshot of Voila Dashboard
 
-
+More details on how this works are in the :ref:`user guide<userguide>`, or you can find out :ref:`how to install<setup>` ContainDS Dashboards.

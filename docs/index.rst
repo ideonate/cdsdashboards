@@ -4,8 +4,8 @@ ContainDS Dashboards
 
 A Dashboard publishing solution for Data Science teams to share results with decision makers.
 
-Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish notebooks as user-friendly interactive 
-dashboards to share with non-technical colleagues.
+Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish Jupyter notebooks or Streamlit apps as user-friendly 
+interactive dashboards to share with non-technical colleagues.
 
 JupyterHub is a way to run one website that provides Jupyter notebook environments to multiple users - your entire data science team, for example. 
 To use ContainDS Dashboards, you will need a JupyterHub setup, but you don't need to use it as the main data science environment for your organisation. 
@@ -23,9 +23,7 @@ Installation and Setup
 Once you have `set up JupyterHub <https://jupyterhub.readthedocs.io/en/stable/installation-guide.html>`__ on a server, you install the 
 cdsdashboards package and make some simple configuration changes to jupyterhub_config.py.
 
-ContainDS Dashboards currently works on single-server JupyterHubs (not Kubernetes-based).
-
-It expects your JupyterHub to be configured with either the default LocalProcessSpawner or DockerSpawner (or similar).
+ContainDS Dashboards currently works on single-server JupyterHubs (not currently Kubernetes-based). See :ref:`other requirements<requirements>`.
 
 To continue installation please see :ref:`setup`
 
