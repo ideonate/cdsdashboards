@@ -51,28 +51,27 @@ class VariableMixin():
 
             args.append(_quote_safe(notebook_dir))
 
-            args.append('{--}port={port}')
-
-            args.append('{--}no-browser')
-
-            args.append('{--}Voila.base_url={base_url}/')
-            args.append('{--}Voila.server_url=/')
+            args.extend([
+                '{--}port={port}',
+                '{--}no-browser',
+                '{--}Voila.base_url={base_url}/',
+                '{--}Voila.server_url=/'
+            ])
 
             if voila_template != '':
                 args.append('='.join(('{--}template', voila_template)))
 
         elif presentation_type == 'streamlit':
 
-            args.extend(['python3', '{-}m','streamlit', 'run'])
+            args.extend(['streamlit', 'run'])
 
             args.append(_quote_safe(notebook_dir))
 
-            args.append('{--}server.port={port}')
-
-            args.append('{--}server.headless=True')
-
-            args.append('{--}server.enableCORS=False')
-
+            args.extend([
+                '{--}server.port={port}',
+                '{--}server.headless=True',
+                '{--}server.enableCORS=False'
+            ])
 
         if self.debug:
             args.append('--debug')
