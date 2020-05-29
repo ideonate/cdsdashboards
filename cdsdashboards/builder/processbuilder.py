@@ -51,7 +51,7 @@ class ProcessBuilder(Builder):
         new_server_options = {
             'presentation_type': dashboard.presentation_type or 'voila',
             'presentation_path': dashboard.start_path,
-            'cmd': 'jhsingle-native-proxy',
+            'cmd': ['python3', '-m', 'jhsingle_native_proxy.main'],
             'environment': {
                 'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
                 'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)

@@ -15,6 +15,8 @@ class VariableMixin():
         """Return the arguments to be passed after self.cmd
 
         Doesn't expect shell expansion to happen.
+
+        Also adds self.args at the end in case specified by the config.
         """
 
         presentation_path = self.user_options.get('presentation_path', '')
@@ -45,7 +47,7 @@ class VariableMixin():
 
         if presentation_type == 'voila':
 
-            args.append('voila')
+            args.extend(['python3', '{-}m','voila'])
 
             args.append(_quote_safe(notebook_dir))
 
@@ -61,7 +63,7 @@ class VariableMixin():
 
         elif presentation_type == 'streamlit':
 
-            args.extend(('streamlit', 'run'))
+            args.extend(['python3', '{-}m','streamlit', 'run'])
 
             args.append(_quote_safe(notebook_dir))
 
@@ -74,7 +76,6 @@ class VariableMixin():
 
         if self.debug:
             args.append('--debug')
-
 
         args.extend(self.args)
         return args

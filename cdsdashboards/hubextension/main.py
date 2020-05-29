@@ -80,7 +80,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         spawners = self.get_source_spawners(current_user)
 
-        spawner_name=None
+        spawner_name=''
         if dashboard is not None and dashboard.source_spawner is not None:
             spawner_name=dashboard.source_spawner.name
 
@@ -281,7 +281,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             # Pick the existing one again
             if dashboard is not None and dashboard.source_spawner is not None:
-                spawner_name=dashboard.source_spawner.name
+                spawner_name = dashboard.source_spawner.name
+            else:
+                spawner_name = ''
 
         return spawner, spawner_name
 
