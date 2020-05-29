@@ -26,12 +26,22 @@ def get_data_files():
         data_files.append((d[ntrim:], [pjoin(d, f)[ntrim:] for f in filenames]))
     return data_files
 
+def get_package_data():
+    """Get package data
+
+    (mostly alembic config)
+    """
+    package_data = {}
+    package_data['cdsdashboards'] = ['alembic.ini', 'cdsalembic/*', 'cdsalembic/versions/*']
+    return package_data
+
 with open('README.md', encoding="utf8") as f:
     readme = f.read()
 
 setup(
     name='cdsdashboards',
     packages=find_packages(),
+    package_data=get_package_data(),
     version='0.0.11',
     python_requires='>=3.6',
     author='Ideonate',

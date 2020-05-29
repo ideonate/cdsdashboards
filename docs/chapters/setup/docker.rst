@@ -69,7 +69,9 @@ Docker Image Requirements
 
 The image you use for the single-user server should have `Voila <https://voila.readthedocs.io/en/stable/>`__ and 
 `jhsingle-native-proxy <https://github.com/ideonate/jhsingle-native-proxy>`__ installed, plus a second 'entrypoint' at 
-/opt/conda/bin/voila-entrypoint.sh to run the Voila server.
+/opt/conda/bin/voila-entrypoint.sh to run the Voila server. 
+
+For Streamlit dashboards, you need a /opt/conda/bin/streamlit-entrypoint.sh 
 
 Please see `docker-singleuser-images <https://github.com/ideonate/cdsdashboards/tree/master/docker-singleuser-images>`__ for an example, 
 or use the ones created for you already:
