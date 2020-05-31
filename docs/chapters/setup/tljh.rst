@@ -86,6 +86,9 @@ Reload the TLJH servers:
     sudo tljh-config reload
 
 
+If you find that Dashboards end up giving a 404 not found error (and named servers created on the Home page also do) 
+please see :ref:`tljh-named-servers-show-404-not-found`.
+
 Options
 ~~~~~~~
 
