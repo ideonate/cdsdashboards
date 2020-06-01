@@ -83,6 +83,10 @@ class VariableMixin():
             # jhsingle-native-proxy debug
             args.append('--debug')
 
+        proxy_request_timeout = getattr(self, 'proxy_request_timeout', 0)
+        if proxy_request_timeout:
+            args.append('--request-timeout={}'.format(proxy_request_timeout))
+
         args.extend(self.args)
         return args
 

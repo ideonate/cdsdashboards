@@ -1,5 +1,5 @@
 from systemdspawner import SystemdSpawner
-from traitlets import Unicode
+from traitlets import Unicode, Integer
 
 from .variablemixin import VariableMixin
 
@@ -10,6 +10,14 @@ class VariableSystemdSpawner(SystemdSpawner, VariableMixin):
         'materialstream',
         help="""
         --template argument to pass to Voila. Default is materialstream
+        """,
+    ).tag(config=True)
+
+    proxy_request_timeout = Integer(
+        0,
+        help="""
+        Request timeout in seconds that jhsingle-native-proxy should allow when proxying to the underlying process (e.g. Voila).
+        The default of 0 means that no --request-timeout flag will be passed to jhsingle-native-proxy so it will use its own default.
         """,
     ).tag(config=True)
 

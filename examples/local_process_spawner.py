@@ -18,6 +18,8 @@ c.ConfigurableHTTPProxy.debug = True
 
 c.JupyterHub.allow_named_servers = True
 
+#c.VariableLocalProcessSpawner.proxy_request_timeout = 300
+
 
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
 from cdsdashboards.hubextension import cds_extra_handlers
