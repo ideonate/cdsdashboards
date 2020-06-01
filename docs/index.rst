@@ -27,6 +27,11 @@ ContainDS Dashboards currently works on single-server JupyterHubs (not currently
 
 To continue installation please see :ref:`setup`
 
+Mailing List
+~~~~~~~~~~~~
+
+Please `sign up to our email list <https://containds.com/signup/>`__ to receive notifications about updates and related news.
+
 Documentation Contents
 ~~~~~~~~~~~~~~~~~~~~~~
 

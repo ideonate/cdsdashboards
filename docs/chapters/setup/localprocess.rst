@@ -41,10 +41,15 @@ Not all dependencies are strictly required in both environments - work is underw
 The key package for the hub environment is cdsdashboards itself; for the user environment the crucial package is jhsingle-native-proxy as well 
 as the 'presentation package' - Voila, which is a user-friendly and safe way to display Jupyter notebooks to non-technical users.
 
+If you plan to make use of streamlit dashboards, also :code:`pip install streamlit` in the user environment.
+
 Changes to jupyterhub_config.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Change or add the following in your jupyterhub_config.py file.
+
+**NOTE: you need to choose one of the two first sections below depending on whether you are using SystemdSpawner or LocalProcessSpawner - 
+comment or delete the other.**
 
 ::
 

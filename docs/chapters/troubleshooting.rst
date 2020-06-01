@@ -86,3 +86,9 @@ If you don't remove nb_conda_kernels then each conda env will appear twice.
 If you must keep auto-discovery of new environments, it is recommended to also manually register each env (ipykernel install) that may be used for Voila Dashboards, 
 perhaps with slightly different names to the auto-discovered equivalents.
 
+Problems after upgrading to 0.0.13
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When upgrading from an older version to 0.0.13, you must upgrade both hub and user environments (user env may not be applicable to DockerSpawner installations).
+
+A database upgrade will be prompted - see the :ref:`changelog`.
