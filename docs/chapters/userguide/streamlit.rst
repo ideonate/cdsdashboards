@@ -24,7 +24,7 @@ Click 'Control Panel' to go back to JupyterHub.
 New Dashboard
 ~~~~~~~~~~~~~
 
-Click 'Dashboards' in the menu bar. You will see the page showing any Dashboards created by you, or shared with you by colleages.
+Click 'Dashboards' in the menu bar. You will see the page showing any Dashboards created by you, or shared with you by colleagues.
 
 Below, we have already created a separate :ref:`Voila<voila>` Dashboard, but in this section we can ignore that and focus on making our 
 Streamlit dashboard:
@@ -44,7 +44,7 @@ different servers are likely to have different files or packages installed, it p
 as the source anyway - most JupyterHubs will share the user's home file system across the different servers, so the Dashboard will 
 be able to locate your notebooks and files.
 
-Select the framework required. For our example, we need to change this to _streamlit_.
+Select the framework required. For our example, we need to change this to *streamlit*.
 
 Specify the URL-path to the Python file of our Streamlit app, relative to the Jupyter server's home folder. In our case, intro.py 
 was at the top level in our Jupyter tree, so we just enter intro.py. It is important to get this right as file-not-found error messages are 
@@ -58,7 +58,7 @@ Building the Dashboard
 ~~~~~~~~~~~~~~~~~~~~~~
 
 When you click Save, the dashboard will be built automatically. This just means that a new named server is created based on your new Dashboard, 
-running Voila instead of the regular Jupyter server.
+running Streamlit instead of the regular Jupyter server.
 
 This is what you should see while the build is taking place:
 

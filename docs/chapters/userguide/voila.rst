@@ -25,7 +25,7 @@ Click 'Control Panel' to go back to JupyterHub.
 New Dashboard
 ~~~~~~~~~~~~~
 
-Click 'Dashboards' in the menu bar. You will see the page showing any Dashboards created by you, or shared with you by colleages.
+Click 'Dashboards' in the menu bar. You will see the page showing any Dashboards created by you, or shared with you by colleagues.
 
 Below, in a fresh installation of ContainDS Dashboards, there are no Dashboards:
 

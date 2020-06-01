@@ -10,7 +10,7 @@ secure interactive [Voila](https://voila.readthedocs.io/en/stable/) web apps.
 
 Any authorised JupyterHub user can view the dashboard.
 
-See [full documentation](https://cdsdashboards.readthedocs.io/en/stable/).
+See [full documentation](https://cdsdashboards.readthedocs.io/).
 
 ## How it works
 
