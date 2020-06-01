@@ -84,8 +84,11 @@ def upgrade(db_url, revision='head'):
         The alembic revision to upgrade to.
     """
     with _temp_alembic_ini(db_url) as alembic_ini:
-        check_call(['alembic', '-c', alembic_ini, 'upgrade', revision])
-
+        #check_call(['alembic', '-c', alembic_ini, 'upgrade', revision])
+        from alembic.config import Config
+        from alembic import command
+        alembic_cfg = Config(alembic_ini)
+        command.upgrade(alembic_cfg, revision)
 
 def backup_db_file(db_file, log=None):
     """Backup a database file if it exists"""
