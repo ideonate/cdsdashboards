@@ -4,6 +4,27 @@
 Changelog
 ---------
 
+Version 0.0.13
+~~~~~~~~~~~~~~
+
+Released 1 June 2020
+
+- Streamlit added as a framework option, in addition to Voila.
+- server_name_template configuration option added to change the URL of Dashboard servers (default :code:`c.CDSDashboardsConfig.server_name_template = 'dash-{urlname}-{date}-{time}'`).
+- presentation_types configuration option added (default: :code:`c.CDSDashboardsConfig.presentation_types = ['voila', 'streamlit']`)
+
+If upgrading from version 0.0.11, the database will require an update. ContainDS Dashboards will prompt for this to happen within the JupyterHub website. 
+
+Upgrade the package: :code:`python -m pip install --upgrade cdsdashboards==0.0.13`
+
+Restart JupyterHub. You may see 500 errors on the Home page. Go to the Dashboards menu where you should see a prompt to upgrade the database, including 
+an 'Upgrade Database' button if you are an admin.
+
+Please backup the database first - sqlite databases will be backed up automatically with a timestamped file in the same folder as the original.
+
+Any problems with the upgrade, please :ref:`get in touch<contact>`. 
+
+
 Version 0.0.11
 ~~~~~~~~~~~~~~
 
