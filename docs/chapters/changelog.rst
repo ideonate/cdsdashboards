@@ -17,7 +17,8 @@ If upgrading from version 0.0.11, the database will require an update. ContainDS
 
 Upgrade the package: :code:`python -m pip install --upgrade cdsdashboards==0.0.13`
 
-You must upgrade the user environment as well as the hub environment. (This may not be applicable if you are using DockerSpawner.)
+You must upgrade the user environment as well as the hub environment. (This may not be applicable if you are using DockerSpawner, but instead you may need to 
+:code:`docker pull` the latest image, or otherwise upgrade it (e.g. use ideonate/containds-all-scipy) if you wish to make Streamlit dashboards.)
 
 Restart JupyterHub. You may see 500 errors on the Home page. Go to the Dashboards menu where you should see a prompt to upgrade the database, including 
 an 'Upgrade Database' button if you are an admin.

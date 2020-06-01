@@ -66,7 +66,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             dashboard_name = dashboard.name
             dashboard_description = dashboard.description
-            dashboard_start_path = dashboard.start_path
+            dashboard_start_path = dashboard.start_path or ''
             dashboard_presentation_type = dashboard.presentation_type
             dashboard_options = dashboard.options
 
