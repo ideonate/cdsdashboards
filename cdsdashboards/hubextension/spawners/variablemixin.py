@@ -78,6 +78,19 @@ class VariableMixin():
 
             if self.debug:
                 args.append('{--}log_level=debug')
+            
+        elif presentation_type == 'plotlydash':
+
+            args.extend(['python3', '{-}m','plotlydash_tornado_cmd.main'])
+
+            args.append(_quote_safe(notebook_dir))
+
+            args.extend([
+                '{--}port={port}'
+            ])
+
+            if self.debug:
+                args.append('{--}debug')
 
         if self.debug:
             # jhsingle-native-proxy debug
@@ -90,3 +103,12 @@ class VariableMixin():
         args.extend(self.args)
         return args
 
+    def _get_presentation_type(self):
+        if self.user_options and 'presentation_type' in self.user_options:
+            return self.user_options['presentation_type']
+        return ''
+
+    def _mixin_user_env(self, env, presentation_type):
+        if presentation_type == 'plotlydash':
+            env['DASH_REQUESTS_PATHNAME_PREFIX'] = "{}/".format(self.server.base_url)
+        return env

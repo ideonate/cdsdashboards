@@ -6,7 +6,7 @@ RUN rm -rf /home/jovyan/work
 
 RUN conda install --quiet --yes -c conda-forge voila
 
-RUN pip install jhsingle-native-proxy==0.1.0 voila-materialstream
+RUN pip install jhsingle-native-proxy==0.1.3 voila-materialstream
 
 RUN pip install streamlit
 
