@@ -108,7 +108,7 @@ class VariableMixin():
             return self.user_options['presentation_type']
         return ''
 
-    def _mixin_user_env(self, env, presentation_type):
+    def _mixin_get_env(self, env, presentation_type):
         if presentation_type == 'plotlydash':
             env['DASH_REQUESTS_PATHNAME_PREFIX'] = "{}/".format(self.server.base_url)
         return env
