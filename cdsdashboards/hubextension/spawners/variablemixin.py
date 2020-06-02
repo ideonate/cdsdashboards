@@ -66,7 +66,12 @@ class VariableMixin():
 
         elif presentation_type == 'streamlit':
 
-            args.extend(['streamlit', 'run'])
+            args.append('streamlit')
+
+            if self.debug:
+                args.append('{--}log_level=debug')
+
+            args.append('run')
 
             args.append(_quote_safe(notebook_dir))
 
@@ -76,8 +81,7 @@ class VariableMixin():
                 '{--}server.enableCORS=False'
             ])
 
-            if self.debug:
-                args.append('{--}log_level=debug')
+
             
         elif presentation_type == 'plotlydash':
 
