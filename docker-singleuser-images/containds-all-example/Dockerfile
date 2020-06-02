@@ -10,10 +10,13 @@ RUN pip install jhsingle-native-proxy==0.1.3 voila-materialstream
 
 RUN pip install streamlit
 
+RUN pip install dash plotlydash-tornado-cmd
+
 COPY voila-entrypoint.sh /opt/conda/bin
 
 COPY streamlit-entrypoint.sh /opt/conda/bin
 
+COPY plotlydash-entrypoint.sh /opt/conda/bin
 
 USER $NB_UID
 COPY jupyter_notebook_config_extra.py /etc/jupyter/
