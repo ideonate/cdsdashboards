@@ -151,6 +151,18 @@ def check_db_revision(engine):
     alembic_revision = engine.execute(
         'SELECT version_num FROM cds_alembic_version'
     ).first()[0]
+
+    if alembic_revision == base:
+        if 'dashboards' in current_table_names:
+            inspector = inspect(engine)
+            cols = inspector.get_columns('dashboards')
+            colnames = [c.get('name','') for c in cols]
+            if 'presentation_type' in colnames:
+                # For people who got stuck in the broken upgrade before - actually they are NOT on base...
+                app_log.debug("Stamping dashboards database schema version %s", head)
+                alembic.command.stamp(cfg, head)
+                alembic_revision = head
+
     if alembic_revision == head:
         app_log.debug("database dashboards schema version found: %s", alembic_revision)
         pass
