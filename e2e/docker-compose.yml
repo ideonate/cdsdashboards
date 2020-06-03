@@ -1,0 +1,17 @@
+version: '2'
+services:
+  cdsdashboards:
+    build: ../
+    command: ["jupyterhub", "-f", "/srv/jupyterhub/config/test_jupyterhub_config.py"]
+    volumes:
+      - ./jupyterhub_config:/srv/jupyterhub/config
+
+  cypress:
+    image: "cypress/included:4.4.0"
+    depends_on:
+      - cdsdashboards
+    environment:
+      - CYPRESS_baseUrl=http://cdsdashboards:8000
+    working_dir: /e2e
+    volumes:
+      - ./:/e2e
