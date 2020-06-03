@@ -15,7 +15,7 @@ previously (or hidden in :ref:`options<options>`).
 Developing a Dashboard
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Dashboards can be created based on either Jupyter notebooks or Streamlit py files.
+Dashboards can be created based on either Jupyter notebooks or Streamlit / Plotly Dash py files.
 
 Use 'My Server' (or a named server) to create a Jupyter notebook (ipynb file) as normal or upload/edit Python files to make your Streamlit app.
 
@@ -28,16 +28,17 @@ For Jupyter notebooks, of course you can run them as usual in your Jupyter serve
 the final dashboard will appear. Voila is the name of the technology that is essentially a user-friendly and secure version of Jupyter notebooks: 
 code cells are hidden, and the user can only view the intended end result. They can interact with widgets if they are present in the notebook though.
 
-Streamlit apps can't normally be run at this stage (in Jupyter), so for now you would upload Python files and data that you have developed on 
+Streamlit and Plotly Dash apps can't normally be run at this stage (in Jupyter), so for now you would upload Python files and data that you have developed on 
 your own machine.
 
-Follow either Jupyter (Voila) or Streamlit below for details on turning your code into a Dashboard to share with colleagues:
+Follow Jupyter (Voila), Streamlit, or Plotly Dash below for details on turning your code into a Dashboard to share with colleagues:
 
 .. toctree::
    :maxdepth: 1
 
    voila
    streamlit
+   plotlydash
    working
 
 

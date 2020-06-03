@@ -10,7 +10,9 @@ Preparing your Code
 
 Use 'My Server' (or a named server) to create a Jupyter notebook (ipynb file) as normal.
 
-Below, we have an ipynb (Jupyter notebook) called Presentation.ipynb.
+Below, we have an ipynb (Jupyter notebook) called Presentation.ipynb. To try out this example, you can obtain the 
+`source code here <https://github.com/ideonate/cdsdashboards/tree/master/examples/sample-source-code/voila>`__. 
+For this notebook to work you may need matplotlib, numpy, and ipywidgets to be installed in your user Python env.
 
 .. figure:: ../../_static/screenshots/userguide/JupyterTree.png
    :alt: Jupyter with ipynb and py files

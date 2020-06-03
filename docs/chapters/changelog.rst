@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.0.14
+~~~~~~~~~~~~~~
+
+Released 2 June 2020
+
+- Plotly Dash added as a framework option. If not visible, remove or update presentation_types configuration option (default: :code:`c.CDSDashboardsConfig.presentation_types = ['voila', 'streamlit', 'plotlydash']`)
+
 Version 0.0.13
 ~~~~~~~~~~~~~~
 

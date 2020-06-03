@@ -5,10 +5,11 @@ Working with Dashboards
 
 This section explains how your Dashboard operates, and can be shared with other users.
 
-It presumes you have already created a Dashboard following either:
+It presumes you have already created a Dashboard following one of:
 
 - :ref:`voila`
 - :ref:`streamlit`
+- :ref:`plotlydash`
 
 Running and Rebuilding Dashboards
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
