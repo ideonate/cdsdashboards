@@ -9,6 +9,8 @@
 
             <p>A recent upgrade to ContainDS Dashboards requires your database to be upgraded.</p>
 
+            <p>You may see server errors elsewhere on this site ('500' errors) until the database is upgraded - this is expected behavior.</p>
+
             {% if is_admin %}
 
                 {% if error %}
@@ -28,7 +30,15 @@
 
                     <form method="post" class="dashboard-edit-form">
 
-                    <p>Please back up your database (sqlite databases will be backed up automatically) and then click the button below.</p>
+                    {% if is_sqlite %}
+
+                    <p>Please click the button below. Your sqlite database will be backed up automatically into the same folder as the original.</p>
+
+                    {% else %}
+
+                    <p>For peace of mind please back up your database, and then click the button below.</p>
+
+                    {% endif %}
 
                     <input type="submit" value="Upgrade Database" />
 

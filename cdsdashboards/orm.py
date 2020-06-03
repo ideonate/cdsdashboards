@@ -6,6 +6,7 @@ from tornado.log import app_log
 
 from jupyterhub.orm import Base, Column, Integer, ForeignKey, relationship, JSONDict, Unicode, DateTime, Spawner, Group, User, Boolean
 from sqlalchemy.orm import backref
+from sqlalchemy import inspect
 
 my_table_names = {'dashboards'}
 
@@ -128,7 +129,20 @@ def check_db_revision(engine):
         if 'cds_alembic_version' not in current_table_names:
             # Has not been tagged or upgraded before.
             # This should only occur for databases created on cdsdashboards 0.0.11 or earlier
-            rev = base
+
+            # Need to identify if this is really an old version or not
+            rev = head
+            if 'dashboards' in current_table_names:
+                inspector = inspect(engine)
+                cols = inspector.get_columns('dashboards')
+                colnames = [c.get('name','') for c in cols]
+                if not 'presentation_type' in colnames:
+                    rev = base
+                    # presentation_type was added in v0.0.13, so the reason we don't have cds_alembic_version 
+                    # is because the db was created before we had db versioning
+                # If we DO have dashboards.presentation_type but no cds_alembic_version then this is just because
+                # it's a new installation, Dashboards has been created before this first check.
+            
             app_log.debug("Stamping dashboards database schema version %s", rev)
             alembic.command.stamp(cfg, rev)
 

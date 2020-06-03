@@ -359,11 +359,14 @@ class UpgradeDashboardsHandler(DashboardBaseHandler):
 
         current_user = await self.get_current_user()
 
+        is_sqlite = str(engine.url).startswith('sqlite:///')
+
         html = self.render_template(
             "upgrade-db.html",
             is_admin=current_user.admin,
             base_url=self.settings['base_url'],
             error='',
+            is_sqlite=is_sqlite,
             success=False
         )
         self.write(html)
@@ -381,8 +384,11 @@ class UpgradeDashboardsHandler(DashboardBaseHandler):
 
         from ..dbutil import upgrade_if_needed
 
+        engine = self.db.get_bind()
+
+        is_sqlite = str(engine.url).startswith('sqlite:///')
+
         try:
-            engine = self.db.get_bind()
             upgrade_if_needed(engine, log=self.log)
         except Exception as e:
             success = False
@@ -393,6 +399,7 @@ class UpgradeDashboardsHandler(DashboardBaseHandler):
             is_admin=current_user.admin,
             error=error,
             success=success,
+            is_sqlite=is_sqlite,
             base_url=self.settings['base_url']
         )
         self.write(html)
