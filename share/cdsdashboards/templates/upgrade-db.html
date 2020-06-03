@@ -9,8 +9,6 @@
 
             <p>A recent upgrade to ContainDS Dashboards requires your database to be upgraded.</p>
 
-            <p>You may see server errors elsewhere on this site ('500' errors) until the database is upgraded - this is expected behavior.</p>
-
             {% if is_admin %}
 
                 {% if error %}
@@ -29,6 +27,8 @@
                 {% else %}
 
                     <form method="post" class="dashboard-edit-form">
+
+                    <p>You may see server errors elsewhere on this site ('500' errors) until the database is upgraded - this is expected behavior.</p>
 
                     {% if is_sqlite %}
 
@@ -49,6 +49,8 @@
             {% else %}
 
             <p>Please ask an admin user to visit this page where they will be able to perform the upgrade.</p>
+
+            <p>You may see server errors elsewhere on this site ('500' errors) until the database is upgraded - this is expected behavior.</p>        
 
             {% endif %}
 

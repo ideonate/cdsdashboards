@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.0.15
+~~~~~~~~~~~~~~
+
+Released 2 June 2020
+
+- Improvements to the Database Upgrade process when migrating to newer versions of cdsdashboards.
+
 Version 0.0.14
 ~~~~~~~~~~~~~~
 
