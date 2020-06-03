@@ -19,6 +19,8 @@ Below, we have a Dash app in a Python file called plotlyapp.py, along with some 
 Plotly Dash apps can't normally be run at this stage (in Jupyter), so for now you would upload Python files and data that you have developed on 
 your own machine.
 
+Your Dash object must be called 'app' in your script - this will be configurable in a future version of cdsdashboards.
+
 Click 'Control Panel' to go back to JupyterHub.
 
 
