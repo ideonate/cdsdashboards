@@ -2,7 +2,7 @@
 
 ./reset_docker.sh
 
-stages="localprocess tljh dockerspawner"
+stages="localprocess tljh dockerspawner localprocessjh10"
 
 functests="login voila db11upgrade db13upgrade"
 
