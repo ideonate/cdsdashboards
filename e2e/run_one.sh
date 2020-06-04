@@ -13,7 +13,7 @@ source stage_${stage}.sh
 
 source functest_${functest}.sh
 
-export JH_CYPRESS_MEDIAFOLDER="${stage}_${functest}"
+export JH_CYPRESS_MEDIAFOLDER="${stage}/${functest}"
 
 docker-compose up --force-recreate --exit-code-from cypress
 docker-compose down
