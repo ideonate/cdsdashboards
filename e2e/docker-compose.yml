@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
   cdsdashboards:
     build:
@@ -18,12 +18,14 @@ services:
       - ./jupyterhub_config:/jh_cypress_config
     labels:
       - "com.containds.e2etest=container"
+    ports:
+      - 16000:80
 
   cypress:
     image: "cypress/included:4.4.0"
     depends_on:
       - cdsdashboards
-    command: ["--spec", "${JH_CYPRESS_TESTS}"]
+    command: ["--spec", "${JH_CYPRESS_TESTS}", "--config", "videosFolder=cypress/videos/${JH_CYPRESS_MEDIAFOLDER:-any},screenshotsFolder=cypress/screenshots/${JH_CYPRESS_MEDIAFOLDER:-any}"]
     environment:
       - CYPRESS_baseUrl=http://cdsdashboards:80
     working_dir: /e2e

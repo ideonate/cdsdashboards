@@ -1,7 +1,7 @@
 ARG BASE_REPO=jupyterhub/jupyterhub:1.2
 FROM $BASE_REPO
 
-RUN python3 -m pip install setuptools
+RUN python3 -m pip install setuptools notebook
 
 RUN mkdir /tmp/cdsdashboard_current
 

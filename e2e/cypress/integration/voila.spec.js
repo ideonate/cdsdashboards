@@ -18,11 +18,24 @@ it('voila dashboard', () => {
   cy.get('#main > div > div > form > div > input[type=submit]')
     .click()
 
-  cy.get('#launch').should('contain', 'Go to Dashboard')
-    .click()
+  cy.get('#launch')
+    .should('contain', 'Go to Dashboard')
+  
+  cy.get('#launch').should('not.have', 'prop("href", "#")', { timeout: 20000 })
+    .then(
+      function($a) {
 
-  cy.get('#rendered_cells > main > div > div > div > div > div:nth-child(3) > div > div > div > div > pre')
-    .should('contain', 'test')
+        // Now visit the dashboard itself
+        const href = $a.attr('href')
+
+        cy.log(`Dashboard URL is ${href}`)
+
+        cy.visit(href)
+
+        cy.get('#rendered_cells > main > div > div > div > div > div:nth-child(3) > div > div > div > div > pre')
+          .should('contain', 'test')
+
+      })
 
 })
 
