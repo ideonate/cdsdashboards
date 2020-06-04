@@ -2,16 +2,24 @@ version: '2'
 services:
   cdsdashboards:
     build: ../
-    command: ["jupyterhub", "-f", "/srv/jupyterhub/config/test_jupyterhub_config.py"]
+    command: ["jupyterhub"]
+    environment:
+      - JH_CYPRESS_JHCONFIG_SRC=${JH_CYPRESS_JHCONFIG_SRC}
+      - JH_CYPRESS_JHCONFIG_DEST=${JH_CYPRESS_JHCONFIG_DEST}
+      - JH_CYPRESS_SQLITE_SRC=${JH_CYPRESS_SQLITE_SRC}
+      - JH_CYPRESS_SQLITE_DEST=${JH_CYPRESS_SQLITE_DEST}
     volumes:
-      - ./jupyterhub_config:/srv/jupyterhub/config
+      - ./jupyterhub_config:/jh_cypress_config
+    labels:
+      - "com.containds.e2etest=container"
 
   cypress:
     image: "cypress/included:4.4.0"
     depends_on:
       - cdsdashboards
+    command: ["--spec", "${JH_CYPRESS_TESTS}"]
     environment:
-      - CYPRESS_baseUrl=http://cdsdashboards:8000
+      - CYPRESS_baseUrl=http://cdsdashboards:80
     working_dir: /e2e
     volumes:
       - ./:/e2e

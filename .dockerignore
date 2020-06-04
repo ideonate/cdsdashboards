@@ -1,3 +1,6 @@
 .git
 .gitignore
 examples/
+dist/
+build/
+cdsdashboards.egg-info/
