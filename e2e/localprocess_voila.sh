@@ -17,5 +17,5 @@ export JH_CYPRESS_TESTS="/e2e/cypress/integration/voila.spec.js"
 
 export JH_CYPRESS_MEDIAFOLDER="local_voila"
 
-docker-compose up #--exit-code-from cypress --force-recreate
-#docker-compose down
+docker-compose up --force-recreate --exit-code-from cypress 
+docker-compose down

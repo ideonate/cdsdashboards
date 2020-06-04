@@ -20,22 +20,14 @@ it('voila dashboard', () => {
 
   cy.get('#launch')
     .should('contain', 'Go to Dashboard')
+    .should('be.visible', { timeout: 20000 })
+    
+  cy.get('#launch').invoke('removeAttr', 'target').click() // Don't want to open in new tab
+
+  // cy.get('#progress-message > a').click()
   
-  cy.get('#launch').should('not.have', 'prop("href", "#")', { timeout: 20000 })
-    .then(
-      function($a) {
-
-        // Now visit the dashboard itself
-        const href = $a.attr('href')
-
-        cy.log(`Dashboard URL is ${href}`)
-
-        cy.visit(href)
-
-        cy.get('#rendered_cells > main > div > div > div > div > div:nth-child(3) > div > div > div > div > pre')
-          .should('contain', 'test')
-
-      })
+  cy.get('#rendered_cells > main > div > div > div > div > div:nth-child(3) > div > div > div > div > pre')
+    .should('contain', 'test')
 
 })
 
