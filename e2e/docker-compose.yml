@@ -15,8 +15,10 @@ services:
       - JH_CYPRESS_HOME_DEST=${JH_CYPRESS_HOME_DEST}
       - JH_CYPRESS_CREATE_USERS=${JH_CYPRESS_CREATE_USERS}
       - JH_CYPRESS_USER_PREFIX=${JH_CYPRESS_USER_PREFIX:-}
+      - JH_CYPRESS_DOCKER_EXTERNAL_USERHOME=${JH_CYPRESS_DOCKER_EXTERNAL_USERHOME:-}
     volumes:
       - ./jupyterhub_config:/jh_cypress_config
+      - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "com.containds.e2etest=container"
     ports:
@@ -33,3 +35,7 @@ services:
     working_dir: /e2e
     volumes:
       - ./:/e2e
+
+networks:
+  default:
+    name: e2etestnetwork

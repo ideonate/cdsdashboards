@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=jupyterhub/jupyterhub:1.2
 FROM $BASE_IMAGE
 
-RUN python3 -m pip install setuptools notebook
+RUN python3 -m pip install setuptools notebook dockerspawner
 
 RUN mkdir /tmp/cdsdashboard_current
 

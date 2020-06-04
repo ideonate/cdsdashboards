@@ -3,6 +3,12 @@ it('voila dashboard', () => {
   
   do_login()
 
+  cy.get('#start')
+    .should('contain', 'My Server').click()
+
+  cy.get('#header-container > span:nth-child(4) > a', { timeout: 20000 })
+    .should('contain', 'Control Panel').click()
+
   cy.get('#thenavbar > ul:nth-child(1) > li:nth-child(4) > a')
     .should('contain', 'Dashboards').click()
 
