@@ -10,9 +10,10 @@ export JH_CYPRESS_JHCONFIG_DEST="/opt/tljh/config/jupyterhub_config.d/cds_jupyte
 export JH_CYPRESS_SQLITE_SRC=""
 export JH_CYPRESS_SQLITE_DEST=""
 
-export JH_CYPRESS_HOME_SRC="/jh_cypress_config/userhome/*"
+export JH_CYPRESS_HOME_SRC="/jh_cypress_config/userhome"
 export JH_CYPRESS_HOME_DEST="/home"
 
+export JH_CYPRESS_USER_PREFIX="jupyter-"
 export JH_CYPRESS_CREATE_USERS="dan"
 
 export JH_CYPRESS_TESTS="/e2e/cypress/integration/voila.spec.js"

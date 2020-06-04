@@ -10,9 +10,10 @@ export JH_CYPRESS_JHCONFIG_DEST="/opt/tljh/config/jupyterhub_config.d/cds_jupyte
 export JH_CYPRESS_SQLITE_SRC="/jh_cypress_config/from.0.0.11.sqlite"
 export JH_CYPRESS_SQLITE_DEST="/opt/tljh/state/jupyterhub.sqlite"
 
-export JH_CYPRESS_HOME_SRC="/jh_cypress_config/userhome/*"
+export JH_CYPRESS_HOME_SRC="/jh_cypress_config/userhome"
 export JH_CYPRESS_HOME_DEST="/home"
 
+export JH_CYPRESS_USER_PREFIX="jupyter-"
 export JH_CYPRESS_CREATE_USERS="dan"
 
 export JH_CYPRESS_TESTS="/e2e/cypress/integration/dbupgrade.spec.js"

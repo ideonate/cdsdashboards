@@ -1,8 +1,6 @@
 ARG BASE_IMAGE=ideonate/tljh-dev:latest
 FROM $BASE_IMAGE
 
-RUN /opt/tljh/hub/bin/python3 -m pip install setuptools notebook
-
 RUN mkdir /tmp/cdsdashboard_current
 
 ADD . /tmp/cdsdashboard_current/
@@ -12,9 +10,8 @@ COPY ./e2e/setup-helper/startup-script.sh /usr/local/bin/startup-script.sh
 RUN cd /tmp/cdsdashboard_current \
         && /opt/tljh/hub/bin/python3 setup.py sdist \
         && /opt/tljh/hub/bin/python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz` \
+        && /opt/tljh/user/bin/python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz` \
         && cd .. && rm -rf ./cdsdashboard_current
-
-#ENTRYPOINT ["/usr/local/bin/startup-script.sh"]
 
 CMD ["/usr/local/bin/startup-script.sh", "/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]
 

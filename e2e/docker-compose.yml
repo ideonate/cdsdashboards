@@ -14,6 +14,7 @@ services:
       - JH_CYPRESS_HOME_SRC=${JH_CYPRESS_HOME_SRC}
       - JH_CYPRESS_HOME_DEST=${JH_CYPRESS_HOME_DEST}
       - JH_CYPRESS_CREATE_USERS=${JH_CYPRESS_CREATE_USERS}
+      - JH_CYPRESS_USER_PREFIX=${JH_CYPRESS_USER_PREFIX:-}
     volumes:
       - ./jupyterhub_config:/jh_cypress_config
     labels:

@@ -7,6 +7,8 @@ c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.processbuilder.Proc
 
 c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}{DASHSERVERNAME}'
 
+c.Spawner.notebook_dir = '/home/jupyter-{username}'
+
 c.Authenticator.admin_users = {'dan'}
 
 c.JupyterHub.allow_named_servers = True
