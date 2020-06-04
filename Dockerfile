@@ -1,5 +1,5 @@
-ARG BASE_REPO=jupyterhub/jupyterhub:1.2
-FROM $BASE_REPO
+ARG BASE_IMAGE=jupyterhub/jupyterhub:1.2
+FROM $BASE_IMAGE
 
 RUN python3 -m pip install setuptools notebook
 

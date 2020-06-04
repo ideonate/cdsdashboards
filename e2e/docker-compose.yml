@@ -3,9 +3,9 @@ services:
   cdsdashboards:
     build:
       context: ../
+      dockerfile: ${JH_CYPRESS_DOCKERFILE:-Dockerfile}
       args:
         BASE_IMAGE: ${JH_CYPRESS_BASE_IMAGE}
-    command: ["jupyterhub"]
     environment:
       - JH_CYPRESS_JHCONFIG_SRC=${JH_CYPRESS_JHCONFIG_SRC}
       - JH_CYPRESS_JHCONFIG_DEST=${JH_CYPRESS_JHCONFIG_DEST}
@@ -20,6 +20,7 @@ services:
       - "com.containds.e2etest=container"
     ports:
       - 16000:80
+    privileged: true
 
   cypress:
     image: "cypress/included:4.4.0"
