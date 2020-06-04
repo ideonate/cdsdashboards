@@ -8,7 +8,7 @@ c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableLocalP
 
 c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.processbuilder.ProcessBuilder'
 
-c.LocalProcessSpawner.notebook_dir = '/srv/jupyterhub/config/userhome/{username}'
+c.LocalProcessSpawner.notebook_dir = '/srv/jupyterhub/userhome/{username}'
 
 c.JupyterHub.allow_named_servers = True
 

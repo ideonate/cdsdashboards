@@ -1,5 +1,5 @@
 
-it('login as dan', () => {
+it('upgrade db', () => {
   
   do_login()
 
