@@ -16,7 +16,7 @@ fi
 if [ ! -z "${JH_CYPRESS_HOME_SRC}" ]; then 
     echo "3 Want to cp from ${JH_CYPRESS_HOME_SRC} to ${JH_CYPRESS_HOME_DEST}"
     mkdir "${JH_CYPRESS_HOME_DEST}"
-    cp -rf "${JH_CYPRESS_HOME_SRC}/*" "${JH_CYPRESS_HOME_DEST}"
+    cp -rf ${JH_CYPRESS_HOME_SRC} ${JH_CYPRESS_HOME_DEST}
 fi
 
 if [ ! -z "${JH_CYPRESS_CREATE_USERS}" ]; then 
