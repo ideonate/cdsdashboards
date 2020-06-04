@@ -2,23 +2,54 @@
 
 ./reset_docker.sh
 
+stages="localprocess tljh"
 
-./localprocess_test.sh
+functests="login voila db11upgrade db13upgrade"
 
-./localprocess_test_db13upgrade.sh
+for stage in $stages
+do
 
-./localprocess_test_db11upgrade.sh
+    docker image rm e2e_cdsdashboards
 
-./localprocess_voila.sh
+    for functest in $functests
+    do
+
+        echo ""
+        echo "*****"
+        echo "Running stage ${stage} with test ${functest}"
+        echo "*****"
+
+        source stage_${stage}.sh
+
+        source functest_${functest}.sh
+
+        export JH_CYPRESS_MEDIAFOLDER="${stage}_${functest}"
+
+        docker-compose up --force-recreate --exit-code-from cypress
+        docker-compose down
+
+    done
 
 
-./tljh_test.sh
+done
 
-./tljh_test_db13upgrade.sh
 
-./tljh_test_db11upgrade.sh
+#./localprocess_test.sh
 
-./tljh_voila.sh
+#./localprocess_test_db13upgrade.sh
+
+#./localprocess_test_db11upgrade.sh
+
+#./localprocess_voila.sh
+
+
+#./tljh_test.sh
+
+#./tljh_test_db13upgrade.sh
+
+#./tljh_test_db11upgrade.sh
+
+#./tljh_voila.sh
 
 
 echo ""
