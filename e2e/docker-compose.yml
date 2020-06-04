@@ -1,7 +1,10 @@
 version: '2'
 services:
   cdsdashboards:
-    build: ../
+    build:
+      context: ../
+      args:
+        BASE_IMAGE: ${JH_CYPRESS_BASE_IMAGE}
     command: ["jupyterhub"]
     environment:
       - JH_CYPRESS_JHCONFIG_SRC=${JH_CYPRESS_JHCONFIG_SRC}

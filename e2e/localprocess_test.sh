@@ -1,6 +1,8 @@
 #!/bin/bash
 
-export JH_CYPRESS_JHCONFIG_SRC="/jh_cypress_config/test_jupyterhub_config.py"
+export JH_CYPRESS_BASE_IMAGE="jupyterhub/jupyterhub:1.2"
+
+export JH_CYPRESS_JHCONFIG_SRC="/jh_cypress_config/localprocess_jupyterhub_config.py"
 export JH_CYPRESS_JHCONFIG_DEST="/srv/jupyterhub/jupyterhub_config.py"
 
 export JH_CYPRESS_SQLITE_SRC=""
