@@ -21,8 +21,7 @@ it('voila dashboard', () => {
   cy.get('#launch')
     .should('contain', 'Go to Dashboard')
     .should('be.visible', { timeout: 20000 })
-    
-  cy.get('#launch').invoke('removeAttr', 'target').click() // Don't want to open in new tab
+    .invoke('removeAttr', 'target').click() // Don't want to open in new tab
 
   // cy.get('#progress-message > a').click()
   
