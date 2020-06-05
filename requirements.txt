@@ -9,7 +9,7 @@ dockerspawner>=0.11.0
 docker
 
 # LocalProcess Spawners
-jhsingle-native-proxy>=0.1.3
+jhsingle-native-proxy>=0.1.4
 plotlydash-tornado-cmd
 voila
 voila-materialstream
