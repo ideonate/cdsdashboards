@@ -63,9 +63,11 @@
                 {% endif %}
 
 
-                <p><label for="start_path">Path to a file or folder (optional):</label></p>
+                <p><label for="start_path">Relative Path to a file or folder (optional): </label></p>
+                
     
                 <p><input type="text" name="start_path" value="{{ dashboard_start_path | escape }}" /></p>
+                <p> <i>Relative to your Jupyter tree root</i></p>
     
                 {% if errors.start_path %}
     

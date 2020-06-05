@@ -12,7 +12,9 @@ functests="login voila db11upgrade db13upgrade"
 for stage in $stages
 do
 
-    docker image rm e2e_cdsdashboards
+    if [ ! -z "`docker image ls -q e2e_cdsdashboards`" ]; then
+        docker image rm e2e_cdsdashboards
+    fi
 
     for functest in $functests
     do
