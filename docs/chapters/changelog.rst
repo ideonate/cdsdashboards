@@ -4,6 +4,16 @@
 Changelog
 ---------
 
+Version 0.0.16
+~~~~~~~~~~~~~~
+
+Released 5 June 2020
+
+- Help text on Dashboard Edit page, explaining relative path is required. Help button links to project docs.
+- Problems with underlying frameworks (e.g. Voila, Dash) are now displayed with detailed error messages in place of the Dashboard.
+
+Please remember to upgrade your hub environment (cdsdashboards package) and also your user environment (cdsdashboards or just jhsingle-native-proxy package).
+
 Version 0.0.15
 ~~~~~~~~~~~~~~
 
