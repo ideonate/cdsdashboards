@@ -32,7 +32,7 @@ it('voila dashboard', () => {
   // cy.get('#progress-message > a').click()
   
   cy.get('#rendered_cells > main > div > div > div > div > div:nth-child(3) > div > div > div > div > pre')
-    .should('contain', 'test')
+    .should('contain', 'Voila top level is working')
 
 })
 

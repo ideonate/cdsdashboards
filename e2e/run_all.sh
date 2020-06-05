@@ -2,6 +2,9 @@
 
 ./reset_docker.sh
 
+# Exit build script on first failure
+set -e
+
 stages="localprocess tljh dockerspawner localprocessjh10"
 
 functests="login voila db11upgrade db13upgrade"
