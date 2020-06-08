@@ -42,3 +42,13 @@ class VariableKubeSpawner(KubeSpawner, VariableMixin):
             env = self._mixin_get_env(env, presentation_type)
 
         return env
+
+    def get_pvc_manifest(self):
+        presentation_type = self._get_presentation_type()
+
+        pvc = super().get_pvc_manifest()
+        
+        if presentation_type != '':
+            pvc.spec.data_source = {'kind': 'PersistentVolumeClaim', 'name': 'claim-dan'}
+        
+        return pvc
