@@ -74,7 +74,7 @@ The image you use for the single-user server should have `Voila <https://voila.r
 For Streamlit dashboards, you need a /opt/conda/bin/streamlit-entrypoint.sh 
 For Plotly Dash dashboards, you need a /opt/conda/bin/plotlydash-entrypoint.sh 
 
-Please see `docker-singleuser-images <https://github.com/ideonate/cdsdashboards/tree/master/docker-singleuser-images>`__ for an example, 
+Please see `docker-singleuser-images <https://github.com/ideonate/cdsdashboards/tree/master/docker-images/singleuser-example>`__ for an example, 
 or use the ones created for you already:
 
 Containing Voila, Streamlit, and Plotly Dash as presentation types:

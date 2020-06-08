@@ -10,6 +10,6 @@ docker
 
 # LocalProcess Spawners
 jhsingle-native-proxy>=0.1.4
-plotlydash-tornado-cmd
+plotlydash-tornado-cmd>=0.0.4
 voila
 voila-materialstream
