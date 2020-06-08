@@ -60,7 +60,7 @@ comment or delete the other.**
     # OR...
 
     # Replacement for SystemdSpawner
-    #c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableSystemdSpawner'
+    #c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variablesystemd.VariableSystemdSpawner'
     #c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}{DASHSERVERNAME}'
 
     c.JupyterHub.allow_named_servers = True

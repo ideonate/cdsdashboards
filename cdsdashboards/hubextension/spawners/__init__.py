@@ -1,3 +1,3 @@
 from .variablelocalprocess import VariableLocalProcessSpawner
 
-__all__ = ['VariableLocalProcessSpawner', 'VariableSystemdSpawner']
+__all__ = ['VariableLocalProcessSpawner']
