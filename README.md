@@ -2,11 +2,12 @@
 
 A Dashboard publishing solution for Data Science teams to share results with decision makers.
 
-Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish Jupyter notebooks or Streamlit apps as 
-user-friendly interactive dashboards to share with non-technical colleagues.
+Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish Jupyter notebooks 
+([Voila](https://voila.readthedocs.io/en/stable/)), Streamlit apps, 
+or Plotly Dash apps as user-friendly interactive dashboards to share with non-technical colleagues.
 
 This open source package allows users to create interactive Jupyter notebooks that can be instantly and reliably published as 
-secure interactive [Voila](https://voila.readthedocs.io/en/stable/) web apps.
+secure interactive web apps.
 
 Any authorised JupyterHub user can view the dashboard.
 
@@ -61,10 +62,7 @@ Basic requirements:
 
 You should be able to use any authenticator for users to login - for example, corporate Google email sign in, or LDAP.
 
-Your JupyterHub will ideally be using LocalProcessSpawner (the default for standard installs), SystemdSpawner (default for The Littlest JupyterHub), 
-or DockerSpawner.
-
-Support for Kubernetes JupyterHub installations running KubeSpawner is in development - please get in touch with your requirements to help move this forward.
+Any JupyterHub distribution should be suitable, depending on configuration. See [requirements](https://cdsdashboards.readthedocs.io/en/stable/chapters/requirements.html).
 
 ## Installation
 

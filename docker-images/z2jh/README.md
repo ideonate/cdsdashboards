@@ -5,7 +5,7 @@
 From docker-images/z2jh/hub:
 
 ```
-docker build -t ideonate/cdsdashboards-jupyter-hub:0.9.0-0.0.17 -f ./Dockerfile  ../../../
+docker build -t ideonate/cdsdashboards-jupyter-k8s-hub:0.9.0-0.0.17 -f ./Dockerfile  ../../../
 ```
 
 ## config.yaml
@@ -13,7 +13,7 @@ docker build -t ideonate/cdsdashboards-jupyter-hub:0.9.0-0.0.17 -f ./Dockerfile 
 hub:
   allowNamedServers: true
   image:
-    name: ideonate/cdsdashboards-jupyter-hub
+    name: ideonate/cdsdashboards-jupyter-k8s-hub
     tag: 0.9.0-0.0.17
 
   extraConfig:
@@ -23,10 +23,9 @@ hub:
     cds-templates: |
       from cdsdashboards.app import CDS_TEMPLATE_PATHS
       c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
-    cds-builder: |
-      c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.kubebuilder.KubeBuilder'
     cds-kube: |
       c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variablekube.VariableKubeSpawner'
+      c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.kubebuilder.KubeBuilder'
 
 singleuser:
   image:

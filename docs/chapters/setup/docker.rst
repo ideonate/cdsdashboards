@@ -31,7 +31,7 @@ Generic Changes to jupyterhub_config.py
 
     c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-    c.DockerSpawner.image = 'ideonate/containds-all-scipy:latest'
+    c.DockerSpawner.image = 'ideonate/containds-all-scipy:20200608-155134'
 
 
 The changes above are mostly for guidance - you may want to use your own Docker image, but it should follow the guidelines listed 
@@ -64,6 +64,8 @@ If you are using The Littlest JupyterHub, you can copy any new settings into a n
 /opt/tljh/config/jupyterhub_config.d/cdsdashboards_config.py, although ideally you would set allow_named_servers and the DockerSpawner settings 
 through tljh-config (but that doesn't matter if you're just trying it out).
 
+.. _docker_singleuser_image:
+
 Docker Image Requirements
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -79,15 +81,15 @@ or use the ones created for you already:
 
 Containing Voila, Streamlit, and Plotly Dash as presentation types:
 
-- `containds-all-basic:latest <https://hub.docker.com/r/ideonate/containds-all-basic>`__ (Standard Python environment)
-- `containds-all-scipy:latest <https://hub.docker.com/r/ideonate/containds-all-scipy>`__ (Extra scientific Python packages installed)
+- `containds-all-basic <https://hub.docker.com/r/ideonate/containds-all-basic>`__ (Standard Python environment)
+- `containds-all-scipy <https://hub.docker.com/r/ideonate/containds-all-scipy>`__ (Extra scientific Python packages installed)
 
 Using Voila as the presentation type:
 
-- `jh-voila-oauth-singleuser:latest <https://hub.docker.com/r/ideonate/jh-voila-oauth-singleuser>`__ (Standard Python environment)
-- `jh-voila-oauth-scipy:latest <https://hub.docker.com/r/ideonate/jh-voila-oauth-scipy>`__ (Extra scientific Python packages installed)
-- `jh-voila-oauth-r:latest <https://hub.docker.com/r/ideonate/jh-voila-oauth-r>`__ (More than just Python)
-- `jh-voila-oauth-datascience:latest <https://hub.docker.com/r/ideonate/jh-voila-oauth-datascience>`__ (R language)
+- `jh-voila-oauth-singleuser <https://hub.docker.com/r/ideonate/jh-voila-oauth-singleuser>`__ (Standard Python environment)
+- `jh-voila-oauth-scipy <https://hub.docker.com/r/ideonate/jh-voila-oauth-scipy>`__ (Extra scientific Python packages installed)
+- `jh-voila-oauth-r <https://hub.docker.com/r/ideonate/jh-voila-oauth-r>`__ (More than just Python)
+- `jh-voila-oauth-datascience <https://hub.docker.com/r/ideonate/jh-voila-oauth-datascience>`__ (R language)
 
 These are based on the similarly-named `Jupyter Docker Stacks <https://jupyter-docker-stacks.readthedocs.io/en/latest/>`__ images, just 
 with extra support for Voila and ContainDS Dashboards. The ContainDS Dockerfile versions are 

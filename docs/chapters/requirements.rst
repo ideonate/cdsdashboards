@@ -5,10 +5,11 @@ Requirements
 
 ContainDS Dashboards requires JupyterHub 1.0+ installed under Python 3.6+.
 
-JupyterHub should be configured with LocalProcessSpawner, SystemdSpawner, or DockerSpawner (or similar).
+JupyterHub should ideally be configured with LocalProcessSpawner, SystemdSpawner, DockerSpawner, or KubeSpawner.
 
-The Littlest JupyterHub (TLJH) is supported.
+`The Littlest JupyterHub <http://tljh.jupyter.org/en/latest/>`__ (TLJH) is supported.
 
-Kubernetes is not currently supported.
+`Zero to JupyterHub on Kubernetes <http://z2jh.jupyter.org/>`__ is now supported, depending on the persistent storage types available to you, as discussed in 
+:ref:`z2jh setup <z2jh_pv>`.
 
-
+It is also possible to use your own custom `installation of JupyterHub <https://jupyterhub.readthedocs.io/en/stable/installation-guide.html>`__.
