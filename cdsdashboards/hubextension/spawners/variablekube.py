@@ -49,6 +49,7 @@ class VariableKubeSpawner(KubeSpawner, VariableMixin):
         pvc = super().get_pvc_manifest()
         
         if presentation_type != '':
-            pvc.spec.data_source = {'kind': 'PersistentVolumeClaim', 'name': 'claim-dan'}
+            pass
+            #pvc.spec.data_source = {'kind': 'PersistentVolumeClaim', 'name': 'claim-dan'}
         
         return pvc

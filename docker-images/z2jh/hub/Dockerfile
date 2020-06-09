@@ -11,6 +11,6 @@ RUN cd /tmp/cdsdashboard_current \
         && python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz` \
         && cd .. && rm -rf ./cdsdashboard_current
 
-RUN python3 -m pip install --upgrade kubernetes==11.0.0
+# RUN python3 -m pip install --upgrade kubernetes==11.0.0
 
 USER ${NB_USER}

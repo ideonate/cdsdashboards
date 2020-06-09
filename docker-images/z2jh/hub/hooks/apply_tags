@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+dt=`date '+%Y%m%d-%H%M%S'`
+docker tag $IMAGE_NAME "$DOCKER_REPO:$dt"
+
+K8S_HUB_VER='0.9.0'
+
+# Tag the latest build with the short git sha as well as version of key runtimes
+# and packages. 
+GIT_SHA_TAG=${SOURCE_COMMIT:0:12}
+docker tag $IMAGE_NAME "$DOCKER_REPO:$K8S_HUB_VER-$GIT_SHA_TAG"
+
+HUB_VERSION_TAG="hub-$(docker run --rm -a STDOUT ${IMAGE_NAME} jupyterhub --version | tr -d '\r')"
+docker tag $IMAGE_NAME "$DOCKER_REPO:$K8S_HUB_VER-${HUB_VERSION_TAG%%\r}"
+
+CDSVERSION_TAG="$K8S_HUB_VER-$(docker run --rm -a STDOUT ${IMAGE_NAME} python3 -m pip --disable-pip-version-check list | grep cdsdashboards 2>&1 | awk '{ print $ 2}')"
+docker tag $IMAGE_NAME "$DOCKER_REPO:${CDSVERSION_TAG%% }"
+
