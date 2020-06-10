@@ -92,3 +92,11 @@ Problems after upgrading to 0.0.13
 When upgrading from an older version to 0.0.13, you must upgrade both hub and user environments (user env may not be applicable to DockerSpawner installations).
 
 A database upgrade will be prompted - see the :ref:`changelog`.
+
+Dashboards (and servers) keep dying
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you find that dashboards (and also servers) seem to disappear after a few minutes of inactivity, it may be that you are running a process to 
+'cull idle servers'. Please try turning that off or increasing the idle time allowed.
+
+For example in The Littlest JupyterHub, see :ref:`here<tljh_cull_idle>`.
