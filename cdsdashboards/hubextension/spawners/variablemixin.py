@@ -81,7 +81,6 @@ class VariableMixin():
                 '{--}server.enableCORS=False'
             ])
 
-
             
         elif presentation_type == 'plotlydash':
 
@@ -95,6 +94,21 @@ class VariableMixin():
 
             if self.debug:
                 args.append('{--}debug')
+
+
+        elif presentation_type == 'bokeh':
+
+            args.extend(['python3', '{-}m','bokeh_root_cmd.main'])
+
+            args.append(_quote_safe(notebook_dir))
+
+            args.extend([
+                '{--}port={port}'
+            ])
+
+            if self.debug:
+                args.append('{--}debug')
+
 
         if self.debug:
             # jhsingle-native-proxy debug

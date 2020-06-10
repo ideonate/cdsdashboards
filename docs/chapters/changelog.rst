@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.0.17
+~~~~~~~~~~~~~~
+
+Released 9 June 2020
+
+- Preliminary support for Kubernetes-based JupyterHubs (Zero to JupyterHub)
+
 Version 0.0.16
 ~~~~~~~~~~~~~~
 

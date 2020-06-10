@@ -47,7 +47,7 @@ common_aliases = {
     'db': 'CDSDashboards.db_url',
 }
 
-_all_allowed_presentation_types = ['voila', 'streamlit', 'plotlydash']
+_all_allowed_presentation_types = ['voila', 'streamlit', 'plotlydash', 'bokeh']
 
 class CDSDashboardsConfig(SingletonConfigurable):
 
