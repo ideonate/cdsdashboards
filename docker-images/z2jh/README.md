@@ -148,3 +148,20 @@ auth:
     users:
       - bob
 ```
+
+# Minikube for testing
+
+```
+minikube start --driver=hyperkit
+
+(OR: minikube config set driver hyperkit)
+
+# To use minikube's docker registry e.g. for docker build:
+eval $(minikube docker-env)
+
+# Use mk instead of kubectl
+
+alias mk="minikube kubectl --"
+
+minikube delete
+```
