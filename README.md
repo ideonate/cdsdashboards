@@ -2,9 +2,14 @@
 
 A Dashboard publishing solution for Data Science teams to share results with decision makers.
 
-Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish Jupyter notebooks 
-([Voila](https://voila.readthedocs.io/en/stable/)), Streamlit apps, 
-or Plotly Dash apps as user-friendly interactive dashboards to share with non-technical colleagues.
+Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish apps and notebooks as user-friendly 
+interactive dashboards to share with non-technical colleagues.
+
+Currently support frameworks:
+- Jupyter notebooks ([Voila](https://voila.readthedocs.io/en/stable/))
+- [Streamlit](https://streamlit.io/) apps
+- [Plotly Dash](https://plotly.com/dash/) apps
+- [Bokeh](https://docs.bokeh.org/) / [Panel](https://panel.holoviz.org/) apps and notebooks
 
 This open source package allows users to create interactive Jupyter notebooks that can be instantly and reliably published as 
 secure interactive web apps.
