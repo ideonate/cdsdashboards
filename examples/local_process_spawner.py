@@ -28,3 +28,4 @@ from cdsdashboards.hubextension import cds_extra_handlers
 
 c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
 c.JupyterHub.extra_handlers = cds_extra_handlers
+

@@ -103,7 +103,8 @@ class VariableMixin():
             args.append(_quote_safe(notebook_dir))
 
             args.extend([
-                '{--}port={port}'
+                '{--}port={port}',
+                '{--}allow-websocket-origin={origin_host}'
             ])
 
             if self.debug:
