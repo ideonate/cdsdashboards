@@ -110,6 +110,19 @@ class VariableMixin():
             if self.debug:
                 args.append('{--}debug')
 
+        elif presentation_type == 'rshiny':
+
+            args.extend(['python3', '{-}m','rshiny_server_cmd.main'])
+
+            args.append(_quote_safe(notebook_dir))
+
+            args.extend([
+                '{--}port={port}'
+            ])
+
+            if self.debug:
+                args.append('{--}debug')
+
 
         if self.debug:
             # jhsingle-native-proxy debug
