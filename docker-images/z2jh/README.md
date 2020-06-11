@@ -30,7 +30,7 @@ hub:
 singleuser:
   image:
     name: ideonate/containds-all-basic
-    tag: 20200611-121535
+    tag: 20200611-134046
 
 
 ## Persistent Storage
