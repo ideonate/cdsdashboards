@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.0.18
+~~~~~~~~~~~~~~
+
+Released 11 June 2020
+
+- Support for Bokeh (and Panel) frameworks
+
 Version 0.0.17
 ~~~~~~~~~~~~~~
 
