@@ -1,9 +1,9 @@
 .. _streamlit:
 
-Streamlit Apps as Dashboards
-----------------------------
+Streamlit Apps
+--------------
 
-How to turn your Streamlit app into a Dashboard.
+How to turn your `Streamlit <https://streamlit.io/>`__ app into a Dashboard.
 
 Preparing your Code
 ~~~~~~~~~~~~~~~~~~~
@@ -48,8 +48,7 @@ be able to locate your notebooks and files.
 Select the framework required. For our example, we need to change this to *streamlit*.
 
 Specify the URL-path to the Python file of our Streamlit app, relative to the Jupyter server's home folder. In our case, intro.py 
-was at the top level in our Jupyter tree, so we just enter intro.py. It is important to get this right as file-not-found error messages are 
-not currently propagated back up to JupyterHub easily.
+was at the top level in our Jupyter tree, so we just enter intro.py.
 
 **Note that your Dashboard will be accessible by any other JupyterHub user.**
 

@@ -70,7 +70,7 @@ Merge the following settings in to your deployment's config.yaml file.
     singleuser:
       image:
         name: ideonate/containds-all-basic
-        tag: 20200608-153522
+        tag: 20200611-121535
 
 The hub.image and singleuser.image settings have already been discussed. In addition, we enable 
 `named servers <https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers>`__, and set some bespoke 

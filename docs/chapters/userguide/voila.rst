@@ -49,9 +49,8 @@ be able to locate your notebooks and files.
 Select the framework required. For our Jupyter notebook (ipynb) file, we need to leave this as 'voila'.
 
 Specify the URL-path to the ipynb file, relative to the Jupyter server's home folder. In our case, Presentation.ipynb was at the top level in our 
-Jupyter tree, so we just enter Presentation.ipynb. It is important to get this right as file-not-found error messages are not currently propagated 
-back up to JupyterHub easily. If in doubt, leave blank and Voila will just show the entire tree to the Dashboard user so they can locate the 
-file themselves.
+Jupyter tree, so we just enter Presentation.ipynb. If in doubt, leave blank and Voila will just show the entire tree to the Dashboard user so 
+they can locate the file themselves.
 
 **Note that your Dashboard will be accessible by any other JupyterHub user.**
 

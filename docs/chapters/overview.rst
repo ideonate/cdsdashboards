@@ -23,6 +23,8 @@ Currently supports:
 - Jupyter notebooks (`Voila <https://github.com/voila-dashboards/voila>`__)
 - `Streamlit <https://streamlit.io/>`__ apps
 - `Plotly Dash <https://plotly.com/dash/>`__ apps
+- `Bokeh <https://docs.bokeh.org/>`__ apps
+- `Panel <https://panel.holoviz.org/>`__ apps and notebooks
 
 Any authorised JupyterHub user can view the dashboard. This means that you can protect the dashboard with any authentication that works 
 with JupyterHub - including single-sign-on through corporate email accounts or LDAP.
@@ -30,7 +32,7 @@ with JupyterHub - including single-sign-on through corporate email accounts or L
 How it works
 ~~~~~~~~~~~~
 
-- Data scientist creates a Jupyter Notebook as normal, or uploads Streamlit / Plotly Dash python files to Jupyter
+- Data scientist creates a Jupyter Notebook as normal, or uploads Streamlit / Plotly Dash / Bokeh python files to Jupyter
 - Data scientist creates a new Dashboard to clone their Jupyter server
 - Other logged-in JupyterHub users see the dashboard in their list
 - Click to launch as a server, using OAuth to gain access

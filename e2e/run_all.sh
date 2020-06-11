@@ -1,6 +1,11 @@
 #!/bin/bash
 
+cd "${0%/*}"
+
 ./reset_docker.sh
+
+rm -rf ./cypress/videos
+rm -rf ./cypress/screenshots
 
 # Exit build script on first failure
 set -e

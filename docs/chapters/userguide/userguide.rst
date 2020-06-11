@@ -31,7 +31,7 @@ code cells are hidden, and the user can only view the intended end result. They 
 Streamlit and Plotly Dash apps can't normally be run at this stage (in Jupyter), so for now you would upload Python files and data that you have developed on 
 your own machine.
 
-Follow Jupyter (Voila), Streamlit, or Plotly Dash below for details on turning your code into a Dashboard to share with colleagues:
+Follow Jupyter (Voila), Streamlit, Plotly Dash, or Bokeh / Panel below for details on turning your code into a Dashboard to share with colleagues:
 
 .. toctree::
    :maxdepth: 1
@@ -39,6 +39,7 @@ Follow Jupyter (Voila), Streamlit, or Plotly Dash below for details on turning y
    voila
    streamlit
    plotlydash
+   bokehpanel
    working
 
 

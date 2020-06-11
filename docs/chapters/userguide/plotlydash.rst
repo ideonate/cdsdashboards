@@ -1,9 +1,9 @@
 .. _plotlydash:
 
-Plotly Dash Apps as Dashboards
-------------------------------
+Plotly Dash Apps
+----------------
 
-How to turn your Plotly Dash app into a Dashboard.
+How to turn your `Plotly Dash <https://plotly.com/dash/>`__ app into a Dashboard.
 
 Preparing your Code
 ~~~~~~~~~~~~~~~~~~~
@@ -50,8 +50,7 @@ be able to locate your notebooks and files.
 Select the framework required. For our example, we need to change this to *plotlydash*.
 
 Specify the URL-path to the Python file of our Dash app, relative to the Jupyter server's home folder. In our case, plotlyapp.py 
-was at the top level in our Jupyter tree, so we just enter plotlyapp.py. It is important to get this right as file-not-found error messages are 
-not currently propagated back up to JupyterHub easily.
+was at the top level in our Jupyter tree, so we just enter plotlyapp.py.
 
 **Note that your Dashboard will be accessible by any other JupyterHub user.**
 
@@ -61,7 +60,7 @@ Building the Dashboard
 ~~~~~~~~~~~~~~~~~~~~~~
 
 When you click Save, the dashboard will be built automatically. This just means that a new named server is created based on your new Dashboard, 
-running Streamlit instead of the regular Jupyter server.
+running Plotly Dash instead of the regular Jupyter server.
 
 This is what you should see while the build is taking place:
 
