@@ -201,3 +201,5 @@ possible, and to help simplify set up of ContainDS Dashboards in new circumstanc
 You are strongly encouraged to :ref:`let us know<contact>` how the guidance here has worked for you (good or bad), and to help us adapt or think of new 
 approaches to your circumstances.
 
+Please `sign up to the ContainDS email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
+features and security advice.

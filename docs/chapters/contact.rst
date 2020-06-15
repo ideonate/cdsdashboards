@@ -1,8 +1,8 @@
 .. _contact:
 
 
-Contact for Feedback
---------------------
+Contact and Mailing List
+------------------------
 
 This software is an alpha version. Please see LICENSE for details.
 
@@ -12,4 +12,9 @@ I would be very interested to find out how it can be used, and to work (without 
 For more background on this project and our related ContainDS Desktop product, please see our website: 
 `containds.com <https://containds.com/>`__.
 
-Contact `support@containds.com <mailto:support@containds.com>`__ with any comments or questions at all. Thank you.
+Contact `support@containds.com <mailto:support@containds.com>`__ with any comments or questions at all.
+
+Please `sign up to the ContainDS email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
+features and security advice.
+
+Thank you.

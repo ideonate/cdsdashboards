@@ -69,3 +69,9 @@ The default, for all of Voila, Streamlit, and Plotly Dash is:
 
     c.CDSDashboardsConfig.presentation_types = ['voila', 'streamlit', 'plotlydash']
 
+
+Mailing List for Updates
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Please `sign up to the ContainDS email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
+features and security advice.

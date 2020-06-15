@@ -30,7 +30,8 @@ To continue installation please see :ref:`setup`
 Mailing List
 ~~~~~~~~~~~~
 
-Please `sign up to our email list <https://containds.com/signup/>`__ to receive notifications about updates and related news.
+Please `sign up to our email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
+features and security advice.
 
 Documentation Contents
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -44,6 +45,7 @@ Documentation Contents
    chapters/troubleshooting
    chapters/requirements
    chapters/changelog
+   chapters/sourcecode
    chapters/contact
    chapters/license
 

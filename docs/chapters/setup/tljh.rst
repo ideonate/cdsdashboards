@@ -103,7 +103,7 @@ Extra options to control behavior of Dashboards are available - see :ref:`option
 ..  _tljh_cull_idle:
 
 Cull Idle Servers
-~~~~~~~~~~~~~~~~~
+-----------------
 
 You may find that your dashboards (and also regular Jupyter servers) disappear after a few minutes of inactivity.
 
@@ -114,3 +114,9 @@ This default TLJH service can be disabled as `described here <http://tljh.jupyte
     sudo tljh-config set services.cull.enabled False
     sudo tljh-config reload
 
+
+Mailing list
+~~~~~~~~~~~~
+
+Please `sign up to the ContainDS email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
+features and security advice.
