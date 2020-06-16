@@ -6,8 +6,6 @@ c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableLocalP
 
 c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.processbuilder.ProcessBuilder'
 
-c.LocalProcessSpawner.debug = True
-
 c.LocalProcessSpawner.notebook_dir = '/Users/dan/Dev/cdsdashboards/examples/local_process_folder/{username}'
 
 c.Spawner.start_timeout = 6000
@@ -20,7 +18,8 @@ c.ConfigurableHTTPProxy.debug = True
 
 c.JupyterHub.allow_named_servers = True
 
-#c.VariableLocalProcessSpawner.proxy_request_timeout = 300
+
+#c.VariableLocalProcessSpawner.voila_template = 'default'
 
 
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
