@@ -4,12 +4,65 @@ from traitlets.config import Configurable
 
 from jupyterhub.spawner import _quote_safe
 
+def _get_voila_template(args, spawner):
+
+    voila_template = getattr(spawner, 'voila_template', '')
+
+    if voila_template != '':
+            args.append('='.join(('{--}template', voila_template)))
+
+    return args
+
+
+def _get_streamlit_debug(args, spawner):
+    try:
+        if spawner.debug:
+            args.insert(args.index('streamlit')+1, '{--}log_level=debug')
+    except ValueError:
+        pass
+    return args
+
 
 class VariableMixin(Configurable):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.merged_presentation_launchers = self.builtin_presentation_launchers
 
+    builtin_presentation_launchers = {
+        'voila': {
+            #'cmd': ['python3', '-m', 'jhsingle_native_proxy.main'],
+            'args': ['--destport=0', 'python3', '{-}m','voila', '{presentation_path}',
+                '{--}port={port}',
+                '{--}no-browser',
+                '{--}Voila.base_url={base_url}/',
+                '{--}Voila.server_url=/'],
+            'extra_args_fn': _get_voila_template
+
+        },
+        'streamlit': {
+            'args': ['--destport=0', 'streamlit', 'run', '{presentation_path}', 
+                '{--}server.port={port}',
+                '{--}server.headless=True',
+                '{--}server.enableCORS=False'],
+            'debug_args': [], # Don't allow default of {--}debug
+            'extra_args_fn': _get_streamlit_debug
+        },
+        'plotlydash': {
+            'args': ['--destport=0', 'python3', '{-}m','plotlydash_tornado_cmd.main', '{presentation_path}',
+                '{--}port={port}']
+        },
+        'bokeh': {
+            'args': ['--destport=0', 'python3', '{-}m','bokeh_root_cmd.main', '{presentation_path}',
+                '{--}port={port}',
+                '{--}allow-websocket-origin={origin_host}']
+        },
+        'rshiny': {
+            'args': ['--destport=0', 'python3', '{-}m','rshiny_server_cmd.main', '{presentation_path}',
+                '{--}port={port}']
+        }
+
+    }
 
     voila_template = Unicode(
         'materialstream',
@@ -51,9 +104,14 @@ class VariableMixin(Configurable):
         if presentation_type == '':
             return super().get_args()
 
+        if presentation_type not in self.merged_presentation_launchers:
+            raise Exception('presentation type {} has not been registered with the spawner'.format(presentation_type))
+
+        launcher = self.merged_presentation_launchers[presentation_type]
+
         presentation_path = self.user_options.get('presentation_path', '')
 
-        args = ['--destport=0']
+        args = []
 
         # jhsingle-native-proxy --destport $destport --authtype oauth voila `pwd` {--}port={port} {--}no-browser {--}Voila.base_url={base_url}/ {--}Voila.server_url=/ --port $port
 
@@ -74,97 +132,27 @@ class VariableMixin(Configurable):
                 presentation_path = presentation_path[1:]
             notebook_dir = os.path.join(notebook_dir, presentation_path)
 
+        if 'args' in launcher:
+            args.extend(launcher['args'])
 
-        voila_template = getattr(self, 'voila_template', '')
-
-        if presentation_type == 'voila':
-
-            args.extend(['python3', '{-}m','voila'])
-
-            args.append(_quote_safe(notebook_dir))
-
-            args.extend([
-                '{--}port={port}',
-                '{--}no-browser',
-                '{--}Voila.base_url={base_url}/',
-                '{--}Voila.server_url=/'
-            ])
-
-            if voila_template != '':
-                args.append('='.join(('{--}template', voila_template)))
-
-            if self.debug:
-                args.append('{--}debug')
-
-        elif presentation_type == 'streamlit':
-
-            args.append('streamlit')
-
-            if self.debug:
-                args.append('{--}log_level=debug')
-
-            args.append('run')
-
-            args.append(_quote_safe(notebook_dir))
-
-            args.extend([
-                '{--}server.port={port}',
-                '{--}server.headless=True',
-                '{--}server.enableCORS=False'
-            ])
-
-            
-        elif presentation_type == 'plotlydash':
-
-            args.extend(['python3', '{-}m','plotlydash_tornado_cmd.main'])
-
-            args.append(_quote_safe(notebook_dir))
-
-            args.extend([
-                '{--}port={port}'
-            ])
-
-            if self.debug:
-                args.append('{--}debug')
-
-
-        elif presentation_type == 'bokeh':
-
-            args.extend(['python3', '{-}m','bokeh_root_cmd.main'])
-
-            args.append(_quote_safe(notebook_dir))
-
-            args.extend([
-                '{--}port={port}',
-                '{--}allow-websocket-origin={origin_host}'
-            ])
-
-            if self.debug:
-                args.append('{--}debug')
-
-        elif presentation_type == 'rshiny':
-
-            args.extend(['python3', '{-}m','rshiny_server_cmd.main'])
-
-            args.append(_quote_safe(notebook_dir))
-
-            args.extend([
-                '{--}port={port}'
-            ])
-
-            if self.debug:
-                args.append('{--}debug')
-
+        args.append('--presentation-path={}'.format(_quote_safe(notebook_dir)))
 
         if self.debug:
-            # jhsingle-native-proxy debug
-            args.append('--debug')
+            if 'debug_args' in launcher:
+                args.extend(launcher['debug_args'])
+            else:
+                args.append('{--}debug')
+            args.append('--debug') # For jhsingle-native-proxy itself
 
         proxy_request_timeout = getattr(self, 'proxy_request_timeout', 0)
         if proxy_request_timeout:
             args.append('--request-timeout={}'.format(proxy_request_timeout))
 
         args.extend(self.args)
+
+        if 'extra_args_fn' in launcher: # Last chance for launcher config to change everything and anything
+            args = launcher['extra_args_fn'](args, self)
+
         return args
 
     def _get_presentation_type(self):
