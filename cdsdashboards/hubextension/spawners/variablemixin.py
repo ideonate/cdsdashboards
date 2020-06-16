@@ -115,13 +115,6 @@ class VariableMixin(Configurable):
 
         # jhsingle-native-proxy --destport $destport --authtype oauth voila `pwd` {--}port={port} {--}no-browser {--}Voila.base_url={base_url}/ {--}Voila.server_url=/ --port $port
 
-        if self.ip:
-            args.append('--ip=%s' % _quote_safe(self.ip))
-
-        if self.port:
-            args.append('--port=%i' % self.port)
-
-
         notebook_dir = '.'
         if self.notebook_dir:
             notebook_dir = self.format_string(self.notebook_dir)
@@ -136,6 +129,12 @@ class VariableMixin(Configurable):
             args.extend(launcher['args'])
 
         args.append('--presentation-path={}'.format(_quote_safe(notebook_dir)))
+
+        if self.ip:
+            args.append('--ip=%s' % _quote_safe(self.ip))
+
+        if self.port:
+            args.append('--port=%i' % self.port)
 
         if self.debug:
             if 'debug_args' in launcher:
