@@ -50,7 +50,8 @@ class VariableMixin(Configurable):
         },
         'plotlydash': {
             'args': ['--destport=0', 'python3', '{-}m','plotlydash_tornado_cmd.main', '{presentation_path}',
-                '{--}port={port}']
+                '{--}port={port}'],
+            'env': {'DASH_REQUESTS_PATHNAME_PREFIX': '{base_url}/'}
         },
         'bokeh': {
             'args': ['--destport=0', 'python3', '{-}m','bokeh_root_cmd.main', '{presentation_path}',
@@ -164,8 +165,15 @@ class VariableMixin(Configurable):
 
         presentation_type = self._get_presentation_type()
 
-        if presentation_type == 'plotlydash':
-            env['DASH_REQUESTS_PATHNAME_PREFIX'] = "{}/".format(self.server.base_url)
+        if presentation_type != '':
+            if presentation_type not in self.merged_presentation_launchers:
+                raise Exception('presentation type {} has not been registered with the spawner'.format(presentation_type))
+
+            launcher = self.merged_presentation_launchers[presentation_type]
+
+            if 'env' in launcher:
+                for k,v in launcher['env'].items():
+                    env[k] = v.format(base_url=self.server.base_url)
         return env
 
 
