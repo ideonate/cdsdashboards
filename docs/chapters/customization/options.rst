@@ -48,8 +48,8 @@ By default, all supported presentation frameworks will be available for new dash
 `Voila <https://github.com/voila-dashboards/voila>`__ (for user-friendly display of Jupyter notebooks), 
 `Streamlit <https://www.streamlit.io/>`__, and `Plotly Dash <https://plotly.com/dash/>`__ are the supported frameworks for dashboards.
 
-To change the available set - for example, to remove streamlit and plotlydash as a possible selection for your users on the New Dashboard page, add the following 
-to your jupyterhub_config.py:
+To change the available set - for example, to remove streamlit and plotlydash as a possible selection for your users on the New Dashboard page, 
+add the following to your jupyterhub_config.py:
 
 ::
 
@@ -63,11 +63,11 @@ Or
 
 to allow streamlit and plotlydash, but not voila.
 
-The default, for all of Voila, Streamlit, and Plotly Dash is:
+The default is to allow all built-in types:
 
 ::
 
-    c.CDSDashboardsConfig.presentation_types = ['voila', 'streamlit', 'plotlydash']
+    c.CDSDashboardsConfig.presentation_types = ['voila', 'streamlit', 'plotlydash', 'bokeh', 'rshiny']
 
 
 Mailing List for Updates

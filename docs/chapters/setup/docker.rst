@@ -79,7 +79,7 @@ For Plotly Dash dashboards, you need a /opt/conda/bin/plotlydash-entrypoint.sh
 Please see `docker-singleuser-images <https://github.com/ideonate/cdsdashboards/tree/master/docker-images/singleuser-example>`__ for an example, 
 or use the ones created for you already:
 
-Containing Voila, Streamlit, and Plotly Dash as presentation types:
+Containing Voila, Streamlit, Plotly Dash, and Bokeh/Panel as presentation types:
 
 - `containds-all-basic <https://hub.docker.com/r/ideonate/containds-all-basic>`__ (Standard Python environment)
 - `containds-all-scipy <https://hub.docker.com/r/ideonate/containds-all-scipy>`__ (Extra scientific Python packages installed)
@@ -91,9 +91,15 @@ Using Voila as the presentation type:
 - `jh-voila-oauth-r <https://hub.docker.com/r/ideonate/jh-voila-oauth-r>`__ (More than just Python)
 - `jh-voila-oauth-datascience <https://hub.docker.com/r/ideonate/jh-voila-oauth-datascience>`__ (R language)
 
+Using R Shiny or Voila as the presentation type:
+
+- `containds-rshiny <https://hub.docker.com/r/ideonate/containds-rshiny>`__ (R with Shiny)
+
 These are based on the similarly-named `Jupyter Docker Stacks <https://jupyter-docker-stacks.readthedocs.io/en/latest/>`__ images, just 
 with extra support for Voila and ContainDS Dashboards. The ContainDS Dockerfile versions are 
 on `GitHub here <https://github.com/ideonate/cdsdashboards-jupyter-docker>`__.
+
+There is currently no pre-built image containing all presentation types including R Shiny Server.
 
 Options
 ~~~~~~~

@@ -24,15 +24,14 @@ It should be possible to use other spawner types and configurations - please :re
 Once JupyterHub is running, please continue based on the spawner or installation type you are using:
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Setup:
 
    localprocess
    tljh
    docker
    z2jh
-   options
-   finetune
+
 
 
 

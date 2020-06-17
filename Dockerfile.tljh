@@ -13,11 +13,11 @@ RUN cd /tmp/cdsdashboard_current \
         && /opt/tljh/user/bin/python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz` \
         && cd .. && rm -rf ./cdsdashboard_current
 
-RUN pip install streamlit
+RUN /opt/tljh/user/bin/python3 -m pip install streamlit
 
-RUN pip install dash plotlydash-tornado-cmd
+RUN /opt/tljh/user/bin/python3 -m pip install dash plotlydash-tornado-cmd
 
-RUN pip install bokeh panel bokeh-root-cmd
+RUN /opt/tljh/user/bin/python3 -m pip install bokeh panel bokeh-root-cmd
 
 CMD ["/usr/local/bin/startup-script.sh", "/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]
 

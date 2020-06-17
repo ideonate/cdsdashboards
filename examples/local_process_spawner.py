@@ -33,7 +33,7 @@ c.VariableMixin.extra_presentation_launchers = {
     }
 }
 
-c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel']
+c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel', 'unavailable']
 
 
 #c.VariableLocalProcessSpawner.voila_template = 'default'

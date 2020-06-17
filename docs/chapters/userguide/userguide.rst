@@ -15,9 +15,9 @@ previously (or hidden in :ref:`options<options>`).
 Developing a Dashboard
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Dashboards can be created based on either Jupyter notebooks or Streamlit / Plotly Dash py files.
+Dashboards can be created based on Jupyter notebooks or py or R files.
 
-Use 'My Server' (or a named server) to create a Jupyter notebook (ipynb file) as normal or upload/edit Python files to make your Streamlit app.
+Use 'My Server' (or a named server) to create a Jupyter notebook (ipynb file) as normal or upload/edit Python or R files to make apps.
 
 Below, we have both an ipynb (Jupyter notebook) and a py file. We will be able to make two dashboards, one for each file.
 
@@ -28,10 +28,10 @@ For Jupyter notebooks, of course you can run them as usual in your Jupyter serve
 the final dashboard will appear. Voila is the name of the technology that is essentially a user-friendly and secure version of Jupyter notebooks: 
 code cells are hidden, and the user can only view the intended end result. They can interact with widgets if they are present in the notebook though.
 
-Streamlit and Plotly Dash apps can't normally be run at this stage (in Jupyter), so for now you would upload Python files and data that you have developed on 
-your own machine.
+Streamlit, Plotly Dash, Bokeh/Panel, and R Shiny apps can't normally be run at this stage (in Jupyter), so for now you would upload Python/R files 
+and data that you have developed on your own machine.
 
-Follow Jupyter (Voila), Streamlit, Plotly Dash, or Bokeh / Panel below for details on turning your code into a Dashboard to share with colleagues:
+Follow Jupyter (Voila), Streamlit, Plotly Dash, Bokeh / Panel, or R Shiny below for details on turning your code into a Dashboard to share with colleagues:
 
 .. toctree::
    :maxdepth: 1
@@ -40,6 +40,7 @@ Follow Jupyter (Voila), Streamlit, Plotly Dash, or Bokeh / Panel below for detai
    streamlit
    plotlydash
    bokehpanel
+   rshiny
    working
 
 

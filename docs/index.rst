@@ -42,6 +42,7 @@ Documentation Contents
    chapters/overview
    chapters/setup/setup
    chapters/userguide/userguide
+   chapters/customization/customization
    chapters/troubleshooting
    chapters/requirements
    chapters/changelog

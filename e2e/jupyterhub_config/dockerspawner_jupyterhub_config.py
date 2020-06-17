@@ -52,5 +52,5 @@ c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "tests-{prefix}-{username}-{servername}"
 
-c.DockerSpawner.image = 'containds-all-example'
+c.DockerSpawner.image = 'ideonate/containds-all-basic:20200611-134046'
 
