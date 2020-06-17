@@ -18,6 +18,23 @@ c.ConfigurableHTTPProxy.debug = True
 
 c.JupyterHub.allow_named_servers = True
 
+import os
+dirname = os.path.dirname(__file__)
+
+c.VariableMixin.extra_presentation_launchers = {
+    'custom-panel': {
+        'args': [
+            'python3', '{presentation_basename}', '{port}', '{origin_host}', '{base_url}'
+            ],
+        'debug_args': [],
+        'env': {
+            'PYTHONPATH': os.path.join(dirname, 'local_process_folder/{username}/{presentation_dirname}')
+        }
+    }
+}
+
+c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel']
+
 
 #c.VariableLocalProcessSpawner.voila_template = 'default'
 

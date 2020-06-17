@@ -1,5 +1,6 @@
 import os.path
-from traitlets import Unicode, Integer
+from copy import deepcopy
+from traitlets import Unicode, Integer, Dict
 from traitlets.config import Configurable
 
 from jupyterhub.spawner import _quote_safe
@@ -12,7 +13,6 @@ def _get_voila_template(args, spawner):
             args.append('='.join(('{--}template', voila_template)))
 
     return args
-
 
 def _get_streamlit_debug(args, spawner):
     try:
@@ -27,26 +27,31 @@ class VariableMixin(Configurable):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.merged_presentation_launchers = self.builtin_presentation_launchers
+        # Merge extra_presentation_launchers config into a copy of builtin_presentation_launchers
+        self.merged_presentation_launchers = deepcopy(self.builtin_presentation_launchers)
+        for frameworkname, launcher in self.extra_presentation_launchers.items():
+            if frameworkname not in self.merged_presentation_launchers:
+                self.merged_presentation_launchers[frameworkname] = {}
+            for k,v in launcher.items():
+                self.merged_presentation_launchers[frameworkname][k] = v
 
     builtin_presentation_launchers = {
         'voila': {
-            #'cmd': ['python3', '-m', 'jhsingle_native_proxy.main'],
+            #'cmd': ['python3', '-m', 'jhsingle_native_proxy.main'],  # This is the default cmd anyway
             'args': ['--destport=0', 'python3', '{-}m','voila', '{presentation_path}',
                 '{--}port={port}',
                 '{--}no-browser',
                 '{--}Voila.base_url={base_url}/',
                 '{--}Voila.server_url=/'],
             'extra_args_fn': _get_voila_template
-
         },
         'streamlit': {
             'args': ['--destport=0', 'streamlit', 'run', '{presentation_path}', 
                 '{--}server.port={port}',
                 '{--}server.headless=True',
                 '{--}server.enableCORS=False'],
-            'debug_args': [], # Don't allow default of {--}debug
-            'extra_args_fn': _get_streamlit_debug
+            'debug_args': [], # The default is {--}debug, we don't want that
+            'extra_args_fn': _get_streamlit_debug # But --log_level=debug has to come earlier in the cmdline
         },
         'plotlydash': {
             'args': ['--destport=0', 'python3', '{-}m','plotlydash_tornado_cmd.main', '{presentation_path}',
@@ -64,6 +69,20 @@ class VariableMixin(Configurable):
         }
 
     }
+
+    extra_presentation_launchers = Dict(
+        {},
+        help="""
+        Configuration dict containing details of any custom frameworks that should be made available to Dashboard creators.
+        Any new keys added here also need to be added to the c.CDSDashboardsConfig.presentation_types list.
+        See cdsdashboards/hubextension/spawners/variablemixin.py in the https://github.com/ideonate/cdsdashboards source code
+        for details of the builtin_presentation_launchers dict which shows some examples. This extra_presentation_launchers 
+        config takes the same format.
+        Any keys in extra_presentation_launchersthat also belong to builtin_presentation_launchers will be merged into the 
+        builtin config, e.g. {'streamlit':{'env':{'STREAMLIT_ENV_VAR':'TEST'}}} will overwrite only the env section of the 
+        builting streamlit launcher.
+        """
+    ).tag(config=True)
 
     voila_template = Unicode(
         'materialstream',
@@ -90,6 +109,13 @@ class VariableMixin(Configurable):
             for k in trait_names.intersection(self.user_options.keys()):
                 setattr(self, k, self.user_options[k])
 
+        # Any update for cmd needs to be set here (args and env have their own overridden functions)
+        presentation_type = self._get_presentation_type()
+        if presentation_type != '':
+            launcher = self.merged_presentation_launchers[presentation_type]
+            if 'cmd' in launcher:
+                self.cmd = launcher['cmd']
+
         return await super().start()
 
     def get_args(self):
@@ -104,9 +130,6 @@ class VariableMixin(Configurable):
         
         if presentation_type == '':
             return super().get_args()
-
-        if presentation_type not in self.merged_presentation_launchers:
-            raise Exception('presentation type {} has not been registered with the spawner'.format(presentation_type))
 
         launcher = self.merged_presentation_launchers[presentation_type]
 
@@ -150,14 +173,22 @@ class VariableMixin(Configurable):
 
         args.extend(self.args)
 
-        if 'extra_args_fn' in launcher: # Last chance for launcher config to change everything and anything
+        if 'extra_args_fn' in launcher and callable(launcher['extra_args_fn']): # Last chance for launcher config to change everything and anything
             args = launcher['extra_args_fn'](args, self)
 
         return args
 
     def _get_presentation_type(self):
+        """
+        Returns the presentation_type (e.g. '' for standard spawner, 'voila', 'streamlit' for named presentation frameworks).
+        Throws an exception if the presentation_type doesn't have a launcher configuration in either extra_presentation_launchers 
+        or builtin_presentation_launchers.
+        """
         if self.user_options and 'presentation_type' in self.user_options:
-            return self.user_options['presentation_type']
+            presentation_type = self.user_options['presentation_type']
+            if presentation_type not in self.merged_presentation_launchers:
+                raise Exception('presentation type {} has not been registered with the spawner'.format(presentation_type))
+            return presentation_type
         return ''
 
     def get_env(self):
@@ -166,14 +197,25 @@ class VariableMixin(Configurable):
         presentation_type = self._get_presentation_type()
 
         if presentation_type != '':
-            if presentation_type not in self.merged_presentation_launchers:
-                raise Exception('presentation type {} has not been registered with the spawner'.format(presentation_type))
 
             launcher = self.merged_presentation_launchers[presentation_type]
 
             if 'env' in launcher:
+                presentation_dirname = '.'
+                presentation_path = ''
+                if self.user_options and 'presentation_path' in self.user_options:
+                    presentation_path = self.user_options['presentation_path']
+                    presentation_dirname = os.path.dirname(presentation_path)
+
+                self.log.info('presentation_dirname: {}'.format(presentation_dirname))
+
                 for k,v in launcher['env'].items():
-                    env[k] = v.format(base_url=self.server.base_url)
+                    env[k] = v.format(
+                        base_url=self.server.base_url,
+                        presentation_dirname=presentation_dirname,
+                        presentation_path=presentation_path,
+                        username=self.user.name
+                    )
         return env
 
 

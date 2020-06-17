@@ -1,6 +1,6 @@
 import sys
 
-from tornado.web import authenticated, HTTPError
+from tornado.web import authenticated
 
 from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Group
@@ -88,7 +88,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
         
-        presentation_types = cdsconfig.presentation_types
+        merged_presentation_types = cdsconfig.merged_presentation_types
 
         html = self.render_template(
             "editdashboard.html",
@@ -100,7 +100,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_start_path=dashboard_start_path,
             dashboard_presentation_type=dashboard_presentation_type,
             dashboard_options=dashboard_options,
-            presentation_types=presentation_types,
+            presentation_types=merged_presentation_types,
             spawner_name=spawner_name,
             current_user=current_user,
             spawners=spawners,
@@ -155,11 +155,11 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         elif not self.start_path_regex.match(dashboard_start_path):
             errors.start_path = 'Please enter valid URL path characters'
 
-        presentation_types = CDSConfigStore.get_instance(self.settings['config']).presentation_types
+        merged_presentation_types = CDSConfigStore.get_instance(self.settings['config']).merged_presentation_types
         
-        if not dashboard_presentation_type in presentation_types:
-            errors.presentation_type = 'Framework %s invalid - it must be one of the allowed types: %s'.format(
-                dashboard_presentation_type, ', '.join(presentation_types)
+        if not dashboard_presentation_type in merged_presentation_types:
+            errors.presentation_type = 'Framework {} invalid - it must be one of the allowed types: {}'.format(
+                dashboard_presentation_type, ', '.join(merged_presentation_types)
                 )
 
         dashboard_options = self.read_options(dashboard, errors)
@@ -245,7 +245,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_start_path=dashboard_start_path,
                 dashboard_presentation_type=dashboard_presentation_type,
                 dashboard_options=dashboard_options,
-                presentation_types=presentation_types,
+                presentation_types=merged_presentation_types,
                 spawner_name=spawner_name,
                 spawners=spawners,
                 errors=errors,

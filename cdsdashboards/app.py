@@ -7,7 +7,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
-from traitlets import Unicode, Integer, Bool, Dict, validate, Any, default, observe, List
+from traitlets import Unicode, Integer, Bool, Dict, validate, Any, default, observe, List, TraitError
 from traitlets.config import Application, catch_config_error, SingletonConfigurable
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
@@ -81,20 +81,27 @@ class CDSDashboardsConfig(SingletonConfigurable):
         default_value=_all_allowed_presentation_types,
         minlen=1,
         help="""
-        Allowed presentation types for Dashboards. A list, allowed strings are: %s.
-        There must be at least one valid entry. Any that aren't in the allowed list will be removed.
+        Allowed presentation types for Dashboards. A list, allowed strings are: {}.
+        There must be at least one valid entry.
         Default value is all the allowed presentation types.
+        Add any custom frameworks to the extra_presentation_types config if you want to augment instead of overwrite the default list.
         """.format(_all_allowed_presentation_types)
     ).tag(config=True)
 
-    @validate('presentation_types')
-    def _valid_presentation_types(self, proposal):
-        presentation_types = []
-        for t in proposal['value']:
-            if t in _all_allowed_presentation_types:
-                presentation_types.append(t)
-        return presentation_types
+    extra_presentation_types = List(
+        trait=Unicode,
+        default_value=[],
+        minlen=0,
+        help="""
+        Extra custom presentation types for Dashboards, to be added to the presentation_types list.
+        A list.
+        Default value is the empty list.
+        """
+    ).tag(config=True)
 
+    @property
+    def merged_presentation_types(self):
+        return self.presentation_types + self.extra_presentation_types
 
 class UpgradeDB(Application):
     """Upgrade the CDSDashboards database schema."""
