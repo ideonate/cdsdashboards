@@ -41,3 +41,15 @@ do_create_and_start_dashboard = (name, path, framework) => {
     .invoke('removeAttr', 'target').click() // Don't want to open in new tab
 
 }
+
+do_stop_dashserver = (id) => {
+  cy.visit('/hub/home')
+
+  cy.get('#stop-'+id)
+    .should('contain', 'stop').click()
+
+  cy.get('#start-'+id)
+    .should('be.visible', { timeout: 20000 })
+    .should('contain', 'start') // Appears when stop complete
+
+}

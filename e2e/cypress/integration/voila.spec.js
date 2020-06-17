@@ -11,13 +11,14 @@ it('voila dashboard', () => {
   cy.get('#header-container > span:nth-child(4) > a', { timeout: 20000 })
     .should('contain', 'Control Panel').click()
 
-
   // Voila
 
   do_create_and_start_dashboard('Voila Test', 'Test.ipynb', 'voila')
   
   cy.get('#rendered_cells > main > div > div > div > div > div:nth-child(3) > div > div > div > div > pre')
     .should('contain', 'Voila top level is working')
+
+  do_stop_dashserver('dash-voila-test')
 
   // Plotly Dash
 
@@ -33,6 +34,8 @@ it('voila dashboard', () => {
     expect($img[0].naturalWidth).to.be.greaterThan(0)
   })
 
+  do_stop_dashserver('dash-plotly-dash-test')
+
   // Bokeh
 
   do_create_and_start_dashboard('Bokeh Test', 'bokeh/hello.py', 'bokeh')
@@ -43,6 +46,7 @@ it('voila dashboard', () => {
 
   cy.get('p.bk').should('contain', 'Hello, BokehDan')
 
+  do_stop_dashserver('dash-bokeh-test')
 
 })
 

@@ -42,7 +42,7 @@ setup(
     name='cdsdashboards',
     packages=find_packages(),
     package_data=get_package_data(),
-    version='0.0.18',
+    version='0.0.19',
     python_requires='>=3.6',
     author='Ideonate',
     author_email='dan@containds.com',
