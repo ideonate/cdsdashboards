@@ -14,6 +14,12 @@ RUN cd /tmp/cdsdashboard_current \
         && python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz` \
         && cd .. && rm -rf ./cdsdashboard_current
 
+RUN pip install streamlit
+
+RUN pip install dash plotlydash-tornado-cmd
+
+RUN pip install bokeh panel bokeh-root-cmd
+
 ENTRYPOINT ["/usr/local/bin/startup-script.sh"]
 
 CMD ["jupyterhub"]

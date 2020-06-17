@@ -11,6 +11,7 @@ docker
 # LocalProcess Spawners
 jhsingle-native-proxy>=0.3.0
 plotlydash-tornado-cmd>=0.0.4
-bokeh-root-cmd>=0.0.3
+bokeh-root-cmd>=0.0.4
+rshiny-server-cmd>=0.0.2
 voila
 voila-materialstream
