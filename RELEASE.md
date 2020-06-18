@@ -2,6 +2,8 @@
 
 Update setup.py to the new version
 
+Update docs: z2jh and dockerspawner to the latest tags
+
 delete dist folder
 
 delete cdsdashboards.egg-info

@@ -54,7 +54,7 @@ Merge the following settings in to your deployment's config.yaml file.
       allowNamedServers: true
       image:
         name: ideonate/cdsdashboards-jupyter-k8s-hub
-        tag: 0.9.0-0.0.17
+        tag: 0.9.0-0.0.19
 
     extraConfig:
       cds-handlers: |
@@ -70,7 +70,7 @@ Merge the following settings in to your deployment's config.yaml file.
     singleuser:
       image:
         name: ideonate/containds-all-basic
-        tag: 20200611-134046
+        tag: 20200617-160028
 
 The hub.image and singleuser.image settings have already been discussed. In addition, we enable 
 `named servers <https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers>`__, and set some bespoke 

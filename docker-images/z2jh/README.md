@@ -5,7 +5,7 @@
 From docker-images/z2jh/hub:
 
 ```
-docker build -t ideonate/cdsdashboards-jupyter-k8s-hub:0.9.0-0.0.17 -f ./Dockerfile  ../../../
+docker build -t ideonate/cdsdashboards-jupyter-k8s-hub:0.9.0-0.0.19 -f ./Dockerfile  ../../../
 ```
 
 ## config.yaml
@@ -14,7 +14,7 @@ hub:
   allowNamedServers: true
   image:
     name: ideonate/cdsdashboards-jupyter-k8s-hub
-    tag: 0.9.0-0.0.17
+    tag: 0.9.0-0.0.19
 
   extraConfig:
     cds-handlers: |
@@ -30,7 +30,7 @@ hub:
 singleuser:
   image:
     name: ideonate/containds-all-basic
-    tag: 20200611-134046
+    tag: 20200617-160028
 
 
 ## Persistent Storage
