@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.0.19
+~~~~~~~~~~~~~~
+
+Released 18 June 2020
+
+- Support for R Shiny Server and custom frameworks (presentation types)
+
 Version 0.0.18
 ~~~~~~~~~~~~~~
 

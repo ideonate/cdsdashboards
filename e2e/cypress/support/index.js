@@ -45,7 +45,10 @@ do_create_and_start_dashboard = (name, path, framework) => {
 do_stop_dashserver = (id) => {
   cy.visit('/hub/home')
 
+  cy.wait(500) // There is probably a better way of course!
+
   cy.get('#stop-'+id)
+    .should('be.visible')
     .should('contain', 'stop').click()
 
   cy.get('#start-'+id)
