@@ -9,7 +9,7 @@ dockerspawner>=0.11.0
 docker
 
 # LocalProcess Spawners
-jhsingle-native-proxy>=0.3.0
+jhsingle-native-proxy>=0.3.1
 plotlydash-tornado-cmd>=0.0.4
 bokeh-root-cmd>=0.0.4
 rshiny-server-cmd>=0.0.2

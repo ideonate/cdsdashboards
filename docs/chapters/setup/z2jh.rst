@@ -36,8 +36,8 @@ in a similar way to `our example Dockerfile <https://github.com/ideonate/cdsdash
 Currently, we have built on top of Helm chart version 0.9.0 only (see corresponding 
 `components and requirements <https://github.com/jupyterhub/helm-chart#versions-coupled-to-each-chart-release>`__).
 
-Our ideonate/cdsdashboards-jupyter-k8s-hub image is tagged as, for example, '0.9.0-0.0.17' meaning it is based on the z2jh version 
-0.9.0 and containing cdsdashboards version 0.0.17.
+Our ideonate/cdsdashboards-jupyter-k8s-hub image is tagged as, for example, '0.9.0-0.0.19' meaning it is based on the z2jh version 
+0.9.0 and containing cdsdashboards version 0.0.19.
 
 As well as setting the new hub image, you will also need a compatible 'singleuser' image, fulfilling the same 
 :ref:`requirements as for DockerSpawner <docker_singleuser_image>`. A suitable starting point is one of 
@@ -70,7 +70,7 @@ Merge the following settings in to your deployment's config.yaml file.
     singleuser:
       image:
         name: ideonate/containds-all-basic
-        tag: 20200617-160028
+        tag: 20200618-125310
 
 The hub.image and singleuser.image settings have already been discussed. In addition, we enable 
 `named servers <https://jupyterhub.readthedocs.io/en/stable/reference/config-user-env.html#named-servers>`__, and set some bespoke 

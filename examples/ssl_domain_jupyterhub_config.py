@@ -541,10 +541,7 @@ c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-#c.DockerSpawner.image = 'ideonate/jh-voila-oauth-scipy:20200524-110326'
-#c.DockerSpawner.image = 'jh-voila-oauth-singleuser:latest'
-c.DockerSpawner.image = 'containds-rshiny:latest'
-#c.DockerSpawner.image = 'ideonate/containds-all-basic:latest'
+c.DockerSpawner.image = 'ideonate/containds-all-scipy:20200618-133730'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
 
