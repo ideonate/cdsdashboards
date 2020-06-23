@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from collections import defaultdict
-from asyncio import sleep, CancelledError
+from asyncio import sleep, CancelledError, Future
 
 from async_generator import aclosing
 from tornado.web import HTTPError
@@ -158,7 +158,7 @@ class DashboardBaseMixin:
                         elif source_spawner.pending in ['spawn', 'check']:
                             builder.add_progress_event({'progress': 15, 'message': 'Attacheding to pending source server for Dashboard'})
                             self.log.debug('Source spawner is pending - await')
-                            spawn_future = final_spawner.getattr('_{}_future'.format(final_spawner.pending), None)
+                            spawn_future = getattr(final_spawner, '_{}_future'.format(final_spawner.pending), None)
                             if spawn_future:
                                 await spawn_future
                         else:
@@ -193,9 +193,11 @@ class DashboardBaseMixin:
                 builder._build_future.add_done_callback(do_final_build)
 
         elif builder.pending:
-            pass # Progress will show where we've got to
+            pass # Already started - Progress will show where we've got to
 
         elif dashboard.final_spawner:
+            # Spawner already running so don't need to build anything
+
             user = self._user_from_orm(dashboard_user)
 
             final_spawner = user.spawners[dashboard.final_spawner.name]
@@ -205,18 +207,28 @@ class DashboardBaseMixin:
 
             elif final_spawner.pending:
 
-                if final_spawner.pending in ['spawn', 'check']:
+                if final_spawner.pending == 'spawn':
                     builder._build_pending = True
 
                     builder.add_progress_event({'progress': 90, 'message': 'Attaching to spawn of final server for Dashboard'})
 
                     # TODO This branch is rare, but should attach pipe to spawner progress
 
-                    final_spawner.getattr('_{}_future'.format(final_spawner.pending)).add_done_callback(do_final_build)
+                    builder._build_future = getattr(final_spawner, '_{}_future'.format(final_spawner.pending), None)
+                    
+                    if builder._build_future:
+                        builder._build_future.add_done_callback(do_final_build)
 
-                else:
-                    builder.add_progress_event({'failed': True, 'message': 'Final server for Dashboard is Stopping'})
+                else: # stop or check
+                    self.log.info("Awaiting failure of builder due to spawner stopping")
 
+                    builder.add_progress_event({'failed': True, 'message': 'Final server for Dashboard is Stopping or Checking'})
+                    builder._build_future = Future()
+
+                    builder._build_future.set_exception(Exception('Could not rebuild - need to wait for destination named server '
+                                                    'to complete {} before you can try again'.format(final_spawner.pending)))
+                    builder._build_pending = False
+                  
             else:
 
                 builder._build_pending = True
@@ -255,7 +267,7 @@ class DashboardBaseMixin:
         if spawner.pending == 'stop':
             self.log.debug("%s already stopping", spawner._log_name)
 
-            await spawner._stop_future
+            # TODO ideally wait until the stop is complete
 
         if spawner.ready or spawner.pending == 'spawn':
 

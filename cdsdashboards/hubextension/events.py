@@ -46,7 +46,7 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
                 'url': url,
             }
 
-        failed_event = {'progress': 100, 'failed': True, 'message': "Build failed", 
+        failed_event = {'progress': 100, 'failed': True, 'message': "Build failed or unable to get progress", 
             'url': url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.urlname, 'clear-error')
             }
 
@@ -74,23 +74,27 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
             else:
                 raise HTTPError(400, "%s is not starting...", builder._log_name)
 
-        # retrieve progress events from the Spawner
-        async with aclosing(
-            iterate_until(build_future, builder._generate_progress())
-        ) as events:
-            try:
-                async for event in events:
-                    # don't allow events to sneakily set the 'ready' flag
-                    if 'ready' in event:
-                        event.pop('ready', None)
-                    await self.send_event(event)
-            except asyncio.CancelledError:
-                pass
+        if build_future: # Just in case build_future is None so iterate_until's asyncio.wait doesn't fail; 
+            # builder._generate_progress should return an iterator because _build_pending was non-None
+            # just above, with no awaits since
 
-        # progress finished, wait for spawn to actually resolve,
-        # in case progress finished early
-        # (ignore errors, which will be logged elsewhere)
-        await build_future
+            # Retrieve progress events from the Builder
+            async with aclosing(
+                iterate_until(build_future, builder._generate_progress())
+            ) as events:
+                try:
+                    async for event in events:
+                        # don't allow events to sneakily set the 'ready' flag
+                        if 'ready' in event:
+                            event.pop('ready', None)
+                        await self.send_event(event)
+                except asyncio.CancelledError:
+                    pass
+
+            # progress finished, wait for spawn to actually resolve,
+            # in case progress finished early
+            # (ignore errors, which will be logged elsewhere)
+            await build_future
 
         # progress and spawn finished, check if spawn succeeded
         if builder.ready:

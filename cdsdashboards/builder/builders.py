@@ -57,15 +57,17 @@ class Builder(LoggingConfigurable):
 
     @property
     def ready(self):
-        """Is this server ready to use?
+        """Is this builder finished, up to assigning a spawner (which may still be starting up)
 
-        A server is not ready if an event is pending.
+        A builder is not ready if an event is pending.
         """
         if self.pending:
             return False
         if self.dashboard is None:
             return False
         if self.dashboard.final_spawner is None:
+            return False
+        if self._build_future and self._build_future.done() and self._build_future.exception():
             return False
         return True
 

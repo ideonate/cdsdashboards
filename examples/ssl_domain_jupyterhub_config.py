@@ -535,7 +535,7 @@ c.JupyterHub.hub_ip = public_ips()[0]
 
 c.DockerSpawner.debug = True
 
-#c.DockerSpawner.go_slow = False
+#c.DockerSpawner.go_slow = True
 
 c.DockerSpawner.remove = True
 
