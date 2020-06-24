@@ -25,6 +25,8 @@ Currently supports:
 - `Plotly Dash <https://plotly.com/dash/>`__ apps
 - `Bokeh <https://docs.bokeh.org/>`__ apps
 - `Panel <https://panel.holoviz.org/>`__ apps and notebooks
+- `R Shiny <https://shiny.rstudio.com/>`__ apps
+- Any :ref:`custom web app<customlaunchers>` server or framework
 
 Any authorised JupyterHub user can view the dashboard. This means that you can protect the dashboard with any authentication that works 
 with JupyterHub - including single-sign-on through corporate email accounts or LDAP.
@@ -32,11 +34,11 @@ with JupyterHub - including single-sign-on through corporate email accounts or L
 How it works
 ~~~~~~~~~~~~
 
-- Data scientist creates a Jupyter Notebook as normal, or uploads Streamlit / Plotly Dash / Bokeh python files to Jupyter
+- Data scientist creates a Jupyter Notebook as normal, or uploads Streamlit / Plotly Dash / Bokeh python files etc to Jupyter
 - Data scientist creates a new Dashboard to clone their Jupyter server
 - Other logged-in JupyterHub users see the dashboard in their list
 - Click to launch as a server, using OAuth to gain access
-- User sees a safe user-friendly version of the original notebook
+- User sees a safe user-friendly version of the original notebook or script
 
 All of this works through a new Dashboards menu item added to JupyterHub's header.
 
@@ -74,5 +76,11 @@ Other user sees a safe user-friendly Voila version of the original notebook
 
 .. figure:: ../_static/screenshots/6_Voila_Dashboard.png
    :alt: Screenshot of Voila Dashboard
+
+
+Or build dashboards using other frameworks - Streamlit, Plotly Dash, Bokeh, Panel, R Studio or anything else
+
+.. figure:: ../_static/screenshots/AppCollage.png
+   :alt: Dashboards built with various frameworks
 
 More details on how this works are in the :ref:`user guide<userguide>`, or you can find out :ref:`how to install<setup>` ContainDS Dashboards.

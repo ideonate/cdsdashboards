@@ -10,21 +10,23 @@ Currently supported frameworks:
 - [Streamlit](https://streamlit.io/) apps
 - [Plotly Dash](https://plotly.com/dash/) apps
 - [Bokeh](https://docs.bokeh.org/) / [Panel](https://panel.holoviz.org/) apps and notebooks
+- [R Shiny](https://shiny.rstudio.com/) apps
+- Any custom server or framework
 
-This open source package allows users to create interactive Jupyter notebooks that can be instantly and reliably published as 
-secure interactive web apps.
+This open source package allows data scientists to instantly and reliably publish interactive 
+notebooks or other scripts as secure interactive web apps.
 
 Any authorised JupyterHub user can view the dashboard.
 
-See [full documentation](https://cdsdashboards.readthedocs.io/).
+**See [full documentation](https://cdsdashboards.readthedocs.io/)**
 
 ## How it works
 
-- Data scientist creates a Jupyter Notebook as normal or uploads Python files
+- Data scientist creates a Jupyter Notebook as normal or uploads Python/R files etc
 - Data scientist creates a new Dashboard to clone their Jupyter server
 - Other logged-in JupyterHub users see the dashboard in their list
 - Click to launch as a server, using OAuth to gain access
-- User sees a safe user-friendly version of the original notebook - served by Voila, Streamlit, Dash, Bokeh etc.
+- User sees a safe user-friendly version of the original notebook - served by Voila, Streamlit, Dash, Bokeh, R Shiny etc.
 
 All of this works through a new Dashboards menu item added to JupyterHub's header.
 
@@ -53,9 +55,9 @@ _Other user sees a safe user-friendly Voila version of the original notebook_
 
 ![Voila Dashboard](./docs/_static/screenshots/6_Voila_Dashboard.png "Voila Dashboard")
 
-_Or a Streamlit app_
+_Or other app frameworks_
 
-![Streamlit App](./docs/_static/screenshots/7_Streamlit_App.png "Streamlit App")
+![App Collage](./docs/_static/screenshots/AppCollage.png "App Collage")
 
 
 ## Requirements
