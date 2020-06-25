@@ -61,7 +61,8 @@ class VariableMixin(Configurable):
         'bokeh': {
             'args': ['--destport=0', 'python3', '{-}m','bokeh_root_cmd.main', '{presentation_path}',
                 '{--}port={port}',
-                '{--}allow-websocket-origin={origin_host}']
+                '{--}allow-websocket-origin={origin_host}',
+                '--ready-check-path=/ready-check']
         },
         'rshiny': {
             'args': ['--destport=0', 'python3', '{-}m','rshiny_server_cmd.main', '{presentation_path}',
