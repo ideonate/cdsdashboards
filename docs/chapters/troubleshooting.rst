@@ -100,3 +100,30 @@ If you find that dashboards (and also servers) seem to disappear after a few min
 'cull idle servers'. Please try turning that off or increasing the idle time allowed.
 
 For example in The Littlest JupyterHub, see :ref:`here<tljh_cull_idle>`.
+
+Dashboards work but "object NoneType" error in logs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You may see this in the singleuser dashboard server logs:
+
+.. code-block:: text
+
+    ERROR:tornado.application:Uncaught exception GET /user/danlester/dash-example/ (127.0.0.1)
+    HTTPServerRequest(protocol='http', host='127.0.0.1:42712', method='GET', uri='/user/danlester/dash-example/', version='HTTP/1.1', remote_ip='127.0.0.1')
+    Traceback (most recent call last):
+    File "/opt/conda/lib/python3.7/site-packages/tornado/web.py", line 1703, in _execute
+        result = await result
+    File "/opt/conda/lib/python3.7/site-packages/jhsingle_native_proxy/websocket.py", line 94, in get
+        return await self.http_get(*args, **kwargs)
+    File "/opt/conda/lib/python3.7/site-packages/jhsingle_native_proxy/proxyhandlers.py", line 592, in http_get
+        return await self.proxy(self.port, path)
+    File "/opt/conda/lib/python3.7/site-packages/jhsingle_native_proxy/proxyhandlers.py", line 586, in proxy
+        return await self.oauth_proxy(port, path)
+    TypeError: object NoneType can't be used in 'await' expression
+
+
+This is actually normal behavior, and is due to a workaround in some 
+core `JupyterHub code <https://github.com/jupyterhub/jupyterhub/blob/76c9111d80660e93578f80dbe441cfb702c1b207/jupyterhub/services/auth.py#L903>`__.
+
+It can be safely ignored, and hasn't in itself been known to cause any problems with dashboards.
+
