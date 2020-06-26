@@ -29,20 +29,27 @@ Install the cdsdashboards package in the hub environment:
     pip install cdsdashboards
 
 
-Also install in the user environment:
+Also install in the user environment, with some extra dependencies:
 
 ::
 
-    pip install cdsdashboards
+    pip install cdsdashboards[user]
 
 
-Not all dependencies are strictly required in both environments - work is underway to split these out into separate installation tracks.
+The key package for the hub environment is cdsdashboards itself; for the user environment the crucial package is jhsingle-native-proxy.
 
-The key package for the hub environment is cdsdashboards itself; for the user environment the crucial package is jhsingle-native-proxy as well 
-as the 'presentation package' - Voila, which is a user-friendly and safe way to display Jupyter notebooks to non-technical users.
+Installing Presentation Frameworks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the user environment you must also install any 'presentation packages' - e.g. Voila, which is a user-friendly and safe way to display 
+Jupyter notebooks to non-technical users:
+
+::
+
+    pip install voila
 
 If you plan to make use of Streamlit dashboards, also :code:`pip install streamlit` in the user environment. 
-For Plotly Dash, also run :code:`pip install dash`.
+For Plotly Dash, also run :code:`pip install dash`, etc.
 
 Changes to jupyterhub_config.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

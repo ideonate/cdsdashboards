@@ -34,13 +34,25 @@ Install the cdsdashboards package in the hub environment:
 
 The last line is just an upgrade to a package used by TLJH that causes problems if you have an old version.
 
-Also install cdsdashboards in the user environment:
+Also install cdsdashboards in the user environment, including extra dependencies:
 
 ::
 
-    sudo -E /opt/tljh/user/bin/python3 -m pip install cdsdashboards
+    sudo -E /opt/tljh/user/bin/python3 -m pip install cdsdashboards[user]
 
-Also install Streamlit and/or Plotly Dash if you are planning to use those frameworks (Voila is installed as standard), e.g.:
+
+Installing Presentation Frameworks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the user environment you must also install any 'presentation packages' - e.g. Voila, which is a user-friendly and safe way to display 
+Jupyter notebooks to non-technical users:
+
+::
+
+    sudo -E /opt/tljh/user/bin/python3 -m pip install voila
+
+
+Also install Streamlit and/or Plotly Dash if you are planning to use those frameworks, e.g.:
 
 ::
 
@@ -48,7 +60,7 @@ Also install Streamlit and/or Plotly Dash if you are planning to use those frame
     sudo -E /opt/tljh/user/bin/python3 -m pip install dash
 
 The key package for the hub environment is cdsdashboards itself; for the user environment the crucial package is jhsingle-native-proxy as well 
-as the 'presentation package' - Voila, which is a user-friendly and safe way to display Jupyter notebooks to non-technical users.
+as any 'presentation package' - Voila, which is a user-friendly and safe way to display Jupyter notebooks to non-technical users.
 
 Changes to jupyterhub_config.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
