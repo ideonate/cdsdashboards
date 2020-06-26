@@ -93,32 +93,13 @@ class BasicDockerBuilder(Builder):
 
         image_name = await self.build_image(dashboard, dashboard_user, tag)
 
-
-        ## Sometimes for debugging, slow things down
-        #from tornado import gen
-        #for i in range(5):
-        #    self.log.debug('Waiting in builder {}'.format(i))
-        #    self.add_progress_event({'progress': 60, 'message': 'Waiting in builder {}'.format(i)})
-        #    await gen.sleep(1)
-
         ### Start a new server
 
         new_server_name = self.format_string(self.cdsconfig.server_name_template, ns=ns)
 
         if not self.allow_named_servers:
             raise BuildException(400, "Named servers are not enabled.")
-        if (
-            self.named_server_limit_per_user > 0
-            and new_server_name not in dashboard_user.orm_spawners
-        ):
-            named_spawners = list(dashboard_user.all_spawners(include_default=False))
-            if self.named_server_limit_per_user <= len(named_spawners):
-                raise BuildException(
-                    "User {} already has the maximum of {} named servers."
-                    "  One must be deleted before a new server can be created".format(
-                        dashboard_user.name, self.named_server_limit_per_user
-                    ),
-                )
+
         spawner = dashboard_user.spawners[new_server_name] # Could be orm_spawner or Spawner wrapper
 
         if spawner.ready:

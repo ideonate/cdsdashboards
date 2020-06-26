@@ -1,48 +1,39 @@
-import os
+import os, sys
 pjoin = os.path.join
 
 from setuptools import setup, find_packages
 
-here = os.path.dirname(__file__)
-
-with open(pjoin(here, 'requirements.txt')) as f:
-    requirements = [
-        l.strip() for l in f.readlines()
-        if not l.strip().startswith('#')
-    ]
-
-# Data files e.g. templates and static js
-
 here = os.path.abspath(os.path.dirname(__file__))
-share_cdsdashboards = pjoin(here, 'share', 'cdsdashboards')
 
-def get_data_files():
-    """Get data files in share/cdsdashboards"""
+from cdsdashboards import __version__
 
-    data_files = []
-    ntrim = len(here + os.path.sep)
+install_requires = [
+    'tornado>=5.1',
+    'traitlets',
+    'jupyterhub>=1.0.0',
+    'alembic',
+    'pluggy'
+]
 
-    for (d, _, filenames) in os.walk(share_cdsdashboards):
-        data_files.append((d[ntrim:], [pjoin(d, f)[ntrim:] for f in filenames]))
-    return data_files
+extras_require = {
+    'user': [
+        'jhsingle-native-proxy>=0.3.1',
+        'plotlydash-tornado-cmd>=0.0.4',
+        'bokeh-root-cmd>=0.0.4',
+        'rshiny-server-cmd>=0.0.2'
+    ],
+    'user-voila' : [
+        'jhsingle-native-proxy>=0.3.1',
+        'voila',
+        'voila-materialstream'
+    ]
+}
 
-def get_package_data():
-    """Get package data
-
-    (mostly alembic config)
-    """
-    package_data = {}
-    package_data['cdsdashboards'] = ['alembic.ini', 'cdsalembic/*', 'cdsalembic/versions/*']
-    return package_data
-
-with open('README.md', encoding="utf8") as f:
+with open(pjoin(here, 'README.md'), encoding="utf8") as f:
     readme = f.read()
 
-setup(
-    name='cdsdashboards',
-    packages=find_packages(),
-    package_data=get_package_data(),
-    version='0.0.19',
+setup_metadata=dict(
+    version=__version__,
     python_requires='>=3.6',
     author='Ideonate',
     author_email='dan@containds.com',
@@ -65,7 +56,42 @@ setup(
     long_description=readme,
     long_description_content_type='text/markdown',
     platforms="Linux, Mac OS X",
-    description="ContainDS Dashboards extension for JupyterHub",
+    description="ContainDS Dashboards extension for JupyterHub"
+    )
+
+# Data files e.g. templates and static js
+
+share_cdsdashboards = pjoin(here, 'share', 'cdsdashboards')
+
+def get_data_files():
+    """Get data files in share/cdsdashboards"""
+
+    data_files = []
+    ntrim = len(here + os.path.sep)
+
+    for (d, _, filenames) in os.walk(share_cdsdashboards):
+        data_files.append((d[ntrim:], [pjoin(d, f)[ntrim:] for f in filenames]))
+    return data_files
+
+def get_package_data():
+    """Get package data
+
+    (mostly alembic config)
+    """
+    package_data = {}
+    package_data['cdsdashboards'] = ['alembic.ini', 'cdsalembic/*', 'cdsalembic/versions/*']
+    return package_data
+
+
+setup_metadata.update(dict(
+    name='cdsdashboards',
+    packages=find_packages(),
+    package_data=get_package_data(),
     data_files=get_data_files(),
-    install_requires=requirements,
+    install_requires=install_requires,
+    extras_require=extras_require
+))
+
+setup(
+    **setup_metadata
 )
