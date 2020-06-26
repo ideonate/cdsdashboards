@@ -36,7 +36,7 @@ c.VariableMixin.extra_presentation_launchers = {
 c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel', 'unavailable']
 
 
-#c.VariableLocalProcessSpawner.voila_template = 'default'
+#c.VariableMixin.voila_template = 'materialstream'
 
 
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
