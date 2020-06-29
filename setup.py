@@ -17,13 +17,13 @@ install_requires = [
 
 extras_require = {
     'user': [
-        'jhsingle-native-proxy>=0.3.1',
+        'jhsingle-native-proxy>=0.3.2',
         'plotlydash-tornado-cmd>=0.0.4',
-        'bokeh-root-cmd>=0.0.4',
+        'bokeh-root-cmd>=0.0.5',
         'rshiny-server-cmd>=0.0.2'
     ],
     'user-voila' : [
-        'jhsingle-native-proxy>=0.3.1',
+        'jhsingle-native-proxy>=0.3.2',
         'voila',
         'voila-materialstream'
     ]

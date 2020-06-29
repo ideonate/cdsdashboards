@@ -10,7 +10,7 @@ RUN pip install cdsdashboards[user] voila-materialstream
 
 RUN pip install streamlit
 
-RUN pip install dash plotlydash-tornado-cmd
+RUN pip install dash
 
 COPY voila-entrypoint.sh /opt/conda/bin
 
