@@ -104,7 +104,7 @@ There is currently no pre-built image containing all presentation types includin
 Options
 ~~~~~~~
 
-Extra options to control behavior of Dashboards are available - see :ref:`options<options>`.
+Extra options to control behavior of Dashboards are available - see :ref:`customization`.
 
 Please `sign up to the ContainDS email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
 features and security advice.

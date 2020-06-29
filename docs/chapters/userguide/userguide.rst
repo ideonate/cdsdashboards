@@ -7,7 +7,7 @@ Dashboards menu
 ~~~~~~~~~~~~~~~
 
 Once :ref:`setup<setup>` your JupyterHub have a new Dashboards menu. It will also have a Named Server section if this wasn't enabled 
-previously (or hidden in :ref:`options<options>`).
+previously (or hidden in :ref:`customization`).
 
 .. figure:: ../../_static/screenshots/userguide/NamedServers.png
    :alt: JupyterHub with Dashboards

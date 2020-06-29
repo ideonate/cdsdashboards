@@ -189,7 +189,7 @@ For example:
       cds-options: |
         c.CDSDashboardsConfig.presentation_types = ['voila']
 
-See details of the :ref:`options<options>` available.
+See details of the :ref:`customization` available.
 
 
 Future Development

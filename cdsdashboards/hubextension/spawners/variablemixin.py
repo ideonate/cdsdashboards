@@ -1,6 +1,6 @@
 import os.path
 from copy import deepcopy
-from traitlets import Unicode, Integer, Dict
+from traitlets import Unicode, Integer, Dict, Bool
 from traitlets.config import Configurable
 
 from jupyterhub.spawner import _quote_safe
@@ -100,6 +100,24 @@ class VariableMixin(Configurable):
         """,
     ).tag(config=True)
 
+    proxy_force_alive = Bool(
+        True,
+        help="""
+        Whether or not jhsingle-native-proxy should fake activity on its subprocess, always reporting to the hub that activity has happened.
+        The default of True means that no flag will be passed to jhsingle-native-proxy so it will use its own default (expected to be --force-alive).
+        If False is specified, --no-force-alive will be passed to jhsingle-native-proxy.
+        """,
+    ).tag(config=True)
+
+    proxy_last_activity_interval = Integer(
+        300,
+        help="""
+        Frequency in seconds that jhsingle-native-proxy should send any recent activity timestamp to the hub.
+        If the default of 300 is specified, no --last-activity-interval flag will be passed to jhsingle-native-proxy so it will use its default.
+        Otherwise the specified value will be passed to --last-activity-interval.
+        """,
+    ).tag(config=True)
+
     async def start(self):
         """
         Copy trait values from user_options into the trait attrs of the spawner object
@@ -171,6 +189,14 @@ class VariableMixin(Configurable):
         proxy_request_timeout = getattr(self, 'proxy_request_timeout', 0)
         if proxy_request_timeout:
             args.append('--request-timeout={}'.format(proxy_request_timeout))
+
+        proxy_force_alive = getattr(self, 'proxy_force_alive', True)
+        if proxy_force_alive == False:
+            args.append('--no-force-alive')
+
+        proxy_last_activity_interval = getattr(self, 'proxy_last_activity_interval', 300)
+        if proxy_last_activity_interval != 300:
+            args.append('--last-activity-interval={}'.format(proxy_last_activity_interval))
 
         args.extend(self.args)
 

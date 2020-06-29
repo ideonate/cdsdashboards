@@ -39,6 +39,11 @@ c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel', 'unavailable']
 #c.VariableMixin.voila_template = 'materialstream'
 
 
+#c.VariableMixin.proxy_last_activity_interval = 10
+
+#c.VariableMixin.proxy_force_alive = False
+
+
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
 from cdsdashboards.hubextension import cds_extra_handlers
 

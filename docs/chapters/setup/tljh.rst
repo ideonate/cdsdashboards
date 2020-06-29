@@ -110,7 +110,7 @@ please see :ref:`tljh-named-servers-show-404-not-found`.
 Options
 ~~~~~~~
 
-Extra options to control behavior of Dashboards are available - see :ref:`options<options>`.
+Extra options to control behavior of Dashboards are available - see :ref:`customization`.
 
 ..  _tljh_cull_idle:
 
