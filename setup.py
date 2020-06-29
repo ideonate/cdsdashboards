@@ -1,4 +1,4 @@
-import os, sys
+import os
 pjoin = os.path.join
 
 from setuptools import setup, find_packages
@@ -30,7 +30,7 @@ extras_require = {
 }
 
 with open(pjoin(here, 'README.md'), encoding="utf8") as f:
-    readme = f.read()
+    readme = f.read().replace('./docs/_static/screenshots/', 'https://github.com/ideonate/cdsdashboards/blob/master/docs/_static/screenshots/')
 
 setup_metadata=dict(
     version=__version__,
