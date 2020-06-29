@@ -8,6 +8,9 @@ There are extra options that can be added to your jupyterhub_config.py file.
 (See `here <http://tljh.jupyter.org/en/latest/topic/escape-hatch.html>`__ for how to add config on The Littlest JupyterHub.)
 
 
+.. _useroptions_timeouts:
+
+
 Server Timeouts and Keep Alive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

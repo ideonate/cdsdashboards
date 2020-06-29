@@ -97,9 +97,14 @@ Dashboards (and servers) keep dying
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you find that dashboards (and also servers) seem to disappear after a few minutes of inactivity, it may be that you are running a process to 
-'cull idle servers'. Please try turning that off or increasing the idle time allowed.
+'cull idle servers'.
 
-For example in The Littlest JupyterHub, see :ref:`here<tljh_cull_idle>`.
+The default behavior for ContainDS Dashboard servers is to always report activity back to the hub (even if there hasn't been any) which should normally keep them 
+alive. Adjust the :ref:`useroptions_timeouts` if you have changed the defaults. Or increase the timeout value in your server idle culling service.
+
+For example in The Littlest JupyterHub, this default service can be disabled as `described here <http://tljh.jupyter.org/en/latest/topic/idle-culler.html>`__.
+
+
 
 Dashboards work but "object NoneType" error in logs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
