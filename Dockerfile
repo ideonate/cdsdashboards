@@ -11,14 +11,14 @@ COPY ./e2e/setup-helper/startup-script.sh /usr/local/bin/startup-script.sh
 
 RUN cd /tmp/cdsdashboard_current \
         && python3 setup.py sdist \
-        && python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz` \
+        && python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz`[user] \
         && cd .. && rm -rf ./cdsdashboard_current
 
 RUN pip install streamlit
 
-RUN pip install dash plotlydash-tornado-cmd
+RUN pip install dash
 
-RUN pip install bokeh panel bokeh-root-cmd
+RUN pip install bokeh panel
 
 ENTRYPOINT ["/usr/local/bin/startup-script.sh"]
 

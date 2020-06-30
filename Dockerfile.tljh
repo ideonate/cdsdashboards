@@ -10,14 +10,14 @@ COPY ./e2e/setup-helper/startup-script.sh /usr/local/bin/startup-script.sh
 RUN cd /tmp/cdsdashboard_current \
         && /opt/tljh/hub/bin/python3 setup.py sdist \
         && /opt/tljh/hub/bin/python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz` \
-        && /opt/tljh/user/bin/python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz` \
+        && /opt/tljh/user/bin/python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz`[user] \
         && cd .. && rm -rf ./cdsdashboard_current
 
 RUN /opt/tljh/user/bin/python3 -m pip install streamlit
 
-RUN /opt/tljh/user/bin/python3 -m pip install dash plotlydash-tornado-cmd
+RUN /opt/tljh/user/bin/python3 -m pip install dash
 
-RUN /opt/tljh/user/bin/python3 -m pip install bokeh panel bokeh-root-cmd
+RUN /opt/tljh/user/bin/python3 -m pip install bokeh panel
 
 CMD ["/usr/local/bin/startup-script.sh", "/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]
 
