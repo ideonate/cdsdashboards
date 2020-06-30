@@ -14,11 +14,7 @@ RUN cd /tmp/cdsdashboard_current \
         && python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz`[user] \
         && cd .. && rm -rf ./cdsdashboard_current
 
-RUN pip install streamlit
-
-RUN pip install dash
-
-RUN pip install bokeh panel
+RUN pip install voila streamlit dash bokeh panel
 
 ENTRYPOINT ["/usr/local/bin/startup-script.sh"]
 
