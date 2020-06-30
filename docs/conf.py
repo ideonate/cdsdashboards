@@ -10,7 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -56,3 +56,10 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# Import cdsdashboards version number
+here = os.path.abspath(os.path.dirname(__file__))
+
+exec(open(os.path.join(here,'../cdsdashboards/version.py')).read()) # Load __version__
+
+rst_epilog = '.. |cds_version| replace:: {}'.format(__version__)

@@ -25,13 +25,13 @@ Not all dependencies are strictly required in both environments - work is underw
 Generic Changes to jupyterhub_config.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-::
+.. parsed-literal::
 
     c.JupyterHub.allow_named_servers = True
 
     c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-    c.DockerSpawner.image = 'ideonate/containds-all-scipy:0.0.20'
+    c.DockerSpawner.image = 'ideonate/containds-all-scipy:|cds_version|'
 
 
 The changes above are mostly for guidance - you may want to use your own Docker image, but it should follow the guidelines listed 
