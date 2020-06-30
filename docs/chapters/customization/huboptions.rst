@@ -76,9 +76,10 @@ To change the default template for Voila presentations, add the following to you
 
 ::
 
-    c.VariableMixin.voila_template = 'materialstream'
+    c.VariableMixin.voila_template = 'default'
 
-The template must already be installed in your user Python environment.
+The template must already be installed in your user Python environment. 
+Specify a blank string to instruct no template to be specified on the Voila command line.
 
 Server Timeouts and Keep Alive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

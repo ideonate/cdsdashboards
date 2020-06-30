@@ -86,9 +86,9 @@ class VariableMixin(Configurable):
     ).tag(config=True)
 
     voila_template = Unicode(
-        '',
+        'materialstream',
         help="""
-        --template argument to pass to Voila. Default is blank (empty string) to not specify any template to Voila command line.
+        --template argument to pass to Voila. Default is materialstream. Specify blank (empty string) to not pass any template to Voila command line.
         """,
     ).tag(config=True)
 
