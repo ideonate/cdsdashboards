@@ -14,6 +14,6 @@ docker tag $IMAGE_NAME "$DOCKER_REPO:$K8S_HUB_VER-$GIT_SHA_TAG"
 HUB_VERSION_TAG="hub-$(docker run --rm -a STDOUT ${IMAGE_NAME} jupyterhub --version | tr -d '\r')"
 docker tag $IMAGE_NAME "$DOCKER_REPO:$K8S_HUB_VER-${HUB_VERSION_TAG%%\r}"
 
-CDSVERSION_TAG="$K8S_HUB_VER-$(docker run --rm -a STDOUT ${IMAGE_NAME} python3 -m pip --disable-pip-version-check list | grep cdsdashboards 2>&1 | awk '{ print $ 2}')"
+CDSVERSION_TAG="$K8S_HUB_VER-$(docker run --rm -a STDOUT ${IMAGE_NAME} python3 -m pip --disable-pip-version-check list | grep cdsdashboards 2>&1 | awk '{ print $2 }')"
 docker tag $IMAGE_NAME "$DOCKER_REPO:${CDSVERSION_TAG%% }"
 

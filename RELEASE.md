@@ -20,6 +20,11 @@ git add and git commit
 
 `git push --tags`
 
+Tag cdsdashboards-jupyter-docker
+
+`git tag -a X.X.X`
+
+`git push --tags`
 
 ## Remove tags
 

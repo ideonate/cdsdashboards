@@ -31,7 +31,7 @@ Generic Changes to jupyterhub_config.py
 
     c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-    c.DockerSpawner.image = 'ideonate/containds-all-scipy:20200618-133730'
+    c.DockerSpawner.image = 'ideonate/containds-all-scipy:0.0.20'
 
 
 The changes above are mostly for guidance - you may want to use your own Docker image, but it should follow the guidelines listed 

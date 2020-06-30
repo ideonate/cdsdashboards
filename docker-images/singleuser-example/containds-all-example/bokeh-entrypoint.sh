@@ -59,11 +59,7 @@ if [ -z "$DASH_REQUESTS_PATHNAME_PREFIX"]; then
   export DASH_REQUESTS_PATHNAME_PREFIX="$JUPYTERHUB_SERVICE_PREFIX"
 fi
 
-# Calculate a reasonable port for the sub-process
-destport=$((port + 1))
-
-echo "Using internal port $destport"
 echo "Using file/folder location $notebook"
 
 # Run the proxy process
-jhsingle-native-proxy --destport $destport --authtype oauth bokeh-root-cmd "$notebook" {--}port={port} {--}allow-websocket-origin={origin_host} --ready-check-path=/ready-check --port $port
+jhsingle-native-proxy --destport 0 --authtype oauth bokeh-root-cmd "$notebook" {--}port={port} {--}allow-websocket-origin={origin_host} --ready-check-path=/ready-check --port $port

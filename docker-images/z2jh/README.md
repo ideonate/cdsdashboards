@@ -14,7 +14,7 @@ hub:
   allowNamedServers: true
   image:
     name: ideonate/cdsdashboards-jupyter-k8s-hub
-    tag: 0.9.0-0.0.19
+    tag: 0.9.0-0.0.20
 
   extraConfig:
     cds-handlers: |
@@ -30,7 +30,7 @@ hub:
 singleuser:
   image:
     name: ideonate/containds-all-basic
-    tag: 20200618-125310
+    tag: 0.0.20
 
 
 ## Persistent Storage

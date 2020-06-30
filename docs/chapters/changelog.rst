@@ -4,6 +4,32 @@
 Changelog
 ---------
 
+Version 0.0.20
+~~~~~~~~~~~~~~
+
+Released 30 June 2020
+
+Remember to upgrade both hub and user environments:
+
+Hub command:
+
+::
+
+    python3 -m pip install --upgrade cdsdashboards==0.0.20
+
+User command:
+
+::
+
+    python3 -m pip install --upgrade cdsdashboards[user]==0.0.20
+
+- Installation dependencies simplified (docker dependency no longer installed - we now assume you have docker if you are already using DockerSpawner)
+- pip install cdsdashboards[user] installs the basic (low-dependency) wrapper scripts needed in your user environment. You also need to install voila, streamlit etc yourself.
+- Bokeh server fix for slow starting processes, should now be more reliable. (Requires bokeh-root-cmd >= 0.0.5)
+- Defaults to keeping dashboard servers alive by reporting activity (even where none is detected). This is to avoid cull idle server processes from stopping dashboards. 
+  Requires jhsingle-native-proxy >= 0.3.2. This behavior can be configured, see :ref:`useroptions_timeouts`.
+- More robust handling of edge cases when building dashboard (e.g. if source server happens to be terminating)
+
 Version 0.0.19
 ~~~~~~~~~~~~~~
 

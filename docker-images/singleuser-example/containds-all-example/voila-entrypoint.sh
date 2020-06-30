@@ -55,11 +55,7 @@ if [ ! -z "$JUPYTERHUB_CDS_PRESENTATION_PATH" ]; then
   notebook="$notebook/$JUPYTERHUB_CDS_PRESENTATION_PATH"
 fi
 
-# Calculate a reasonable port for the sub-process
-destport=$((port + 1))
-
-echo "Using internal port $destport"
 echo "Using file/folder location $notebook"
 
 # Run the proxy process
-jhsingle-native-proxy --destport $destport --authtype oauth voila "$notebook" {--}port={port} {--}no-browser {--}Voila.base_url={base_url}/ {--}Voila.server_url=/ --port $port
+jhsingle-native-proxy --destport 0 --authtype oauth voila "$notebook" {--}port={port} {--}no-browser {--}Voila.base_url={base_url}/ {--}Voila.server_url=/ --port $port
