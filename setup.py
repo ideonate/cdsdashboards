@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-from cdsdashboards import __version__
+exec(open(pjoin(here,'cdsdashboards/version.py')).read()) # Load __version__
 
 install_requires = [
     'tornado>=5.1',
