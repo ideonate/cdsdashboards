@@ -1,6 +1,18 @@
+## Update docker images
+
+Tag cdsdashboards-jupyter-docker
+
+`git tag -a X.X.X`
+
+`git push --tags`
+
+## Run e2e tests
+
+./e2e/run_all.sh
+
 ## Release to PyPI
 
-Update setup.py to the new version
+Update version.py to the new version
 
 Update docs: z2jh and dockerspawner to the latest tags
 
@@ -20,11 +32,7 @@ git add and git commit
 
 `git push --tags`
 
-Tag cdsdashboards-jupyter-docker
 
-`git tag -a X.X.X`
-
-`git push --tags`
 
 ## Remove tags
 
