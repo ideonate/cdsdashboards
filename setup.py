@@ -31,7 +31,7 @@ extras_require = {
 }
 
 with open(pjoin(here, 'README.md'), encoding="utf8") as f:
-    readme = f.read().replace('./docs/_static/screenshots/', 'https://github.com/ideonate/cdsdashboards/blob/master/docs/_static/screenshots/')
+    readme = f.read().replace('./docs/_static/screenshots/', 'https://github.com/ideonate/cdsdashboards/raw/master/docs/_static/screenshots/')
 
 setup_metadata=dict(
     version=__version__,
