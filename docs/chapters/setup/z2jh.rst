@@ -54,18 +54,17 @@ Merge the following settings in to your deployment's config.yaml file.
       allowNamedServers: true
       image:
         name: ideonate/cdsdashboards-jupyter-k8s-hub
-        tag: 0.9.0-|cds_version|
-
-    extraConfig:
-      cds-handlers: |
-        from cdsdashboards.hubextension import cds_extra_handlers
-        c.JupyterHub.extra_handlers = cds_extra_handlers
-      cds-templates: |
-        from cdsdashboards.app import CDS_TEMPLATE_PATHS
-        c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
-      cds-kube: |
-        c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variablekube.VariableKubeSpawner'
-        c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.kubebuilder.KubeBuilder'
+        tag: 0.9.0-|cds-version|
+      extraConfig:
+        cds-handlers: |
+          from cdsdashboards.hubextension import cds_extra_handlers
+          c.JupyterHub.extra_handlers = cds_extra_handlers
+        cds-templates: |
+          from cdsdashboards.app import CDS_TEMPLATE_PATHS
+          c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
+        cds-kube: |
+          c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variablekube.VariableKubeSpawner'
+          c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.kubebuilder.KubeBuilder'
 
     singleuser:
       image:
