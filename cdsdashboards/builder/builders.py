@@ -222,12 +222,9 @@ class Builder(LoggingConfigurable):
         )
 
     allow_named_servers = True # TODO take from main app config
-    named_server_limit_per_user = 0
 
     def template_namespace(self):
         """Return the template namespace for format-string formatting.
-
-        Currently used on default_url and notebook_dir.
 
         Subclasses may add items to the available namespace.
 

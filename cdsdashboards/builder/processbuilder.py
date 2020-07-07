@@ -13,7 +13,7 @@ class ProcessBuilder(Builder):
 
         """
 
-        app_log.info('Starting LocalProcess Builder start function')
+        app_log.info('Starting Builder start function')
 
         self.event_queue = []
 
@@ -21,22 +21,15 @@ class ProcessBuilder(Builder):
 
         self._build_pending = True
 
-        new_server_name = self.format_string(self.cdsconfig.server_name_template)
+        ns = self.template_namespace()
+
+        new_server_name = self.format_string(self.cdsconfig.server_name_template, ns=ns)
+
+        new_server_options = await self.prespawn_server_options(dashboard, dashboard_user, ns)
 
         if not self.allow_named_servers:
             raise BuildException(400, "Named servers are not enabled.")
-        if (
-            self.named_server_limit_per_user > 0
-            and new_server_name not in dashboard_user.orm_spawners
-        ):
-            named_spawners = list(dashboard_user.all_spawners(include_default=False))
-            if self.named_server_limit_per_user <= len(named_spawners):
-                raise BuildException(
-                    "User {} already has the maximum of {} named servers."
-                    "  One must be deleted before a new server can be created".format(
-                        dashboard_user.name, self.named_server_limit_per_user
-                    ),
-                )
+
         spawner = dashboard_user.spawners[new_server_name] # Could be orm_spawner or Spawner wrapper
 
         if spawner.ready:
@@ -48,7 +41,7 @@ class ProcessBuilder(Builder):
             finally:
                 spawner._spawn_pending = False
 
-        new_server_options = {
+        new_server_options.update({
             'presentation_type': dashboard.presentation_type or 'voila',
             'presentation_path': dashboard.start_path,
             'cmd': ['python3', '-m', 'jhsingle_native_proxy.main'],
@@ -56,9 +49,10 @@ class ProcessBuilder(Builder):
                 'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
                 'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)
                 }
-            }
+            })
 
         return (new_server_name, new_server_options)
 
-
+    async def prespawn_server_options(self, dashboard, dashboard_user, ns):
+        return {} # Empty options - override in subclasses if needed
 

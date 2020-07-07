@@ -27,9 +27,7 @@ c.JupyterHub.service_check_interval = 6000
 # python3 -m jupyterhub_idle_culler --timeout=10 --url=http://192.168.0.69:8081/hub/api
 c.JupyterHub.last_activity_interval = 30
 
-from dockerspawner import DockerSpawner
-
-c.JupyterHub.spawner_class = DockerSpawner
+c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variabledocker.VariableDockerSpawner'
 
 c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'
 
@@ -40,6 +38,10 @@ c.JupyterHub.hub_ip = public_ips()[0]
 c.DockerSpawner.debug = True
 
 #c.DockerSpawner.go_slow = True
+
+
+c.CDSDashboardsConfig.show_source_servers = False
+c.CDSDashboardsConfig.require_source_server = False
 
 c.DockerSpawner.remove = True
 
