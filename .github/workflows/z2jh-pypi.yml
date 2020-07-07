@@ -1,0 +1,39 @@
+name: Build and push z2jh Docker images from cdsdashboards on pypi
+
+on:
+  push:
+    branches:
+      - refs/tags/*
+
+jobs:
+  
+  build_cdsdashboards_pypi:
+    name: Build and Push cdsdashboards-jupyter-k8s-hub
+    runs-on: ubuntu-18.04
+
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Get cdsdashboards version number
+        id: getcdsversion
+        run: echo "::set-output name=cdsversion::$(python ./cdsdashboards/version.py)"
+          
+      - name: Build docker 
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: 0.9.0-${{ steps.getcdsversion.outputs.cdsversion }}
+          path: ./
+          dockerfile: ./docker-images/z2jh/hub/Dockerfile.pypi
+          repository: ideonate/cdsdashboards-jupyter-k8s-hub
+          build_args: CDSVERSION=${{ steps.getcdsversion.outputs.cdsversion }}
+          tag_with_ref: true
+          tag_with_sha: true
