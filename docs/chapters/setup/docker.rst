@@ -27,7 +27,7 @@ Generic Changes to jupyterhub_config.py
 
 .. parsed-literal::
 
-    c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableDockerSpawner'
+    c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variabledocker.VariableDockerSpawner'
 
     c.JupyterHub.allow_named_servers = True
 
