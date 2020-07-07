@@ -1,6 +1,8 @@
 
                 {% if show_source_servers %}
 
+                <hr />
+
                     <h3>Choose a source server:</h3>
 
                     {% if not require_source_server %}
@@ -26,10 +28,14 @@
 
                     {% endfor %}
 
+
+                    {% if errors.spawner %}
+        
+                    <p class="error">{{ errors.spawner | escape }}</p>
+        
+                    {% endif %}
+
+                    <hr />
+                    
                 {% endif %}
 
-                {% if errors.spawner %}
-    
-                <p class="error">{{ errors.spawner | escape }}</p>
-    
-                {% endif %}

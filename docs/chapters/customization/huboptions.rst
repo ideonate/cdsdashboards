@@ -105,6 +105,36 @@ The proxy_request_timeout setting is an the timeout in seconds to allow the subp
 The default value of 0 means that no value is passed as --request-timeout to jhsingle-native-proxy which then causes it to use its own default of 300. Note 
 this default behavior is different to the proxy_last_activity_interval because a proxy_last_activity_interval value of 0 means something to jhsingle-native-proxy.
 
+.. _docker_source_servers:
+
+Source Servers
+~~~~~~~~~~~~~~
+
+The following options are currently only used by the DockerSpawner.
+
+DockerSpawner users have extra functionality available whereby the dashboard creator 
+can select a 'source server' to clone (*docker commit*). The dashboard server will be built out of that image, meaning any extra packages installed in the 
+source server will be 
+available. Likewise, if your home folder is built into the container rather than mounted as a volume, the source files will be copied into the new 
+dashboard server.
+
+Unless 
+different servers are likely to have different files or packages installed, it probably won't make much difference which server is selected 
+as the source anyway - most JupyterHubs will share the user's home file system across the different servers, so the Dashboard will 
+be able to locate your notebooks and files. Most JupyterHubs maintain a central Docker image that contains all required packages, so users rarely 
+install packages into their own server exclusively.
+
+In your jupyterhub_config.py file:
+
+::
+
+    c.CDSDashboardsConfig.show_source_servers = True
+    c.CDSDashboardsConfig.require_source_server = True
+
+If show_source_servers is True, the create/edit Dashboard page will allow the dashboard creator to select a source server to clone. If require_source_server 
+is False, there will also be a 'No Server' option to maintain the default behavior of starting a new dashboard server based on the usual Jupyter server 
+configuration. If require_source_server is True, there will be no such option and a source server must be selected (your 'Default Server' will be available, 
+along with any non-dashboard named servers).
 
 Mailing List for Updates
 ~~~~~~~~~~~~~~~~~~~~~~~~

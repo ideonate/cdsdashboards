@@ -39,11 +39,6 @@ Click 'New Dashboard'.
 
 Fill in a name and optionally a description.
 
-The default My Server should already be selected as the source. If you have other named servers they should be available here. Unless 
-different servers are likely to have different files or packages installed, it probably won't make much difference which server is selected 
-as the source anyway - most JupyterHubs will share the user's home file system across the different servers, so the Dashboard will 
-be able to locate your notebooks and files.
-
 Select the framework 'rshiny' from the dropdown list.
 
 Specify the URL-path to the folder, relative to the Jupyter server's home folder. In our case, rshinydemo was at the top level in our 

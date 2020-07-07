@@ -27,6 +27,8 @@ Generic Changes to jupyterhub_config.py
 
 .. parsed-literal::
 
+    c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableDockerSpawner'
+
     c.JupyterHub.allow_named_servers = True
 
     c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
@@ -36,6 +38,10 @@ Generic Changes to jupyterhub_config.py
 
 The changes above are mostly for guidance - you may want to use your own Docker image, but it should follow the guidelines listed 
 later in this document.
+
+Instead of the original DockerSpawner, you actually need to use a slightly enhanced version of that spawner called VariableDockerSpawner 
+- that is set by assigning to c.JupyterHub.spawner_class as above. Corresponding alternatives are available for the other spawners provided 
+in the `dockerspawner <https://github.com/jupyterhub/dockerspawner>`__ package if you are using those instead.
 
 The allow_named_servers option is a standard JupyterHub option where every user gets more than just their single 'My Server' Jupyter environment. 
 They can add extra environments by specifying a name. ContainDS Dashboards makes use of this by running the presentation servers as named servers - 
@@ -105,6 +111,10 @@ Options
 ~~~~~~~
 
 Extra options to control behavior of Dashboards are available - see :ref:`customization`.
+
+DockerSpawner users (compared to users of LocalProcessSpawner or KubeSpawner etc) have extra functionality available whereby the dashboard creator 
+can select a 'source server' to clone. The dashboard will be built out of that image, meaning any extra packages installed in the server will be 
+available. (:ref:`docker_source_servers`)
 
 Please `sign up to the ContainDS email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
 features and security advice.

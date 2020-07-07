@@ -41,11 +41,6 @@ Click 'New Dashboard'.
 
 Fill in a name and optionally a description.
 
-The default My Server should already be selected as the source. If you have other named servers they should be available here. Unless 
-different servers are likely to have different files or packages installed, it probably won't make much difference which server is selected 
-as the source anyway - most JupyterHubs will share the user's home file system across the different servers, so the Dashboard will 
-be able to locate your notebooks and files.
-
 Select the framework required. For our Jupyter notebook (ipynb) file, we need to leave this as 'voila'.
 
 Specify the URL-path to the ipynb file, relative to the Jupyter server's home folder. In our case, Presentation.ipynb was at the top level in our 

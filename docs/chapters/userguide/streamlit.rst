@@ -40,11 +40,6 @@ Click 'New Dashboard'.
 
 Fill in a name and optionally a description.
 
-The default My Server should already be selected as the source. If you have other named servers they should be available here. Unless 
-different servers are likely to have different files or packages installed, it probably won't make much difference which server is selected 
-as the source anyway - most JupyterHubs will share the user's home file system across the different servers, so the Dashboard will 
-be able to locate your notebooks and files.
-
 Select the framework required. For our example, we need to change this to *streamlit*.
 
 Specify the URL-path to the Python file of our Streamlit app, relative to the Jupyter server's home folder. In our case, intro.py 
