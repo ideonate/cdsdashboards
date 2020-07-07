@@ -101,6 +101,10 @@ Using R Shiny or Voila as the presentation type:
 
 - `containds-rshiny <https://hub.docker.com/r/ideonate/containds-rshiny>`__ (R with Shiny)
 
+Using all built-in presentation types - Voila, Streamlit, Plotly Dash, and Bokeh/Panel, and R Shiny:
+
+- `containds-allr-scipyr <https://hub.docker.com/r/ideonate/containds-allr-scipyr>`__ (Sci Python plus R and Shiny)
+
 These are based on the similarly-named `Jupyter Docker Stacks <https://jupyter-docker-stacks.readthedocs.io/en/latest/>`__ images, just 
 with extra support for Voila and ContainDS Dashboards. The ContainDS Dockerfile versions are 
 on `GitHub here <https://github.com/ideonate/cdsdashboards-jupyter-docker>`__.
