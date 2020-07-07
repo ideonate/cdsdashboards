@@ -18,14 +18,12 @@ c.JupyterHub.extra_handlers = cds_extra_handlers
 
 c.Spawner.debug = True
 
-from dockerspawner import DockerSpawner
-
 from jupyter_client.localinterfaces import public_ips
 
 c.JupyterHub.hub_ip = public_ips()[0]
 
 
-c.JupyterHub.spawner_class = DockerSpawner
+c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variabledocker.VariableDockerSpawner'
 
 c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'
 
@@ -52,5 +50,5 @@ c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "tests-{prefix}-{username}-{servername}"
 
-c.DockerSpawner.image = 'ideonate/containds-all-basic:0.0.20'
+c.DockerSpawner.image = 'ideonate/containds-all-basic:0.1.0'
 

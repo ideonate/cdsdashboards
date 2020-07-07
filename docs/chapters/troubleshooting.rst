@@ -104,7 +104,16 @@ alive. Adjust the :ref:`useroptions_timeouts` if you have changed the defaults. 
 
 For example in The Littlest JupyterHub, this default service can be disabled as `described here <http://tljh.jupyter.org/en/latest/topic/idle-culler.html>`__.
 
+Dashboard just shows Jupyter server as normal
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+If the dashboard appears to be a regular Jupyter server instead of the presentation (e.g. Voila, Streamlit etc) then it may be that you are 
+still using the standard spawners. You need to use the 'Variable' spawners supplied with ContainDS Dashboards.
+
+See :ref:`setup` for details of which c.JupyterHub.spawner_class to set.
+
+Note that from version 0.1.0 onwards, DockerSpawner needs to be replaced with VariableDockerSpawner. (Previous versions worked with the 
+standard DockerSpawner.)
 
 Dashboards work but "object NoneType" error in logs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

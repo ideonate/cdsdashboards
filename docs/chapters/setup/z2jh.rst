@@ -54,7 +54,7 @@ Merge the following settings in to your deployment's config.yaml file.
       allowNamedServers: true
       image:
         name: ideonate/cdsdashboards-jupyter-k8s-hub
-        tag: 0.9.0-|cds-version|
+        tag: 0.9.0-|cds_version|
       extraConfig:
         cds-handlers: |
           from cdsdashboards.hubextension import cds_extra_handlers
@@ -68,7 +68,7 @@ Merge the following settings in to your deployment's config.yaml file.
 
     singleuser:
       image:
-        name: ideonate/containds-all-basic
+        name: ideonate/containds-allr-scipyr
         tag: |cds_version|
 
 The hub.image and singleuser.image settings have already been discussed. In addition, we enable 

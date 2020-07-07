@@ -23,10 +23,10 @@ do_create_and_start_dashboard = (name, path, framework) => {
   cy.get('#start')
     .should('contain', 'New Dashboard').click()
 
-  cy.get('#main > div > div > form > p:nth-child(2) > input[type=text]')
+  cy.get('#dashboard-name')
     .type(name)
 
-  cy.get('#main > div > div > form > p:nth-child(12) > input[type=text]')
+  cy.get('#dashboard-start-path')
     .type(path)
 
   cy.get('#presentation_type')

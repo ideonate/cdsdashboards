@@ -47,7 +47,7 @@ c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-c.DockerSpawner.image = 'containds-all-example'
+c.DockerSpawner.image = 'ideonate/containds-allr-scipyr:sha-37a6434'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
 
