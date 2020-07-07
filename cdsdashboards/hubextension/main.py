@@ -6,7 +6,7 @@ from jupyterhub.handlers.base import BaseHandler
 from jupyterhub.orm import Group
 
 from ..orm import Dashboard
-from .base import DashboardBaseMixin, check_database_upgrade
+from .base import DashboardBaseMixin, check_database_upgrade, spawner_to_dict
 from ..util import DefaultObjDict, url_path_join
 from .. import hookimpl
 from ..pluggymanager import pm
@@ -70,6 +70,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_presentation_type = dashboard.presentation_type
             dashboard_options = dashboard.options
 
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
         # Get List of possible visitor users
         existing_group_users = None
         if dashboard is not None and dashboard.group:
@@ -78,15 +80,18 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         # Get User's spawners:
 
-        spawners = self.get_source_spawners(current_user)
+        spawners = []
+        spawner_id=''
 
-        spawner_name=''
-        if dashboard is not None and dashboard.source_spawner is not None:
-            spawner_name=dashboard.source_spawner.name
+        if cdsconfig.show_source_servers:
+
+            spawners = self.get_source_spawners(current_user)
+            spawner_id = 'default'
+
+            if dashboard is not None and dashboard.source_spawner is not None:
+                spawner_id = spawner_to_dict(dashboard.source_spawner).id
 
         errors = DefaultObjDict()
-
-        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
         
         merged_presentation_types = cdsconfig.merged_presentation_types
 
@@ -101,9 +106,11 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_presentation_type=dashboard_presentation_type,
             dashboard_options=dashboard_options,
             presentation_types=merged_presentation_types,
-            spawner_name=spawner_name,
+            spawner_id=spawner_id,
             current_user=current_user,
             spawners=spawners,
+            show_source_servers=cdsconfig.show_source_servers,
+            require_source_server=cdsconfig.require_source_server,
             all_visitors=all_visitors,
             errors=errors)
             )
@@ -164,10 +171,16 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         dashboard_options = self.read_options(dashboard, errors)
 
-        spawners = self.get_source_spawners(current_user)
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
-        spawner, spawner_name = self.read_spawner(dashboard, spawners, dashboard_options, errors)
-  
+        spawners = []
+        spawner = None
+        spawner_id = ''
+
+        if cdsconfig.show_source_servers:
+            spawners = self.get_source_spawners(current_user)
+            spawner, spawner_id = self.read_spawner(dashboard, spawners, dashboard_options, errors, cdsconfig.require_source_server)
+ 
         if len(errors) == 0:
             db = self.db
 
@@ -246,8 +259,10 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_presentation_type=dashboard_presentation_type,
                 dashboard_options=dashboard_options,
                 presentation_types=merged_presentation_types,
-                spawner_name=spawner_name,
+                spawner_id=spawner_id,
                 spawners=spawners,
+                show_source_servers=cdsconfig.show_source_servers,
+                require_source_server=cdsconfig.require_source_server,
                 errors=errors,
                 current_user=current_user))
             )
@@ -260,32 +275,35 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             return dashboard.options
         return dict()
 
-    def read_spawner(self, dashboard, spawners, dashboard_options, errors):
+    def read_spawner(self, dashboard, spawners, dashboard_options, errors, require_source_server):
 
         # Get Spawners
         
-        spawner_name = self.get_argument('spawner_name', None)
+        spawner_id = self.get_argument('spawner_id', '')
 
-        self.log.debug('Got spawner_name {}.'.format(spawner_name))
+        self.log.debug('Got spawner_id {}.'.format(spawner_id))
 
         spawner = None
-        thisspawners = [spawner for spawner in spawners if spawner.name == spawner_name]
+        thisspawners = [spawner for spawner in spawners if spawner.id == spawner_id]
 
         if len(thisspawners) == 1:
             spawner = thisspawners[0]
         else:
-            if spawner_name is None:
-                errors.spawner = 'Please select a source spawner'
+            if spawner_id == '':
+                if require_source_server:
+                    errors.spawner = 'Please select a source spawner'
+                else:
+                    return spawner, spawner_id
             else:
-                errors.spawner = 'Spawner {} not found'.format(spawner_name)
+                errors.spawner = 'Spawner {} not found'.format(spawner_id)
 
             # Pick the existing one again
             if dashboard is not None and dashboard.source_spawner is not None:
-                spawner_name = dashboard.source_spawner.name
+                spawner_id = spawner_to_dict(dashboard.source_spawner).id
             else:
-                spawner_name = ''
+                spawner_id = ''
 
-        return spawner, spawner_name
+        return spawner, spawner_id
 
 
 class MainViewDashboardHandler(DashboardBaseHandler):

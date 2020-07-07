@@ -1,17 +1,32 @@
 
-                <h3>Choose a source server:</h3>
+                {% if show_source_servers %}
 
-                {% for spawner in spawners %}
+                    <h3>Choose a source server:</h3>
 
-                <p>
-                    <input type="radio" name="spawner_name" id="spawner-{{ spawner.name }}" 
-                        value="{{ spawner.name }}"
-                        {% if spawner_name == spawner.name %}checked{% endif %}/>
-                    <label for="spawner-{{ spawner.name }}">{{ spawner.name | default('Default Server', true) | escape }} 
-                        {% if spawner.active %} (ACTIVE) {% endif %}</label>
-                </p>
+                    {% if not require_source_server %}
 
-                {% endfor %}
+                        <p>
+                            <input type="radio" name="spawner_id" id="spawner-none" 
+                                value=""
+                                {% if spawner_id == "" %}checked{% endif %}/>
+                            <label for="spawner-none"> No Source Server </label>
+                        </p>
+
+                    {% endif %}
+
+                    {% for spawner in spawners %}
+
+                        <p>
+                            <input type="radio" name="spawner_id" id="spawner-{{ spawner.id }}" 
+                                value="{{ spawner.id | escape }}"
+                                {% if spawner_id == spawner.id %}checked{% endif %} />
+                            <label for="spawner-{{ spawner.id }}">{{ spawner.name | escape }} 
+                                {% if spawner.active %} (ACTIVE) {% endif %}</label>
+                        </p>
+
+                    {% endfor %}
+
+                {% endif %}
 
                 {% if errors.spawner %}
     

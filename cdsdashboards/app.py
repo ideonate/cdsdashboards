@@ -103,6 +103,22 @@ class CDSDashboardsConfig(SingletonConfigurable):
     def merged_presentation_types(self):
         return self.presentation_types + self.extra_presentation_types
 
+    show_source_servers = Bool(
+        False,
+        help="""
+        Allow the user to select a source server when creating a Dashboard (currently only relevant for DockerSpawner)
+        """
+    ).tag(config=True)
+
+    require_source_server = Bool(
+        False,
+        help="""
+        Require the user to select a source server when creating a Dashboard (currently only relevant for DockerSpawner).
+        You must set show_source_servers to True if you set require_source_server to True.
+        """
+    ).tag(config=True)
+
+
 class UpgradeDB(Application):
     """Upgrade the CDSDashboards database schema."""
 

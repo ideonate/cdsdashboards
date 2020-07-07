@@ -14,6 +14,19 @@ from ..util import maybe_future
 from ..orm import Dashboard
 from ..app import BuildersStore
 from ..dbutil import is_upgrade_needed
+from ..util import DefaultObjDict
+
+
+def spawner_to_dict(spawner):
+    name = spawner.name
+    active = spawner.active
+    id = 'named-{}'.format(name)
+    
+    if name == '':
+        id = 'default'
+        name = 'Default Server'
+        
+    return DefaultObjDict({'name': name, 'active': active, 'id': id, 'orm_spawner': spawner.orm_spawner})
 
 def check_database_upgrade(f):
     def handler(self, *args, **kwargs):
@@ -89,7 +102,7 @@ class DashboardBaseMixin:
                 break 
 
     def get_source_spawners(self, user):
-        return [spawner for spawner in user.all_spawners(include_default=True) if not spawner.orm_spawner.dashboard_final_of]
+        return [spawner_to_dict(spawner) for spawner in user.all_spawners(include_default=True) if not spawner.orm_spawner.dashboard_final_of]
 
     def get_visitor_dashboards(self, user):
         orm_dashboards = set()

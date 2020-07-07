@@ -7,13 +7,13 @@ from docker.utils import kwargs_from_env
 from traitlets import Dict, Unicode, Any
 from tornado import ioloop
 from tornado.log import app_log
-from datetime import datetime
-from .builders import Builder, BuildException
+from .builders import BuildException
+from .processbuilder import ProcessBuilder
 from .. import hookimpl
 from ..pluggymanager import pm
 
 
-class BasicDockerBuilder(Builder):
+class BasicDockerBuilder(ProcessBuilder):
 
     user = Any()
 
@@ -71,58 +71,14 @@ class BasicDockerBuilder(Builder):
 
     repo_prefix = Unicode(default_value='cdsuser').tag(config=True)
 
-    async def start(self, dashboard, dashboard_user, db):
-        """Start the dashboard
+    async def prespawn_server_options(self, dashboard, dashboard_user, ns):
 
-        Returns:
-          (str, str): the (new_server_name, new_server_options) of the new dashboard server.
-
-        """
-
-        app_log.info('Starting start function')
-
-        self.event_queue = []
-
-        self.add_progress_event({'progress': 10, 'message': 'Starting builder'})
-
-        self._build_pending = True
-
-        ns = self.template_namespace()
-
-        tag = self.format_string('{date}-{time}', ns=ns)
-
-        image_name = await self.build_image(dashboard, dashboard_user, tag)
-
-        ### Start a new server
-
-        new_server_name = self.format_string(self.cdsconfig.server_name_template, ns=ns)
-
-        if not self.allow_named_servers:
-            raise BuildException(400, "Named servers are not enabled.")
-
-        spawner = dashboard_user.spawners[new_server_name] # Could be orm_spawner or Spawner wrapper
-
-        if spawner.ready:
-            # include notify, so that a server that died is noticed immediately
-            # set _spawn_pending flag to prevent races while we wait
-            spawner._spawn_pending = True
-            try:
-                state = await spawner.poll_and_notify()
-            finally:
-                spawner._spawn_pending = False
-
-        new_server_options = {'image': image_name}
-
-        return (new_server_name, new_server_options)
-        
-    allow_named_servers = True # TODO take from main app config
-    named_server_limit_per_user = 0
-
-    async def build_image(self, dashboard, dashboard_user, tag):
         source_spawner_orm = dashboard.source_spawner
 
         if source_spawner_orm is None:
-            raise BuildException('No source server is set for this dashboard')
+            return {} # Just use default image
+
+        tag = self.format_string('{date}-{time}', ns=ns)
 
         source_spawner_name = source_spawner_orm.name
 
@@ -167,7 +123,7 @@ class BasicDockerBuilder(Builder):
 
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
-        return image_name
+        return {'image': image_name}
 
 
 DockerBuilder = BasicDockerBuilder
