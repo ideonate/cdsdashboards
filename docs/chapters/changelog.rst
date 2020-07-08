@@ -7,6 +7,8 @@ Changelog
 Version 0.1.0
 ~~~~~~~~~~~~~
 
+Released 8 July 2020
+
 - DockerSpawner major changes: requires use of an enhanced spawner. Set jupyterhub_config.py as follows:
   :code:`c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variabledocker.VariableDockerSpawner'`
   This is to bring DockerSpawner into line with the other spawners. See `GitHub Issue <https://github.com/ideonate/cdsdashboards/issues/13>`__ for rationale.
