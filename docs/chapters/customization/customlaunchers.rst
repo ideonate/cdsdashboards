@@ -7,8 +7,6 @@ Custom Launchers
 It is possible to add your own presentation types (like the built-in Streamlit or Voila) by specifying the details of a new launcher. 
 You can also modify the built-in types to suit your environment if necessary.
 
-The method for doing this is very different depending on whether you have a DockerSpawner setup or not.
-
 This is an advanced topic for which programming experience would be beneficial.
 
 Enabling your own Launcher
@@ -36,19 +34,9 @@ you can add your own types to extra_presentation_types without clobbering the de
 After restarting JupyterHub, the custom presentation type should be available in the dropdown on the New Dashboard page - but it will not 
 successfully launch a dashboard until you have also configured a launcher.
 
-Launchers on DockerSpawner
-~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For DockerSpawner JupyterHubs, you need to add a new entrypoint.
-
-In our example of adding a new launcher called 'custom-panel', add an entrypoint at /opt/conda/bin/custom-panel-entrypoint.sh
-
-See the example Dockerfile and entrypoints on `GitHub <https://github.com/ideonate/cdsdashboards/tree/master/docker-images/singleuser-example/containds-all-example>`__.
-
-Launchers on Other Spawners
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-LocalProcessSpawner, SystemdSpawner (including TLJH), and KubeSpawner all require a different approach.
+Configuring your Launcher
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 An extra_presentation_launchers configuration dict must be added to your jupyterhub_config.py
 

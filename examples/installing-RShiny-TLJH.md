@@ -11,11 +11,7 @@ docker run \
 
 Within docker exec -it tljh-dev /bin/bash:
 
-source /opt/tljh/user/bin/activate 
-conda install r-base
-conda install r-essentials
-conda install -c r r-irkernel
-
+source /opt/tljh/hub/bin/activate 
 
 cd /opt/tljh/
 git clone https://github.com/ideonate/cdsdashboards
@@ -23,8 +19,16 @@ git clone https://github.com/ideonate/cdsdashboards
 cd cdsdashboards/
 pip install -e .
 
-source /opt/tljh/hub/bin/activate
-pip install -e .
+source /opt/tljh/user/bin/activate
+pip install -e .[user]
+
+
+
+source /opt/tljh/user/bin/activate 
+conda install r-base
+conda install r-essentials
+conda install -c r r-irkernel
+
 
 apt-get update
 apt-get install vim
