@@ -136,6 +136,33 @@ is False, there will also be a 'No Server' option to maintain the default behavi
 configuration. If require_source_server is True, there will be no such option and a source server must be selected (your 'Default Server' will be available, 
 along with any non-dashboard named servers).
 
+
+.. _default_allow_all:
+
+Default User Access to Dashboards
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Control whether other authenticated JupyterHub users will be able to access new dashboards by default.
+
+By default, all authenticated users will have access.
+
+To change this, in your jupyterhub_config.py file:
+
+::
+
+    c.CDSDashboardsConfig.default_allow_all = False
+
+Newly-created dashboards will now only be accessible to the creating user and also to members of a special group named after the dashboard. 
+If the dashboard is at a URL such as https://myjupyterhub.net/hub/dashboards/example then the relevant JupyterHub group will be called 
+dash-example.
+
+There is currently no standard user interface for viewing or editing JupyterHub group membership. Example REST API calls are 
+demonstrated in `this gist <https://gist.github.com/danlester/a5287ae6bad0c44bdbd96227cec365e2>`__.
+
+The 'allow_all' status of an existing dashboard can be changed by altering the allow_all field of the dashboards table in the 
+JupyterHub database.
+
+
 Mailing List for Updates
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

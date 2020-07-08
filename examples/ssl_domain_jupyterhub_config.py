@@ -43,6 +43,8 @@ c.DockerSpawner.debug = True
 c.CDSDashboardsConfig.show_source_servers = False
 c.CDSDashboardsConfig.require_source_server = False
 
+c.CDSDashboardsConfig.default_allow_all = True
+
 c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"

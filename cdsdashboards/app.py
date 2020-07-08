@@ -118,6 +118,15 @@ class CDSDashboardsConfig(SingletonConfigurable):
         """
     ).tag(config=True)
 
+    default_allow_all = Bool(
+        True,
+        help="""
+        If True (default) then newly-created Dashboards will be accessible to all authenticated JupyterHub users.
+        If False, only members of the dashboard's own group will be allowed to access it.
+        This flag is passed on to the Dashboard object's allow_all field so can be subsequently overridden in the database.
+        """
+    ).tag(config=True)
+
 
 class UpgradeDB(Application):
     """Upgrade the CDSDashboards database schema."""

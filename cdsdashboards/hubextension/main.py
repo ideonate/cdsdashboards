@@ -201,7 +201,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                         description=dashboard_description, start_path=dashboard_start_path, 
                         presentation_type=dashboard_presentation_type,
                         source_spawner=orm_spawner,
-                        options=dashboard_options
+                        options=dashboard_options,
+                        allow_all=cdsconfig.default_allow_all
                         )
                     self.log.debug('dashboard urlname '+dashboard.urlname+', main name '+dashboard.name)
 
