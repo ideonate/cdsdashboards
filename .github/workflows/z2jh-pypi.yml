@@ -35,5 +35,5 @@ jobs:
           dockerfile: ./docker-images/z2jh/hub/Dockerfile.pypi
           repository: ideonate/cdsdashboards-jupyter-k8s-hub
           build_args: CDSVERSION=${{ steps.getcdsversion.outputs.cdsversion }}
-          tag_with_ref: true
-          tag_with_sha: true
+          tag_with_ref: false
+          tag_with_sha: false

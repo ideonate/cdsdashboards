@@ -1,6 +1,9 @@
 name: Build and push z2jh Docker images from local repo
 
-on: push
+on:
+  push:
+    branches:
+      - '**'
 
 jobs:
   
@@ -21,6 +24,6 @@ jobs:
           path: ./
           dockerfile: ./docker-images/z2jh/hub/Dockerfile
           repository: ideonate/cdsdashboards-jupyter-k8s-hub
-          tag_with_ref: true
+          tag_with_ref: false
           tag_with_sha: true
           
