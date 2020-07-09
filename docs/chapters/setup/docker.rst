@@ -33,7 +33,7 @@ Generic Changes to jupyterhub_config.py
 
     c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-    c.DockerSpawner.image = 'ideonate/containds-allr-scipyr:|cds_version|'
+    c.DockerSpawner.image = 'ideonate/containds-allr-datascience:|cds_version|'
 
 
 The changes above are mostly for guidance - you may want to use your own Docker image, but it should follow the guidelines listed 
@@ -103,13 +103,11 @@ Using R Shiny or Voila as the presentation type:
 
 Using all built-in presentation types - Voila, Streamlit, Plotly Dash, and Bokeh/Panel, and R Shiny:
 
-- `containds-allr-scipyr <https://hub.docker.com/r/ideonate/containds-allr-scipyr>`__ (Sci Python plus R and Shiny)
+- `containds-allr-datascience <https://hub.docker.com/r/ideonate/containds-allr-datascience>`__ (Sci Python plus R and Shiny)
 
 These are based on the similarly-named `Jupyter Docker Stacks <https://jupyter-docker-stacks.readthedocs.io/en/latest/>`__ images, just 
 with extra support for Voila and ContainDS Dashboards. The ContainDS Dockerfile versions are 
 on `GitHub here <https://github.com/ideonate/cdsdashboards-jupyter-docker>`__.
-
-There is currently no pre-built image containing all presentation types including R Shiny Server.
 
 Options
 ~~~~~~~

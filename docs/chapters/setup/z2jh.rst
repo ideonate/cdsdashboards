@@ -68,7 +68,7 @@ Merge the following settings in to your deployment's config.yaml file.
 
     singleuser:
       image:
-        name: ideonate/containds-allr-scipyr
+        name: ideonate/containds-allr-datascience
         tag: |cds_version|
 
 The hub.image and singleuser.image settings have already been discussed. In addition, we enable 
