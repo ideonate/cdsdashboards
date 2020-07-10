@@ -81,7 +81,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         # Get User's spawners:
 
         spawners = []
-        spawner_id=''
+        spawner_id = ''
+        git_repo = ''
 
         if cdsconfig.show_source_servers:
 
@@ -90,6 +91,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             if dashboard is not None and dashboard.source_spawner is not None:
                 spawner_id = spawner_to_dict(dashboard.source_spawner).id
+
+        if cdsconfig.show_source_git:
+            git_repo = dashboard_options.get('git_repo', '')
 
         errors = DefaultObjDict()
         
@@ -105,11 +109,13 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_start_path=dashboard_start_path,
             dashboard_presentation_type=dashboard_presentation_type,
             dashboard_options=dashboard_options,
+            git_repo=git_repo,
             presentation_types=merged_presentation_types,
             spawner_id=spawner_id,
             current_user=current_user,
             spawners=spawners,
             show_source_servers=cdsconfig.show_source_servers,
+            show_source_git=cdsconfig.show_source_git,
             require_source_server=cdsconfig.require_source_server,
             all_visitors=all_visitors,
             errors=errors)
@@ -169,9 +175,19 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_presentation_type, ', '.join(merged_presentation_types)
                 )
 
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
         dashboard_options = self.read_options(dashboard, errors)
 
-        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+        git_repo = ''
+
+        if cdsconfig.show_source_git:
+            git_repo = self.get_argument('git_repo', '').strip()
+
+            # TODO check git repo is valid
+            # if not then errors.git_repo = 'Please enter a valid git repo'
+
+        dashboard_options['git_repo'] = git_repo
 
         spawners = []
         spawner = None
@@ -249,6 +265,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         if len(errors):
 
+            git_repo = dashboard_options['git_repo'] = dashboard_options.get('git_repo', '')
+
             html = self.render_template(
                 "editdashboard.html",
                 **self.template_vars(dict(
@@ -259,10 +277,12 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_start_path=dashboard_start_path,
                 dashboard_presentation_type=dashboard_presentation_type,
                 dashboard_options=dashboard_options,
+                git_repo=git_repo,
                 presentation_types=merged_presentation_types,
                 spawner_id=spawner_id,
                 spawners=spawners,
                 show_source_servers=cdsconfig.show_source_servers,
+                show_source_git=cdsconfig.show_source_git,
                 require_source_server=cdsconfig.require_source_server,
                 errors=errors,
                 current_user=current_user))

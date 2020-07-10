@@ -1,3 +1,8 @@
+                {% if show_source_servers or show_source_git %}
+
+                  <h3>Source</h3>
+
+                {% endif %}
 
                 {% if show_source_servers %}
 
@@ -38,4 +43,21 @@
                     <hr />
                     
                 {% endif %}
+
+
+                {% if show_source_servers or show_source_git %}
+
+                    <p><label for="source_type_git">Git Repo (optional)</label></p>
+
+                    <p><input type="text" name="git_repo" id="git_repo" 
+                                                    value="{{ git_repo | escape }}" /></p>
+
+                    {% if errors.git_repo %}
+        
+                    <p class="error">{{ errors.git_repo | escape }}</p>
+        
+                    {% endif %}
+
+                {% endif %}
+
 

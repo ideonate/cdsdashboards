@@ -1,4 +1,5 @@
 import os.path
+import re
 from copy import deepcopy
 from traitlets import Unicode, Integer, Dict, Bool
 from traitlets.config import Configurable
@@ -162,6 +163,15 @@ class VariableMixin(Configurable):
         if self.notebook_dir:
             notebook_dir = self.format_string(self.notebook_dir)
 
+        git_repo = self.user_options.get('git_repo', '')
+        repofolder = ''
+        if git_repo != '':
+            repofolder = self._calc_repo_folder(git_repo)
+            args.append('--repo={}'.format(_quote_safe(git_repo)))
+            notebook_dir = os.path.join(notebook_dir, repofolder)
+            args.append('--repofolder={}'.format(_quote_safe(notebook_dir)))
+
+
         if presentation_path != '' and not '..' in presentation_path:
             # Should have been validated when dashboard created, but .. is particularly dangerous
             if presentation_path.startswith("/"):
@@ -244,6 +254,12 @@ class VariableMixin(Configurable):
                         username=self.user.name
                     )
         return env
+
+    def _calc_repo_folder(self, git_repo):
+        s = re.sub('^https?', '', git_repo.lower()) # Remove https and convert to lower case
+        s = re.sub('[^a-z0-9]', '-', s) # Replace any non-alphanumeric chars with dash
+        s = re.sub('^-+|-+$|-(?=-)', '', s) # Remove dashes from start/end and reduce multiple dashes to just one dash
+        return s
 
 
 class MetaVariableMixin(type(Configurable)):

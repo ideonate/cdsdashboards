@@ -106,7 +106,7 @@ class CDSDashboardsConfig(SingletonConfigurable):
     show_source_servers = Bool(
         False,
         help="""
-        Allow the user to select a source server when creating a Dashboard (currently only relevant for DockerSpawner)
+        Allow the user to select a source server when creating a Dashboard (currently only relevant for DockerSpawner).
         """
     ).tag(config=True)
 
@@ -115,6 +115,13 @@ class CDSDashboardsConfig(SingletonConfigurable):
         help="""
         Require the user to select a source server when creating a Dashboard (currently only relevant for DockerSpawner).
         You must set show_source_servers to True if you set require_source_server to True.
+        """
+    ).tag(config=True)
+
+    show_source_git = Bool(
+        True,
+        help="""
+        Allow the user to enter a git repo to fetch files for a dashboard. 
         """
     ).tag(config=True)
 
