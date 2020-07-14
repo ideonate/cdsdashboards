@@ -76,7 +76,7 @@ comment or delete the other.**
     #c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variablesystemd.VariableSystemdSpawner'
     #c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}{DASHSERVERNAME}'
 
-After setting the spawner, you need to specify those options:
+After setting the spawner, you need to specify these options:
 
 ::
 

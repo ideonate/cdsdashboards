@@ -1,4 +1,4 @@
-import sys
+import sys, re
 
 from tornado.web import authenticated
 
@@ -177,7 +177,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
-        dashboard_options = self.read_options(dashboard, errors)
+        dashboard_options = {}
 
         git_repo = ''
 
@@ -186,6 +186,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             # TODO check git repo is valid
             # if not then errors.git_repo = 'Please enter a valid git repo'
+            if git_repo != '':
+                if not re.match('^((git|ssh|http(s)?)|(git@[\w\.]+))(:(//)?)([\w\.@\:/\-~]+)(/)?$', git_repo):
+                    errors.git_repo = 'Please enter a valid git repo URL'
 
         dashboard_options['git_repo'] = git_repo
 
@@ -290,11 +293,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             return self.write(html)
         
         self.redirect("{}hub/dashboards/{}".format(self.settings['base_url'], dashboard.urlname))
-
-    def read_options(self, dashboard, errors):
-        if dashboard:
-            return dashboard.options
-        return dict()
 
     def read_spawner(self, dashboard, spawners, dashboard_options, errors, require_source_server):
 
