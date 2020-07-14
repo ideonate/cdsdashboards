@@ -27,6 +27,8 @@ Install the cdsdashboards package in the hub environment:
 ::
 
     pip install cdsdashboards
+    # or
+    conda install -c conda-forge cdsdashboards
 
 
 Also install in the user environment, with some extra dependencies:
@@ -34,6 +36,8 @@ Also install in the user environment, with some extra dependencies:
 ::
 
     pip install cdsdashboards[user]
+    # or
+    conda install -c conda-forge cdsdashboards-singleuser
 
 
 The key package for the hub environment is cdsdashboards itself; for the user environment the crucial package is jhsingle-native-proxy.
@@ -47,6 +51,8 @@ Jupyter notebooks to non-technical users:
 ::
 
     pip install voila
+    # or
+    conda install -c conda-forge voila
 
 If you plan to make use of Streamlit dashboards, also :code:`pip install streamlit` in the user environment. 
 For Plotly Dash, also run :code:`pip install dash`, etc.
@@ -69,6 +75,10 @@ comment or delete the other.**
     # Replacement for SystemdSpawner
     #c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variablesystemd.VariableSystemdSpawner'
     #c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}{DASHSERVERNAME}'
+
+After setting the spawner, you need to specify those options:
+
+::
 
     c.JupyterHub.allow_named_servers = True
 
