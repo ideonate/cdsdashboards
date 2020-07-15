@@ -1,14 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: E2E Tests
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  push
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -21,6 +18,9 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+
+    - name: Docker pull the singleuser image for the dockerspawner tests
+      run: docker pull ideonate/containds-all-basic:latest
 
     # Run e2e tests
     - name: Run a one-line script
