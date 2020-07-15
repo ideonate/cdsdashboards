@@ -87,18 +87,18 @@
 
                 {% if show_source_git %}
 
-                <div id="tab-source-container">
-                    <ul>
-                        <li><a href="#tab-jupytertree" data-source-value="jupytertree">Jupyter Tree</a></li>
-                        <li><a href="#tab-gitrepo" data-source-value="gitrepo">Git Repo</a></li>
+                <div id="tab-source-container" class="dashboard-tab-container">
+                    <ul class="dashboard-selectable-tabs">
+                        <li id="tab-selector-jupytertree"><a href="#tab-jupytertree" data-source-value="jupytertree">Jupyter Tree</a></li>
+                        <li id="tab-selector-gitrepo"><a href="#tab-gitrepo" data-source-value="gitrepo">Git Repo</a></li>
                     </ul>
 
-                    <div id="tab-jupytertree">
+                    <div id="tab-jupytertree" style="display: none">
                     </div>
 
-                    <div id="tab-gitrepo">
+                    <div id="tab-gitrepo" style="display: none">
 
-                        <p><label for="source_type_git">Git Repo (optional)</label></p>
+                        <p><label for="source_type_git">Git Repo URL</label></p>
 
                         <p><input type="text" name="git_repo" id="git_repo" 
                                                         value="{{ git_repo | escape }}" /></p>
@@ -173,14 +173,20 @@
 {% block script %}
 {{ super () }}
 <script type="text/javascript">
-require(["jquery", "../../dashboards-static/components/jquery.easytabs.js"], function($, easytabs) {
+require(["jquery", "../../dashboards-static/components/jquery.easytabs"], function($, easytabs) {
     "use strict";
   
-    $(document).ready(function(){ $('#tab-source-container').easytabs({defaultTab: '#tab-{{ source_type }}'}).bind(
-        'easytabs:after', function(evt, tab, panel, data) {
-            $('#source_type').val(tab.data('source-value'));
-        }
-    ); });
+    $(document).ready(function() { 
+        $('#tab-source-container').easytabs({
+                updateHash: false,
+                animate: false,
+                defaultTab: '#tab-selector-{{ source_type }}'
+            }).bind(
+            'easytabs:after', function(evt, tab, panel, data) {
+                $('#source_type').val(tab.data('source-value'));
+            }
+        ); 
+    });
   
 });
 

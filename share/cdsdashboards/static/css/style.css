@@ -30,4 +30,28 @@
     padding: 15px;
     border-radius: 4px;
     text-decoration: none;
-  }
+}
+
+.dashboard-tab-container {
+    padding: 5px 0px;
+}
+
+ul.dashboard-selectable-tabs {
+    padding-inline-start: 0px;
+    margin: 20px 5px;
+}
+
+ul.dashboard-selectable-tabs li {
+    display: inline;
+    border: 1px dotted grey;
+    padding: 5px 20px;
+}
+
+ul.dashboard-selectable-tabs li.active {
+    border: 1px solid black;
+    background-color: #f0ad4e;
+}
+
+#tab-source-container > div {
+    margin-left: 20px;
+}

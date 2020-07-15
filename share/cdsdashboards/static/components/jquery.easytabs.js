@@ -1,5 +1,4 @@
 /*
-
   * This file is assumed to be under the MIT license
 
   * https://github.com/JangoSteve/jQuery-EasyTabs
@@ -295,7 +294,7 @@
     // Make sure hash is a valid id value (admittedly strict in that HTML5 allows almost anything without a space)
     // but jQuery has issues with such id values anyway, so we can afford to be strict here.
     plugin.validId = function(id) {
-      return id.substr(1).match(/^[A-Za-z][A-Za-z0-9\-_:\.]*$/);
+      return id.substr(1).match(/^[A-Za-z]+[A-Za-z0-9\-_:\.].$/);
     };
 
     // Select matching tab when URL hash changes
@@ -543,12 +542,7 @@
           if ( settings.updateHash && ! skipUpdateToHash ) {
             //window.location = url.toString().replace((url.pathname + hash), (url.pathname + $clicked.attr("href")));
             // Not sure why this behaves so differently, but it's more straight forward and seems to have less side-effects
-						if (window.history.pushState) {
-							window.history.pushState(null, null, '#' + $targetPanel.attr('id'));
-						}
-						else {
-							window.location.hash = '#' + $targetPanel.attr('id');
-						}
+            window.location.hash = '#' + $targetPanel.attr('id');
           } else {
             skipUpdateToHash = false;
           }
