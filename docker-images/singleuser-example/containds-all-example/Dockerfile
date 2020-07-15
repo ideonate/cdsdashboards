@@ -15,7 +15,7 @@ RUN conda install --quiet --yes -c conda-forge voila
 # But we often build the docker image before the cdsdashboards release to pypi
 # so just pick the bits we need:
 
-ARG JHSINGLENATIVEPROXY_LINE=jhsingle-native-proxy>=0.3.2
+ARG JHSINGLENATIVEPROXY_LINE=jhsingle-native-proxy>=0.4.0
 
 RUN pip install $JHSINGLENATIVEPROXY_LINE plotlydash-tornado-cmd>=0.0.4 bokeh-root-cmd>=0.0.5 rshiny-server-cmd>=0.0.2 voila-materialstream>=0.2.6
 

@@ -20,6 +20,34 @@ it('voila dashboard', () => {
 
   do_stop_dashserver('dash-voila-test')
 
+  // Now try with git repo
+
+  cy.visit('/hub/dashboards/voila-test/edit')
+
+  cy.get('#tab-selector-gitrepo > a')
+    .should('contain', 'Git Repo')
+    .click()
+
+  cy.get('#git_repo')
+    .type('https://github.com/danlester/binder-sincos')
+
+  cy.get('#dashboard-start-path')
+    .clear()
+    .type('Presentation.ipynb')
+
+  cy.get('#main > div > div > form > div > input[type=submit]')
+    .click()
+
+  cy.get('#launch')
+    .should('contain', 'Go to Dashboard')
+    .should('be.visible', { timeout: 20000 })
+    .invoke('removeAttr', 'target').click() // Don't want to open in new tab
+
+  cy.get('#Sin-and-Cos-Graph-demo')
+    .should('contain', 'Sin and Cos Graph demo')
+
+  do_stop_dashserver('dash-voila-test')
+
   // Plotly Dash
 
   do_create_and_start_dashboard('Plotly Dash Test', 'subfolder/subapp.py', 'plotlydash')
