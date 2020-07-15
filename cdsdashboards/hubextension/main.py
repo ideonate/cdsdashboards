@@ -82,6 +82,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         spawners = []
         spawner_id = ''
+        source_type = dashboard_options.get('source_type', 'jupytertree')
         git_repo = ''
 
         if cdsconfig.show_source_servers:
@@ -94,6 +95,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         if cdsconfig.show_source_git:
             git_repo = dashboard_options.get('git_repo', '')
+        else:
+            source_type = 'jupytertree'
 
         errors = DefaultObjDict()
         
@@ -109,6 +112,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_start_path=dashboard_start_path,
             dashboard_presentation_type=dashboard_presentation_type,
             dashboard_options=dashboard_options,
+            source_type=source_type,
             git_repo=git_repo,
             presentation_types=merged_presentation_types,
             spawner_id=spawner_id,
@@ -180,8 +184,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         dashboard_options = {}
 
         git_repo = ''
+        source_type = self.get_argument('source_type', '').strip()
 
-        if cdsconfig.show_source_git:
+        if cdsconfig.show_source_git and source_type == 'gitrepo':
             git_repo = self.get_argument('git_repo', '').strip()
 
             # TODO check git repo is valid
@@ -189,7 +194,10 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             if git_repo != '':
                 if not re.match('^((git|ssh|http(s)?)|(git@[\w\.]+))(:(//)?)([\w\.@\:/\-~]+)(/)?$', git_repo):
                     errors.git_repo = 'Please enter a valid git repo URL'
+        else:
+            source_type = 'jupytertree'
 
+        dashboard_options['source_type'] = source_type
         dashboard_options['git_repo'] = git_repo
 
         spawners = []
@@ -281,6 +289,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_presentation_type=dashboard_presentation_type,
                 dashboard_options=dashboard_options,
                 git_repo=git_repo,
+                source_type=source_type,
                 presentation_types=merged_presentation_types,
                 spawner_id=spawner_id,
                 spawners=spawners,
