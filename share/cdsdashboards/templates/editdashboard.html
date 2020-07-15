@@ -38,15 +38,7 @@
                 {% endif %}
 
 
-                {% if show_source_servers or show_source_git %}
-
-                  <h3>Source</h3>
-
-                {% endif %}
-
                 {% if show_source_servers %}
-
-                <hr />
 
                     <h3>Choose a source server:</h3>
 
@@ -79,13 +71,13 @@
                     <p class="error">{{ errors.spawner | escape }}</p>
         
                     {% endif %}
-
-                    <hr />
                     
                 {% endif %}
 
 
                 {% if show_source_git %}
+
+                <h3>File source</h3>
 
                 <div id="tab-source-container" class="dashboard-tab-container">
                     <ul class="dashboard-selectable-tabs">
