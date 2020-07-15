@@ -4,11 +4,9 @@ ARG BASE_REPO=jupyterhub/singleuser
 FROM $BASE_REPO:$TAG
 
 # git is now used to source files for cdsdashboards
-RUN conda install --quiet --yes -c conda-forge git
+RUN conda install --quiet --yes -c conda-forge git voila
 
 RUN rm -rf /home/jovyan/work
-
-RUN conda install --quiet --yes -c conda-forge voila
 
 # Effectively we just want to run
 # RUN pip install cdsdashboards[user]

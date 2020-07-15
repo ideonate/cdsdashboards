@@ -15,6 +15,6 @@ source functest_${functest}.sh
 
 export JH_CYPRESS_MEDIAFOLDER="${stage}/${functest}"
 
-docker-compose up --force-recreate --exit-code-from cypress
+docker-compose up --force-recreate #--exit-code-from cypress
 docker-compose down
 

@@ -173,7 +173,7 @@ require(["jquery", "../../dashboards-static/components/jquery.easytabs"], functi
                 updateHash: false,
                 animate: false,
                 defaultTab: '#tab-selector-{{ source_type }}'
-            }).bind(
+            }).on(
             'easytabs:after', function(evt, tab, panel, data) {
                 $('#source_type').val(tab.data('source-value'));
             }

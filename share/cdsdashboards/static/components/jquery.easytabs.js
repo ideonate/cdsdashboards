@@ -474,7 +474,7 @@
     // Bind tab-select funtionality to namespaced click event, called by
     // init
     var bindToTabClicks = function() {
-      plugin.tabs.children("a").bind(settings.bind_str, function(e) {
+      plugin.tabs.children("a").on(settings.bind_str, function(e) {
 
         // Stop cycling when a tab is clicked
         settings.cycle = false;

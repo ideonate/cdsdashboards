@@ -24,7 +24,7 @@ extras_require = {
         'voila-materialstream>=0.2.6' # Does not install voila itself
     ],
     'user-voila' : [
-        'jhsingle-native-proxy>=0.3.2',
+        'jhsingle-native-proxy>=0.4.0',
         'voila>=0.1.14',
         'voila-materialstream>=0.2.6'
     ]

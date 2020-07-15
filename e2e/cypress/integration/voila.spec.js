@@ -35,6 +35,10 @@ it('voila dashboard', () => {
     .clear()
     .type('Presentation.ipynb')
 
+  cy.get('#source_type')
+    .then( elem => { elem.val('gitrepo'); } )
+    //.should('have.value', 'gitrepo')
+
   cy.get('#main > div > div > form > div > input[type=submit]')
     .click()
 

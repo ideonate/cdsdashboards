@@ -23,5 +23,5 @@ jobs:
       run: docker pull ideonate/containds-all-basic:latest
 
     # Run e2e tests
-    - name: Run a one-line script
+    - name: Run all tests
       run: cd e2e && ./run_all.sh
