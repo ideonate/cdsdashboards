@@ -49,7 +49,8 @@ c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-c.DockerSpawner.image = 'ideonate/containds-allr-datascience:0.1.0'
+#c.DockerSpawner.image = 'ideonate/containds-allr-datascience:0.1.0'
+c.DockerSpawner.image = 'containds-all-example:latest'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
 
