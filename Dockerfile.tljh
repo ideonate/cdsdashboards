@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=ideonate/tljh-dev:latest
 FROM $BASE_IMAGE
 
-RUN conda install --quiet --yes -c conda-forge git
+RUN apt-get update && apt-get --assume-yes install git
 
 RUN mkdir /tmp/cdsdashboard_current
 
