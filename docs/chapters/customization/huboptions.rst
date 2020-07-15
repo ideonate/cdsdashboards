@@ -136,6 +136,19 @@ is False, there will also be a 'No Server' option to maintain the default behavi
 configuration. If require_source_server is True, there will be no such option and a source server must be selected (your 'Default Server' will be available, 
 along with any non-dashboard named servers).
 
+File Source
+~~~~~~~~~~~
+
+If you don't want users to be able to enter a git repo as a source for dashboard files, add the following to your jupyterhub_config.py file:
+
+::
+
+    c.CDSDashboardsConfig.show_source_git = False
+
+This will remove the git repo selection in the new/edit dashboard page, forcing all dashboards to be based on files from the Jupyter Tree.
+
+The default value is true.
+
 
 .. _default_allow_all:
 
