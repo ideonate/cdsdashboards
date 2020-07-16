@@ -67,20 +67,19 @@ The following options in your config file will install the extension. Please not
 
 
 If you are using The Littlest JupyterHub, you can copy any new settings into a new file called 
-/opt/tljh/config/jupyterhub_config.d/cdsdashboards_config.py, although ideally you would set allow_named_servers and the DockerSpawner settings 
-through tljh-config (but that doesn't matter if you're just trying it out).
+/opt/tljh/config/jupyterhub_config.d/cdsdashboards_config.py.
 
 .. _docker_singleuser_image:
 
 Docker Image Requirements
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The image you use for the single-user server should have `Voila <https://voila.readthedocs.io/en/stable/>`__ and 
-`jhsingle-native-proxy <https://github.com/ideonate/jhsingle-native-proxy>`__ installed, plus a second 'entrypoint' at 
-/opt/conda/bin/voila-entrypoint.sh to run the Voila server. 
+The image you use for the single-user server should have  
+`jhsingle-native-proxy <https://github.com/ideonate/jhsingle-native-proxy>`__ installed plus any other helper scripts required. These 
+are fairly small, so the easiest thing is to :code:`pip install cdsdashboards[user]` or :code:`conda install -c conda-forge cdsdashboards-singleuser` 
+to install every ContainDS Dashboards component.
 
-For Streamlit dashboards, you need a /opt/conda/bin/streamlit-entrypoint.sh 
-For Plotly Dash dashboards, you need a /opt/conda/bin/plotlydash-entrypoint.sh 
+It also needs Voila, Streamlit, or whichever frameworks you want to use.
 
 Please see `docker-singleuser-images <https://github.com/ideonate/cdsdashboards/tree/master/docker-images/singleuser-example>`__ for an example, 
 or use the ones created for you already:

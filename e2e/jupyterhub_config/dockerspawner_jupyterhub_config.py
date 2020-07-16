@@ -27,12 +27,11 @@ c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variabledocker
 
 c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'
 
-#from jupyter_client.localinterfaces import public_ips
 
-#c.JupyterHub.hub_ip = public_ips()[0]
 
 c.DockerSpawner.use_internal_ip = True
 c.DockerSpawner.network_name = 'e2etestnetwork'
+
 # Pass the network name as argument to spawned containers
 c.DockerSpawner.extra_host_config = { 'network_mode': 'e2etestnetwork' }
 
