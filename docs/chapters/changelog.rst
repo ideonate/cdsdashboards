@@ -4,6 +4,14 @@
 Changelog
 ---------
 
+Version 0.2.0
+~~~~~~~~~~~~~
+
+Released 16 July 2020
+
+- Git Repos can be used as a source for files (otherwise, pull from Jupyter Tree as before).
+- Installation of components is now available via conda-forge (thanks to `Frédéric Collonval <https://github.com/fcollonval>`__).
+
 Version 0.1.0
 ~~~~~~~~~~~~~
 
