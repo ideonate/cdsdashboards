@@ -10,30 +10,30 @@ Preparing your Code
 
 You can use 'My Server' (or a named server) to upload any notebooks, or Python files and data, that form your app or notebook.
 
-In our example, we will take a Panel app straight from a GitHub repo. We have a Panel app in a Jupyter notebook called 
-Panel_Introduction.ipynb, available on 
-`GitHub here <https://github.com/ideonate/cdsdashboards/tree/master/examples/sample-source-code/panel>`__.
+In our example, we will take a Bokeh app straight from a GitHub repo. There is an app called 
+sliders.py, available on 
+`GitHub here <https://github.com/bokeh/bokeh/blob/master/examples/app/sliders.py>`__.
 
 New Dashboard
 ~~~~~~~~~~~~~
 
 Click 'Dashboards' in the menu bar. Then click 'New Dashboard'.
 
-.. figure:: ../../../_static/screenshots/userguide/frameworks/PanelNewDashboard.png
+.. figure:: ../../../_static/screenshots/userguide/frameworks/BokehNewDashboard.png
    :alt: New Dashboard screen
 
 Fill in a name and optionally a description.
 
-Click 'Git Repo' and enter the URL: :code:`https://github.com/ideonate/cdsdashboards`
+Click 'Git Repo' and enter the URL: :code:`https://github.com/bokeh/bokeh`
 
 Select the framework required. For our example, we need to change this to *bokeh*.
 
 Specify the URL-path to our Bokeh/Panel app, relative to the Jupyter server's home folder. This can be a Python py file, an ipynb notebook, or a 
 folder containing at least a main.py file.
 
-In our case, Panel_Introduction.ipynb is the file we need, but it is a few folders deep in the Git repo, so we enter:
+In our case, sliders.py is the file we need, but it is a few folders deep in the Git repo, so we enter:
 
-:code:`examples/sample-source-code/panel/Panel_Introduction.ipynb`
+:code:`examples/app/sliders.py`
 
 **Note that your Dashboard will be accessible by any other JupyterHub user.**
 
@@ -49,7 +49,7 @@ Once the Dashboard is built, click the 'Go to Dashboard' button to open the dash
 
 The Bokeh/Panel app is displayed:
 
-.. figure:: ../../../_static/screenshots/userguide/frameworks/PanelApp.png
+.. figure:: ../../../_static/screenshots/userguide/frameworks/BokehApp.png
    :alt: Dashboard screen
 
 See :ref:`working with dashboards<working>` to understand more about how Dashboards operate, including sharing them with colleagues.
