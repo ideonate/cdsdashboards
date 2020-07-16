@@ -8,42 +8,32 @@ How to turn your `Bokeh <https://docs.bokeh.org/>`__ or `Panel <https://panel.ho
 Preparing your Code
 ~~~~~~~~~~~~~~~~~~~
 
-Use 'My Server' (or a named server) to upload any notebooks, or Python files and data, that form your app or notebook.
+You can use 'My Server' (or a named server) to upload any notebooks, or Python files and data, that form your app or notebook.
 
-Below, we have a Panel app in a Jupyter notebook called Panel_Introduction.ipynb. It is in a folder called 'panel'.
-To try out this example, you can obtain 
-the `source code here <https://github.com/ideonate/cdsdashboards/tree/master/examples/sample-source-code/panel>`__.
-
-
-.. figure:: ../../_static/screenshots/userguide/PanelTree.png
-   :alt: Jupyter with ipynb notebook file
-
-Click 'Control Panel' to go back to JupyterHub.
-
+In our example, we will take a Panel app straight from a GitHub repo. We have a Panel app in a Jupyter notebook called 
+Panel_Introduction.ipynb, available on 
+`GitHub here <https://github.com/ideonate/cdsdashboards/tree/master/examples/sample-source-code/panel>`__.
 
 New Dashboard
 ~~~~~~~~~~~~~
 
-Click 'Dashboards' in the menu bar. You will see the page showing any Dashboards created by you, or shared with you by colleagues.
+Click 'Dashboards' in the menu bar. Then click 'New Dashboard'.
 
-Below, in a fresh installation of ContainDS Dashboards, there are no Dashboards:
-
-.. figure:: ../../_static/screenshots/userguide/EmptyDashboards.png
-   :alt: Empty Dashboards screen
-
-Click 'New Dashboard'.
-
-.. figure:: ../../_static/screenshots/userguide/PanelNewDashboard.png
+.. figure:: ../../../_static/screenshots/userguide/frameworks/PanelNewDashboard.png
    :alt: New Dashboard screen
 
 Fill in a name and optionally a description.
+
+Click 'Git Repo' and enter the URL: :code:`https://github.com/ideonate/cdsdashboards`
 
 Select the framework required. For our example, we need to change this to *bokeh*.
 
 Specify the URL-path to our Bokeh/Panel app, relative to the Jupyter server's home folder. This can be a Python py file, an ipynb notebook, or a 
 folder containing at least a main.py file.
 
-In our case, Panel_Introduction.ipynb was in the 'panel' folder in our Jupyter tree, so we enter panel/Panel_Introduction.ipynb.
+In our case, Panel_Introduction.ipynb is the file we need, but it is a few folders deep in the Git repo, so we enter:
+
+:code:`examples/sample-source-code/panel/Panel_Introduction.ipynb`
 
 **Note that your Dashboard will be accessible by any other JupyterHub user.**
 
@@ -53,20 +43,13 @@ Building the Dashboard
 ~~~~~~~~~~~~~~~~~~~~~~
 
 When you click Save, the dashboard will be built automatically. This just means that a new named server is created based on your new Dashboard, 
-running the Bokeh/Panel server instead of the regular Jupyter server.
-
-This is what you should see while the build is taking place:
-
-.. figure:: ../../_static/screenshots/userguide/PanelDashboardBuild.png
-   :alt: Dashboard Build screen
-
-Any errors during the build will be visible here.
+but running the Bokeh server instead of Jupyter.
 
 Once the Dashboard is built, click the 'Go to Dashboard' button to open the dashboard in a new tab.
 
 The Bokeh/Panel app is displayed:
 
-.. figure:: ../../_static/screenshots/userguide/PanelApp.png
+.. figure:: ../../../_static/screenshots/userguide/frameworks/PanelApp.png
    :alt: Dashboard screen
 
 See :ref:`working with dashboards<working>` to understand more about how Dashboards operate, including sharing them with colleagues.

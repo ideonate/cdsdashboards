@@ -14,8 +14,8 @@ that should be available for Dashboards.
 :ref:`finetune` explores generic JupyterHub settings that may make sense now that you have non-technical users logging in. For example, 
 launching straight into 'My Server' may not be the best landing page for those users.
 
-:ref:`customlaunchers` is an advance topic explaining how you can add your own presentation types or adjust the way that the built-in 
-presentation servers are launched.
+:ref:`customlaunchers` is an advanced topic explaining how you can add your own presentation types (frameworks) or adjust the way that 
+the built-in presentation servers are launched.
 
 
 .. toctree::

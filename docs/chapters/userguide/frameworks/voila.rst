@@ -3,7 +3,7 @@
 Jupyter (Voila) Dashboards
 --------------------------
 
-How to build a Jupyter notebook-based Dashboard.
+How to build a Jupyter notebook-based Dashboard, from your 'My Server' Jupyter tree.
 
 Preparing your Code
 ~~~~~~~~~~~~~~~~~~~
@@ -14,29 +14,21 @@ Below, we have an ipynb (Jupyter notebook) called Presentation.ipynb. To try out
 `source code here <https://github.com/ideonate/cdsdashboards/tree/master/examples/sample-source-code/voila>`__. 
 For this notebook to work you may need matplotlib, numpy, and ipywidgets to be installed in your user Python env.
 
-.. figure:: ../../_static/screenshots/userguide/JupyterTree.png
+.. figure:: ../../../_static/screenshots/userguide/frameworks/JupyterTree.png
    :alt: Jupyter with ipynb and py files
 
-For Jupyter notebooks, of course you can run them as usual in your Jupyter server - and there is a 'Voila Preview' button so you can see how 
+You can run the Jupyter notebook as usual in your Jupyter server - and there is a 'Voila Preview' button so you can see how 
 the final dashboard will appear. Voila is the name of the technology that is essentially a user-friendly and secure version of Jupyter notebooks: 
 code cells are hidden, and the user can only view the intended end result. They can interact with widgets if they are present in the notebook though.
 
 Click 'Control Panel' to go back to JupyterHub.
 
-
 New Dashboard
 ~~~~~~~~~~~~~
 
-Click 'Dashboards' in the menu bar. You will see the page showing any Dashboards created by you, or shared with you by colleagues.
+From the Dashboards page in JupyterHub, click 'New Dashboard'.
 
-Below, in a fresh installation of ContainDS Dashboards, there are no Dashboards:
-
-.. figure:: ../../_static/screenshots/userguide/EmptyDashboards.png
-   :alt: Empty Dashboards screen
-
-Click 'New Dashboard'.
-
-.. figure:: ../../_static/screenshots/userguide/NewDashboard.png
+.. figure:: ../../../_static/screenshots/userguide/frameworks/FileSourceJupyterTree.png
    :alt: New Dashboard screen
 
 Fill in a name and optionally a description.
@@ -51,24 +43,11 @@ they can locate the file themselves.
 
 Click 'Save'.
 
-Building the Dashboard
-~~~~~~~~~~~~~~~~~~~~~~
-
-When you click Save, the dashboard will be built automatically. This just means that a new named server is created based on your new Dashboard, 
-running Voila instead of the regular Jupyter server.
-
-This is what you should see while the build is taking place:
-
-.. figure:: ../../_static/screenshots/userguide/DashboardBuild.png
-   :alt: Dashboard Build screen
-
-Any errors during the build will be visible here.
-
 Once the Dashboard is built, click the 'Go to Dashboard' button to open the dashboard in a new tab.
 
 The user-friendly and safe version of the notebook is displayed:
 
-.. figure:: ../../_static/screenshots/userguide/DashboardView.png
+.. figure:: ../../../_static/screenshots/userguide/frameworks/DashboardView.png
    :alt: Dashboard screen
 
 See :ref:`working with dashboards<working>` to understand more about how Dashboards operate, including sharing them with colleagues.

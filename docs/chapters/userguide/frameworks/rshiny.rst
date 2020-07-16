@@ -14,30 +14,26 @@ Below, we have these two files uploaded to a folder called `rshinydemo` at the t
 To try out this example, you can obtain the 
 `source code here <https://github.com/ideonate/cdsdashboards/tree/master/examples/sample-source-code/rshinydemo>`__. 
 
-For this demo you will need shiny-server installed and available on the PATH.
+For this demo you will need :code:`shiny-server` installed and available on the PATH.
 
-.. figure:: ../../_static/screenshots/userguide/RShinyJupyterTree.png
+.. figure:: ../../../_static/screenshots/userguide/frameworks/RShinyJupyterTree.png
    :alt: Jupyter with server.R and ui.R files
 
 Click 'Control Panel' to go back to JupyterHub.
 
+*Please note it is also possible to deploy your app direct from a Git Repo.*
 
 New Dashboard
 ~~~~~~~~~~~~~
 
-Click 'Dashboards' in the menu bar. You will see the page showing any Dashboards created by you, or shared with you by colleagues.
+Click 'Dashboards' in the menu bar, then click 'New Dashboard'.
 
-Below, in a fresh installation of ContainDS Dashboards, there are no Dashboards:
-
-.. figure:: ../../_static/screenshots/userguide/EmptyDashboards.png
-   :alt: Empty Dashboards screen
-
-Click 'New Dashboard'.
-
-.. figure:: ../../_static/screenshots/userguide/RShinyNewDashboard.png
-   :alt: New Dashboard screen
+.. figure:: ../../../_static/screenshots/userguide/frameworks/RShinyNewDashboard.png
+   :alt: New dashboard for R Shiny Server
 
 Fill in a name and optionally a description.
+
+Leave 'Jupyter Tree' selected.
 
 Select the framework 'rshiny' from the dropdown list.
 
@@ -52,20 +48,13 @@ Building the Dashboard
 ~~~~~~~~~~~~~~~~~~~~~~
 
 When you click Save, the dashboard will be built automatically. This just means that a new named server is created based on your new Dashboard, 
-running Voila instead of the regular Jupyter server.
-
-This is what you should see while the build is taking place:
-
-.. figure:: ../../_static/screenshots/userguide/RShinyDashboardBuild.png
-   :alt: Dashboard Build screen
-
-Any errors during the build will be visible here.
+running shiny-server instead of the regular Jupyter server.
 
 Once the Dashboard is built, click the 'Go to Dashboard' button to open the dashboard in a new tab.
 
 The user-friendly and safe version of the app is displayed:
 
-.. figure:: ../../_static/screenshots/userguide/RShinyDashboardView.png
+.. figure:: ../../../_static/screenshots/userguide/frameworks/RShinyDashboardView.png
    :alt: Dashboard screen
 
 See :ref:`working with dashboards<working>` to understand more about how Dashboards operate, including sharing them with colleagues.
