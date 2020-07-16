@@ -95,13 +95,19 @@ folder when it starts up. An example is using `ElasticFileSystem on AWS <https:/
 
 **Dynamic storage** (the default) is where a new 'persistent volume' is generally created for each new Jupyter server that starts up.
 
-What we need to achieve when configuring persistent storage that will work with Dashboards is this: 
-
-When a user creates a new Dashboard, it will be based on an existing 'source server' (probably just their default 'My Server'). The Dashboard is really just a 
+When a user creates a new Dashboard, it will be based within a new named server. The Dashboard is really just a 
 new separate Jupyter server that happens to be running a presentation front-end (e.g. Voila) instead of the usual Jupyter notebook server. We just 
-need to ensure that same files (e.g. ipynb notebooks) that were present on the source server are also present on the new dashboard server.
+need to ensure that required files (e.g. ipynb notebooks or py/R files) for the dashbboard are present on the new dashboard server.
 
-The easiest way to achieve this is to ensure that each user has their own home folder that is somehow mounted on all of their servers.
+The dashboard's source files can come from the Jupyter Tree or a Git Repo (:ref:`read more here <prepare_dashboard>`).
+
+If you are creating dashboards based on a Git Repo, the source files will be pulled from the repo when the dashboard server is started, so any type of storage 
+should be suitable.
+
+If your dashboards are based on files in the user's Jupyter Tree, then you will need to ensure files uploaded to another Jupyter Server (e.g. the default 
+'My Server') will also be available to the new dashboard server.
+
+The easiest way to achieve this is to ensure that each user has their own home folder (or shared folder) that is somehow mounted on all of their servers.
 
 Static Storage
 --------------
@@ -174,6 +180,30 @@ This `functionality requires Kubernetes 1.16+ <https://kubernetes.io/docs/concep
 storage drivers. At present, this approach is considered experimental, and you are encouraged to :ref:`get in touch<contact>` for help in understanding if this 
 approach will work for you.
 
+
+Hybrid Static/Dynamic
+---------------------
+
+If you feel unable to use Static Storage because it slows down your JupyterLab sessions too much, but don't have a suitable way to share files between Dynamic 
+volumes, then a hybrid approach might work.
+
+Your primary persistent storage might be through a dynamic PVC in ReadWriteOnce mode, but you also share a secondary static storage volume:
+
+::
+
+    singleuser:
+      storage:
+        extraVolumes:
+        - name: shared
+          persistentVolumeClaim: 
+            claimName: shared-claim
+        extraVolumeMounts:
+        - name: shared
+          mountPath: /home/jovyan/shared
+
+In this scenario, you can instruct your users to use the *shared* folder within Jupyter to hold their dashboard files - perhaps within a further *<username>* 
+folder. This way, all dashboard files will be available to all servers, including the dashboard server - and also in their colleagues' own servers too, of 
+course.
 
 Options
 ~~~~~~~
