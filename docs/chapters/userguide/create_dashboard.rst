@@ -43,7 +43,7 @@ The other options are 'streamlit', 'plotlydash', 'bokeh' (for panel too), 'rshin
 you have installed.
 
 Specify the URL-path to the ipynb file, relative to the Jupyter server's home folder or to the git repo root. In the first example above, Presentation.ipynb 
-was at the top level in our Jupyter tree, so we just enter Presentation.ipynb; and in the second example it was at the root of .
+was at the top level in our Jupyter tree, so we just enter Presentation.ipynb; and in the second example it was at the root of the git repo.
 
 For some framework types including Voila, you can leave the Relative Path blank and Voila will just show the entire tree to the Dashboard user so they can 
 choose between the relevant files for themselves.

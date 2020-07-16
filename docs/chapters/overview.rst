@@ -34,8 +34,8 @@ with JupyterHub - including single-sign-on through corporate email accounts or L
 How it works
 ~~~~~~~~~~~~
 
-- Data scientist creates a Jupyter Notebook as normal, or uploads Streamlit / Plotly Dash / Bokeh python files etc to Jupyter
-- Data scientist creates a new Dashboard to clone their Jupyter server
+- Data scientist creates a visualization as normal, on a Git Repo or by creating/uploading files on the Jupyter tree
+- Data scientist creates a new Dashboard to clone their Jupyter server or Git Repo
 - Other logged-in JupyterHub users see the dashboard in their list
 - Click to launch as a server, using OAuth to gain access
 - User sees a safe user-friendly version of the original notebook or script

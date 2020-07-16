@@ -16,6 +16,8 @@ Currently supported frameworks:
 This open source package allows data scientists to instantly and reliably publish interactive 
 notebooks or other scripts as secure interactive web apps.
 
+Source files can be pulled from a Git repo or from the user's Jupyter tree.
+
 Any authorised JupyterHub user can view the dashboard.
 
 **See [full documentation](https://cdsdashboards.readthedocs.io/)**
