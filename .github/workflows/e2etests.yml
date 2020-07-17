@@ -25,3 +25,6 @@ jobs:
     # Run e2e tests
     - name: Run all tests
       run: cd e2e && ./run_all.sh
+      env:
+        E2E_STAGES: localprocess tljh localprocessjh10
+        

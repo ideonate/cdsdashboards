@@ -12,7 +12,21 @@ set -e
 
 stages="dockerspawner localprocess tljh localprocessjh10"
 
+if [ ! -z "${E2E_STAGES}" ]; then
+    stages="${E2E_STAGES}"
+fi
+
+echo "STAGES: $stages"
+
+
 functests="login voila db11upgrade db13upgrade"
+
+if [ ! -z "${E2E_FUNCTESTS}" ]; then
+    functests="${E2E_FUNCTESTS}"
+fi
+
+echo "FUNCTESTS: $functests"
+
 
 for stage in $stages
 do
