@@ -49,8 +49,8 @@ c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-#c.DockerSpawner.image = 'ideonate/containds-allr-datascience:0.1.0'
-c.DockerSpawner.image = 'containds-all-example:latest'
+c.DockerSpawner.image = 'ideonate/containds-allr-datascience:0.2.0'
+#c.DockerSpawner.image = 'containds-all-example:latest'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
 
@@ -69,6 +69,11 @@ c.ConfigurableHTTPProxy.debug = True
 c.JupyterHub.cleanup_servers = True
 
 c.ConfigurableHTTPProxy.should_start = True
+
+
+
+c.JupyterHub.redirect_to_server = False
+c.JupyterHub.default_url = '/hub/dashboards'
 
 
 import os

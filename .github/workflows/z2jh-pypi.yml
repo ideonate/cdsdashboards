@@ -1,4 +1,4 @@
-name: Build and push z2jh Docker images from cdsdashboards on pypi
+name: z2jh Docker image from pypi
 
 on:
   push:

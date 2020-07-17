@@ -1,4 +1,4 @@
-name: Build and push z2jh Docker images from local repo
+name: z2jh Docker image from local repo
 
 on:
   push:
