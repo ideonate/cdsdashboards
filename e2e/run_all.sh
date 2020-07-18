@@ -63,5 +63,8 @@ echo "Any Screenshots of failures:"
 echo "----------------------------"
 echo ""
 
-find ./cypress/screenshots/ -name "*.png"
+if [ -d "./cypress/screenshots/" ]; then
+    find ./cypress/screenshots/ -name "*.png"
+fi
+
 
