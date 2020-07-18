@@ -167,7 +167,9 @@ mk create namespace khub
 
 helm upgrade --install khubrel jupyterhub/jupyterhub   --namespace khub    --version=0.9.0   --values config.yaml
 
-mk port-forward svc/proxy-public 8000:80 --namespace=khub
+mk config set-context --current --namespace=khub
+
+mk port-forward svc/proxy-public 8000:80
 
 
 
