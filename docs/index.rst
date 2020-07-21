@@ -16,6 +16,8 @@ Source files can be obtained from a Git repo, or directly from the dashboard pub
 
 Read a full description in :ref:`overview`.
 
+.. image:: ./_static/screencasts/ContainDS_Screencast_Basic.gif
+   :target: https://youtu.be/iyryD2ngnx4
 
 JupyterHub
 ~~~~~~~~~~
