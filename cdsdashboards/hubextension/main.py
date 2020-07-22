@@ -98,9 +98,12 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         else:
             source_type = 'jupytertree'
 
+        conda_env = dashboard_options.get('conda_env', '')
+
         errors = DefaultObjDict()
         
         merged_presentation_types = cdsconfig.merged_presentation_types
+        all_conda_envs = cdsconfig.conda_envs
 
         html = self.render_template(
             "editdashboard.html",
@@ -114,7 +117,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_options=dashboard_options,
             source_type=source_type,
             git_repo=git_repo,
+            conda_env=conda_env,
             presentation_types=merged_presentation_types,
+            all_conda_envs=all_conda_envs,
             spawner_id=spawner_id,
             current_user=current_user,
             spawners=spawners,
@@ -172,14 +177,15 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         elif not self.start_path_regex.match(dashboard_start_path):
             errors.start_path = 'Please enter valid URL path characters'
 
-        merged_presentation_types = CDSConfigStore.get_instance(self.settings['config']).merged_presentation_types
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
+        merged_presentation_types = cdsconfig.merged_presentation_types
+        all_conda_envs = cdsconfig.conda_envs
         
         if not dashboard_presentation_type in merged_presentation_types:
             errors.presentation_type = 'Framework {} invalid - it must be one of the allowed types: {}'.format(
                 dashboard_presentation_type, ', '.join(merged_presentation_types)
                 )
-
-        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
         dashboard_options = {}
 
@@ -189,16 +195,19 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         if cdsconfig.show_source_git and source_type == 'gitrepo':
             git_repo = self.get_argument('git_repo', '').strip()
 
-            # TODO check git repo is valid
-            # if not then errors.git_repo = 'Please enter a valid git repo'
             if git_repo != '':
                 if not re.match('^((git|ssh|http(s)?)|(git@[\w\.]+))(:(//)?)([\w\.@\:/\-~]+)(/)?$', git_repo):
                     errors.git_repo = 'Please enter a valid git repo URL'
         else:
             source_type = 'jupytertree'
 
+        conda_env = self.get_argument('conda_env', '').strip()
+
+        # TODO check conda_env is valid and in all_conda_envs
+
         dashboard_options['source_type'] = source_type
         dashboard_options['git_repo'] = git_repo
+        dashboard_options['conda_env'] = conda_env
 
         spawners = []
         spawner = None
@@ -277,6 +286,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         if len(errors):
 
             git_repo = dashboard_options['git_repo'] = dashboard_options.get('git_repo', '')
+            conda_env = dashboard_options['conda_env'] = dashboard_options.get('conda_env', '')
 
             html = self.render_template(
                 "editdashboard.html",
@@ -290,7 +300,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_options=dashboard_options,
                 git_repo=git_repo,
                 source_type=source_type,
+                conda_env=conda_env,
                 presentation_types=merged_presentation_types,
+                all_conda_envs=all_conda_envs,
                 spawner_id=spawner_id,
                 spawners=spawners,
                 show_source_servers=cdsconfig.show_source_servers,

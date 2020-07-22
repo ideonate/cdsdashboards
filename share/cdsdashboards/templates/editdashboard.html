@@ -127,6 +127,26 @@
                 {% endif %}
 
 
+                {% if all_conda_envs %}
+
+                    <p><label for="conda_env">Conda Env:</label>
+                        <select name="conda_env" id="conda_env">
+                            <option value="" {% if conda_env == '' %}selected{% endif %}>None / Default</option>
+                            {% for ce in all_conda_envs %}
+                                <option value="{{ce}}" {% if conda_env == ce %}selected{% endif %}>{{ce}}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+
+                    {% if errors.conda_env %}
+        
+                    <p class="error">{{ errors.conda_env | escape }}</p>
+        
+                    {% endif %}
+
+                {% endif %}
+
+
                 <p><label for="start_path">Relative Path to a file or folder: </label></p>
                 
     

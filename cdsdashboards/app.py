@@ -134,6 +134,17 @@ class CDSDashboardsConfig(SingletonConfigurable):
         """
     ).tag(config=True)
 
+    conda_envs = List(
+        trait=Unicode,
+        default_value=[],
+        minlen=0,
+        help="""
+        A list of Conda env names for the dashboard creator to select.
+        A list.
+        Default value is the empty list.
+        """
+    ).tag(config=True)
+
 
 class UpgradeDB(Application):
     """Upgrade the CDSDashboards database schema."""

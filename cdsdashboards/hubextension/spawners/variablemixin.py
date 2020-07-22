@@ -171,7 +171,6 @@ class VariableMixin(Configurable):
             notebook_dir = os.path.join(notebook_dir, repofolder)
             args.append('--repofolder={}'.format(_quote_safe(notebook_dir)))
 
-
         if presentation_path != '' and not '..' in presentation_path:
             # Should have been validated when dashboard created, but .. is particularly dangerous
             if presentation_path.startswith("/"):
@@ -182,6 +181,10 @@ class VariableMixin(Configurable):
             args.extend(launcher['args'])
 
         args.append('--presentation-path={}'.format(_quote_safe(notebook_dir)))
+
+        conda_env = self.user_options.get('conda_env', '')
+        if conda_env != '':
+            args.append('--conda-env=%s' % _quote_safe(conda_env))
 
         if self.ip:
             args.append('--ip=%s' % _quote_safe(self.ip))

@@ -42,11 +42,13 @@ class ProcessBuilder(Builder):
                 spawner._spawn_pending = False
 
         git_repo = dashboard.options.get('git_repo', '')
+        conda_env = dashboard.options.get('conda_env', '')
 
         new_server_options.update({
             'presentation_type': dashboard.presentation_type or 'voila',
             'presentation_path': dashboard.start_path,
             'git_repo': git_repo,
+            'conda_env': conda_env,
             'cmd': ['python3', '-m', 'jhsingle_native_proxy.main'],
             'environment': {
                 'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
