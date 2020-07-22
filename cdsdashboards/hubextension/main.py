@@ -3,7 +3,7 @@ import sys, re
 from tornado.web import authenticated
 
 from jupyterhub.handlers.base import BaseHandler
-from jupyterhub.orm import Group
+from jupyterhub.orm import Group, User
 
 from ..orm import Dashboard
 from .base import DashboardBaseMixin, check_database_upgrade, spawner_to_dict
@@ -47,12 +47,15 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         current_user = await self.get_current_user()
 
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
         dashboard = None
         dashboard_name = ''
         dashboard_description = ''
         dashboard_presentation_type = ''
         dashboard_start_path = ''
         dashboard_options = {}
+        user_permissions = cdsconfig.default_allow_all and 'anyusers' or 'selectedusers'
 
         if dashboard_urlname is not None:
 
@@ -69,13 +72,13 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_start_path = dashboard.start_path or ''
             dashboard_presentation_type = dashboard.presentation_type
             dashboard_options = dashboard.options
-
-        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+            user_permissions = dashboard.allow_all and 'anyusers' or 'selectedusers'
 
         # Get List of possible visitor users
         existing_group_users = None
         if dashboard is not None and dashboard.group:
             existing_group_users = dashboard.group.users
+
         all_visitors = self.get_visitor_tuples(current_user.id, existing_group_users)
 
         # Get User's spawners:
@@ -122,6 +125,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             all_conda_envs=all_conda_envs,
             spawner_id=spawner_id,
             current_user=current_user,
+            user_permissions=user_permissions,
             spawners=spawners,
             show_source_servers=cdsconfig.show_source_servers,
             show_source_git=cdsconfig.show_source_git,
@@ -167,6 +171,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         errors = DefaultObjDict()
 
+        # Presentation basics
+
         if dashboard_name == '':
             errors.name = 'Please enter a name'
         elif not self.name_regex.match(dashboard_name):
@@ -187,6 +193,18 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_presentation_type, ', '.join(merged_presentation_types)
                 )
 
+        # Visitors allowed
+        all_visitors = self.get_arguments('selected_users[]')
+
+        all_visitors_users = self.db.query(User).filter(User.name.in_(all_visitors)).all()
+
+        user_permissions = self.get_argument('user_permissions', cdsconfig.default_allow_all and 'anyusers' or 'selectedusers').strip()
+
+        if user_permissions not in ('anyusers', 'selectedusers'):
+            user_permissions = cdsconfig.default_allow_all and 'anyusers' or 'selectedusers'
+            errors.user_permissions = 'You must choose either anyusers or selectedusers'
+
+        # Dashboard options
         dashboard_options = {}
 
         git_repo = ''
@@ -241,7 +259,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                         presentation_type=dashboard_presentation_type,
                         source_spawner=orm_spawner,
                         options=dashboard_options,
-                        allow_all=cdsconfig.default_allow_all
+                        allow_all=user_permissions=='anyusers'
                         )
                     self.log.debug('dashboard urlname '+dashboard.urlname+', main name '+dashboard.name)
 
@@ -252,6 +270,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                     dashboard.presentation_type = dashboard_presentation_type
                     dashboard.source_spawner = orm_spawner
                     dashboard.options = dashboard_options
+                    allow_all=user_permissions=='anyusers'
+                    dashboard.allow_all=allow_all
                     
                 if group is None:
                     group = Group.find(db, dashboard.groupname)
@@ -261,6 +281,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                     dashboard.group = group
 
                 db.add(dashboard)
+
+                if self.sync_group(group, all_visitors_users):
+                    self.db.add(group)
                     
                 db.commit()
 
@@ -290,6 +313,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             git_repo = dashboard_options['git_repo'] = dashboard_options.get('git_repo', '')
             conda_env = dashboard_options['conda_env'] = dashboard_options.get('conda_env', '')
+            all_visitors = self.get_visitor_tuples(current_user.id, all_visitors_users)
 
             html = self.render_template(
                 "editdashboard.html",
@@ -301,6 +325,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_start_path=dashboard_start_path,
                 dashboard_presentation_type=dashboard_presentation_type,
                 dashboard_options=dashboard_options,
+                user_permissions=user_permissions,
                 git_repo=git_repo,
                 source_type=source_type,
                 conda_env=conda_env,
@@ -311,6 +336,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 show_source_servers=cdsconfig.show_source_servers,
                 show_source_git=cdsconfig.show_source_git,
                 require_source_server=cdsconfig.require_source_server,
+                all_visitors=all_visitors,
                 errors=errors,
                 current_user=current_user))
             )

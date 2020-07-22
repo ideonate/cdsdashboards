@@ -134,6 +134,26 @@ class DashboardBaseMixin:
 
         return [(True, user) for user in visitor_users] + [(False, user) for user in set(possible_visitor_users) - set(visitor_users)]
 
+    def sync_group(self, group, visitor_users):
+        """
+        Make sure all allowed JupyterHub users are part of this group
+        Returns True if changes made, False otherwise
+        """
+        unwantedusers = set(group.users) - set(visitor_users)
+        newusers = set(visitor_users) - set(group.users)
+
+        if len(unwantedusers) + len(newusers) > 0:
+
+            for user in unwantedusers:
+                group.users.remove(user)
+
+            for user in newusers:
+                group.users.append(user)
+
+            return True
+
+        return False
+
     async def maybe_start_build(self, dashboard, dashboard_user, force_start=False):
 
         builders_store = BuildersStore.get_instance(self.settings['config'])

@@ -52,6 +52,6 @@ ul.dashboard-selectable-tabs li.active {
     background-color: #f0ad4e;
 }
 
-#tab-source-container > div {
+.dashboard-tab-container > div {
     margin-left: 20px;
 }

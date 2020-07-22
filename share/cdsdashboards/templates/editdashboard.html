@@ -38,6 +38,42 @@
                 {% endif %}
 
 
+                <h3>User Permissions</h3>
+
+                <div id="tab-user-permissions-container" class="dashboard-tab-container">
+                    <ul class="dashboard-selectable-tabs">
+                        <li id="tab-selector-anyusers"><a href="#tab-anyusers" data-source-value="anyusers">All Users</a></li>
+                        <li id="tab-selector-selectedusers"><a href="#tab-selectedusers" data-source-value="selectedusers">Selected Users</a></li>
+                    </ul>
+
+                    <div id="tab-anyusers" style="display: none">
+                    </div>
+
+                    <div id="tab-selectedusers" style="display: none">
+
+                        <select multiple name="selected_users[]" id="selected_users" class="selectator" style="width: 300px">
+
+                        {% for visitor_tuple in all_visitors %}
+
+                            <option value="{{ visitor_tuple[1].name | escape }}" {%if visitor_tuple[0] %}selected{% endif %}>{{ visitor_tuple[1].name | escape }}</option>
+
+                        {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <input type="hidden" name="user_permissions" id="user_permissions" value="{{ user_permissions }}" />
+
+                </div>
+
+                {% if errors.user_permissions %}
+    
+                <p class="error">{{ errors.user_permissions | escape }}</p>
+    
+                {% endif %}
+
+
                 {% if show_source_servers %}
 
                     <h3>Choose a source server:</h3>
@@ -183,24 +219,45 @@
 
 {% block script %}
 {{ super () }}
+<link rel="stylesheet" href="../../dashboards-static/components/selectator/fm.selectator.jquery.css"/>
 <script type="text/javascript">
-require(["jquery", "../../dashboards-static/components/jquery.easytabs"], function($, easytabs) {
-    "use strict";
-  
-    $(document).ready(function() { 
-        $('#tab-source-container').easytabs({
-                updateHash: false,
-                animate: false,
-                defaultTab: '#tab-selector-{{ source_type }}'
-            }).on(
-            'easytabs:after', function(evt, tab, panel, data) {
-                $('#source_type').val(tab.data('source-value'));
-            }
-        ); 
-    });
-  
-});
+require(
+    [
+        "jquery", 
+        "../../dashboards-static/components/selectator/fm.selectator.jquery.js", 
+        "../../dashboards-static/components/jquery.easytabs"
+    ], 
+    function($, selectator, easytabs) {
+        "use strict";
+    
+        $(document).ready(function() {
 
+            $('#tab-source-container').easytabs({
+                    updateHash: false,
+                    animate: false,
+                    defaultTab: '#tab-selector-{{ source_type }}'
+                }).on(
+                'easytabs:after', function(evt, tab, panel, data) {
+                    $('#source_type').val(tab.data('source-value'));
+                }
+            ); 
+
+            $('#tab-user-permissions-container').easytabs({
+                    updateHash: false,
+                    animate: false,
+                    defaultTab: '#tab-selector-{{ user_permissions }}'
+                }).on(
+                'easytabs:after', function(evt, tab, panel, data) {
+                    $('#user_permissions').val(tab.data('source-value'));
+                }
+            ); 
+        });
+
+        $('#selected_users').selectator({
+            showAllOptionsOnFocus: true
+        });
+
+    });
 
 </script>
 {% endblock script %}
