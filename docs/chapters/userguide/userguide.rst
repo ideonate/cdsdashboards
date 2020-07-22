@@ -3,7 +3,7 @@
 User Guide
 ----------
 
-Here are the user guide parts:
+This section explains how a user can prepare and publish a dashboard through the new Dashboards menu in JupyterHub.
 
 .. toctree::
    :maxdepth: 1

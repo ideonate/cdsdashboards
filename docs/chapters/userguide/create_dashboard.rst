@@ -42,6 +42,9 @@ Select the framework required. For a Jupyter notebook (ipynb) file, we need to l
 The other options are 'streamlit', 'plotlydash', 'bokeh' (for panel too), 'rshiny' - or potentially any other :ref:`custom framework <customlaunchers>` 
 you have installed.
 
+If configured for your installation, you may be able to select a Conda environment in which to run the dashboard. 
+See :ref:`Conda env configuration details<conda_envs>`.
+
 Specify the URL-path to the ipynb file, relative to the Jupyter server's home folder or to the git repo root. In the first example above, Presentation.ipynb 
 was at the top level in our Jupyter tree, so we just enter Presentation.ipynb; and in the second example it was at the root of the git repo.
 

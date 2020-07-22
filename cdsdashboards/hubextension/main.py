@@ -203,7 +203,10 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         conda_env = self.get_argument('conda_env', '').strip()
 
-        # TODO check conda_env is valid and in all_conda_envs
+        if conda_env != '':
+            if conda_env not in all_conda_envs:
+                errors.conda_env = 'Please select a valid Conda env (\'{}\' is not in the allowed list)'.format(conda_env)
+                conda_env = ''
 
         dashboard_options['source_type'] = source_type
         dashboard_options['git_repo'] = git_repo

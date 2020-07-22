@@ -150,6 +150,38 @@ This will remove the git repo selection in the new/edit dashboard page, forcing 
 The default value is true.
 
 
+.. _conda_envs:
+
+Conda Environments
+~~~~~~~~~~~~~~~~~~
+
+To allow users to select a Conda environment in which the dashboard should run, you can provide a list of Conda env names in your jupyterhub_config.py file:
+
+::
+
+    c.CDSDashboardsConfig.conda_envs = ['env1', 'env2', 'myenv', 'anotherenv']
+
+This will add a dropdown to the new/edit dashboard page showing these selections in addition to a 'Default / None' option. The 'Default / None' option will 
+be equivalent to the default behavior which runs the dashboard in whichever 'singleuser server' environment it finds (which may or may not be a Conda env 
+at all). If a named Conda env is selected for the dashboard, the singleuser server (i.e. jhsingle-native-proxy) will actively attempt to switch to the 
+named conda env.
+
+For the conda env activation to work, :code:`conda` must be available on the path. Locating the named Conda env is done by iterating through the list of 
+envs supplied e.g. by :code:`conda env list` and matching by the name of the right-most folder, returning whichever Conda env path it matches first.
+
+It may be possible for env names to be duplicated, in which case only the first match can ever be activated.
+
+If you have trouble making your Conda envs available to dashboards, please :ref:`get in touch<contact>` since more work may be required to cater for 
+relatively common but non-standard Conda installations.
+
+Note that Jupyter notebooks (ipynb files) may already contain the details of the Conda env in which they were created - since the different Conda 'kernels' 
+are already available to Jupyter if registered using ipykernel. Therefore, Voila may already be capable of switching to the desired Conda env (kernel) 
+when it runs the notebook, and thus you may not need to specify Conda envs through :code:`c.CDSDashboardsConfig.conda_envs` at all in order for everything 
+to work if Voila is the only relevant dashboard framework type.
+
+See also :ref:`conda_kernels_voila`.
+
+
 .. _default_allow_all:
 
 Default User Access to Dashboards

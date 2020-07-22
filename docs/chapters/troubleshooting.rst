@@ -43,8 +43,15 @@ The fix is just to upgrade one particular Python package called jupyterhub-traef
     sudo tljh-config reload
 
 
-Conda Kernels not found by Voila
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. _conda_kernels_voila:
+
+Conda Kernels or Packages not found
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If your usual Conda environment doesn't seem to be available for your dashboard, you may need to allow your users to select which Conda 
+environment is required when they create the dashboard. See :ref:`Conda env configuration details<conda_envs>`.
+
+For Voila, there is an extra consideration that a specific Conda Kernel may also be specified within the ipynb file metadata:
 
 Where the Voila debug logs show: :code:`Could not find a kernel named 'conda-env-myenv-py', will use  'python3'` or similar, this means 
 Voila cannot find one of the Conda environments that you have made available to your notebooks. It may be that the notebook has come from 

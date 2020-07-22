@@ -138,14 +138,13 @@
                         </select>
                     </p>
 
-                    {% if errors.conda_env %}
-        
-                    <p class="error">{{ errors.conda_env | escape }}</p>
-        
-                    {% endif %}
-
                 {% endif %}
 
+                {% if errors.conda_env %}
+    
+                <p class="error">{{ errors.conda_env | escape }}</p>
+    
+                {% endif %}
 
                 <p><label for="start_path">Relative Path to a file or folder: </label></p>
                 

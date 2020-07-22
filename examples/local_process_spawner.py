@@ -69,7 +69,7 @@ c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel', 'unavailable']
 c.CDSDashboardsConfig.show_source_git = True
 c.CDSDashboardsConfig.show_source_servers = False
 
-c.CDSDashboardsConfig.conda_envs = ['env1', 'env2']
+#c.CDSDashboardsConfig.conda_envs = ['env1', 'env2']
 
 
 #c.VariableMixin.voila_template = 'materialstream'
