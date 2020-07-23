@@ -18,14 +18,23 @@ Click on 'New Dashboard'.
 
 At the top of the page, fill in a name and optionally a description.
 
+User Permissions
+----------------
+
+Click 'All Users' if you want any authenticated user to be able to access your dashboard.
+
+If you want to limit access to selected individual users only, click 'Selected Users' and then type or click on the names of the users 
+who should be allowed access:
+
+.. figure:: ../../_static/screenshots/userguide/create_dashboard/SelectedUsersNewDashboard.png
+   :alt: Selected User Permissions
+
+
 File Source
 -----------
 
 If your files are stored on your Jupyter tree (e.g. they were developed or uploaded through My Server within JupyterHub), just leave 
-'Jupyter Tree' selected as the file source:
-
-.. figure:: ../../_static/screenshots/userguide/create_dashboard/FileSourceJupyterTree.png
-   :alt: Jupyter Tree File Source
+'Jupyter Tree' selected as the file source.
 
 Alternatively, if your files are coming directly from a git repo, click on 'Git Repo' and then supply the Git Repo URL:
 
@@ -48,8 +57,8 @@ See :ref:`Conda env configuration details<conda_envs>`.
 Specify the URL-path to the ipynb file, relative to the Jupyter server's home folder or to the git repo root. In the first example above, Presentation.ipynb 
 was at the top level in our Jupyter tree, so we just enter Presentation.ipynb; and in the second example it was at the root of the git repo.
 
-For some framework types including Voila, you can leave the Relative Path blank and Voila will just show the entire tree to the Dashboard user so they can 
-choose between the relevant files for themselves.
+For some framework types including Voila, you can leave the Relative Path blank or pointing to a folder and Voila will just show the entire tree to the 
+dashboard viewer so they can choose between the relevant files for themselves.
 
 **Note that your Dashboard will be accessible by any other JupyterHub user.**
 

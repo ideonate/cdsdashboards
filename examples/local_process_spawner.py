@@ -71,6 +71,7 @@ c.CDSDashboardsConfig.show_source_servers = False
 
 #c.CDSDashboardsConfig.conda_envs = ['env1', 'env2']
 
+#c.CDSDashboardsConfig.default_allow_all = True
 
 #c.VariableMixin.voila_template = 'materialstream'
 
