@@ -53,9 +53,9 @@
 
                         <select multiple name="selected_users[]" id="selected_users" class="selectator" style="width: 300px">
 
-                        {% for visitor_tuple in all_visitors %}
+                        {% for visitor_tuple in all_users_tuples %}
 
-                            <option value="{{ visitor_tuple[1].name | escape }}" {%if visitor_tuple[0] %}selected{% endif %}>{{ visitor_tuple[1].name | escape }}</option>
+                            <option value="{{ visitor_tuple[1] | escape }}" {%if visitor_tuple[0] %}selected{% endif %}>{{ visitor_tuple[1] | escape }}</option>
 
                         {% endfor %}
 

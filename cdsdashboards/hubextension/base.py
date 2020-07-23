@@ -132,7 +132,9 @@ class DashboardBaseMixin:
         if existing_group_users is not None:
             visitor_users = existing_group_users
 
-        return [(True, user) for user in visitor_users] + [(False, user) for user in set(possible_visitor_users) - set(visitor_users)]
+        all_tuples = [(True, user.name) for user in visitor_users] + [(False, user.name) for user in set(possible_visitor_users) - set(visitor_users)]
+        all_tuples.sort(key=lambda x: x[1])
+        return all_tuples
 
     def sync_group(self, group, visitor_users):
         """

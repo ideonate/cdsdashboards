@@ -79,7 +79,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         if dashboard is not None and dashboard.group:
             existing_group_users = dashboard.group.users
 
-        all_visitors = self.get_visitor_tuples(current_user.id, existing_group_users)
+        all_users_tuples = self.get_visitor_tuples(current_user.id, existing_group_users)
 
         # Get User's spawners:
 
@@ -130,7 +130,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             show_source_servers=cdsconfig.show_source_servers,
             show_source_git=cdsconfig.show_source_git,
             require_source_server=cdsconfig.require_source_server,
-            all_visitors=all_visitors,
+            all_users_tuples=all_users_tuples,
             errors=errors)
             )
         )
@@ -194,9 +194,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 )
 
         # Visitors allowed
-        all_visitors = self.get_arguments('selected_users[]')
+        selected_users = self.get_arguments('selected_users[]')
 
-        all_visitors_users = self.db.query(User).filter(User.name.in_(all_visitors)).all()
+        selected_users_orm = self.db.query(User).filter(User.name.in_(selected_users)).all()
 
         user_permissions = self.get_argument('user_permissions', cdsconfig.default_allow_all and 'anyusers' or 'selectedusers').strip()
 
@@ -282,7 +282,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
                 db.add(dashboard)
 
-                if self.sync_group(group, all_visitors_users):
+                if self.sync_group(group, selected_users_orm):
                     self.db.add(group)
                     
                 db.commit()
@@ -313,7 +313,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             git_repo = dashboard_options['git_repo'] = dashboard_options.get('git_repo', '')
             conda_env = dashboard_options['conda_env'] = dashboard_options.get('conda_env', '')
-            all_visitors = self.get_visitor_tuples(current_user.id, all_visitors_users)
+            all_users_tuples = self.get_visitor_tuples(current_user.id, selected_users_orm)
 
             html = self.render_template(
                 "editdashboard.html",
@@ -336,7 +336,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 show_source_servers=cdsconfig.show_source_servers,
                 show_source_git=cdsconfig.show_source_git,
                 require_source_server=cdsconfig.require_source_server,
-                all_visitors=all_visitors,
+                all_users_tuples=all_users_tuples,
                 errors=errors,
                 current_user=current_user))
             )

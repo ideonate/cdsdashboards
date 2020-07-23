@@ -16,6 +16,10 @@
     height: 60px;
 }
 
+.dashboard-edit-form {
+    margin-bottom: 20px;
+}
+
 #help-floater {
     position: fixed;
     bottom: 20px;
