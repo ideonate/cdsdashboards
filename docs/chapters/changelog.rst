@@ -4,6 +4,15 @@
 Changelog
 ---------
 
+Version 0.3.0
+~~~~~~~~~~~~~
+
+Released 23 July 2020
+
+- User permissions: choose 'All Users' or 'Selected Users' for each dashboard to restrict access.
+- Conda Envs: select from a list of available Conda envs in which your dashboard should run - see :ref:`conda_envs`.
+
+
 Version 0.2.0
 ~~~~~~~~~~~~~
 

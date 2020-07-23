@@ -9,7 +9,7 @@ JupyterHub should ideally be configured with LocalProcessSpawner, SystemdSpawner
 
 `The Littlest JupyterHub <http://tljh.jupyter.org/en/latest/>`__ (TLJH) is supported.
 
-`Zero to JupyterHub on Kubernetes <http://z2jh.jupyter.org/>`__ is now supported, depending on the persistent storage types available to you, as discussed in 
-:ref:`z2jh setup <z2jh_pv>`.
+`Zero to JupyterHub on Kubernetes <http://z2jh.jupyter.org/>`__ is supported. Features available may depend on the persistent storage types available 
+to you, as discussed in :ref:`z2jh setup <z2jh_pv>`.
 
 It is also possible to use your own custom `installation of JupyterHub <https://jupyterhub.readthedocs.io/en/stable/installation-guide.html>`__.

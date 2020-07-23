@@ -18,9 +18,9 @@ Install the cdsdashboards package in the JupyterHub Python environment:
 ::
 
     pip install cdsdashboards
-
-Not all dependencies are strictly required in both environments - work is underway to split these out into separate installation tracks.
-
+    # or
+    conda install -c conda-forge cdsdashboards
+    
 
 Generic Changes to jupyterhub_config.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

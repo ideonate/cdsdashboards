@@ -73,11 +73,11 @@ Documentation Contents
    chapters/userguide/userguide
    chapters/customization/customization
    chapters/troubleshooting
-   chapters/requirements
+   chapters/upgrading
+   chapters/technical_and_legal/technical_and_legal
    chapters/changelog
-   chapters/sourcecode
    chapters/contact
-   chapters/license
+
 
 
 ContainDS Dashboards source code can be found on `GitHub here <https://github.com/ideonate/cdsdashboards>`_.
