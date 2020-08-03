@@ -37,7 +37,6 @@ services:
       - "data:${DATA_VOLUME_CONTAINER}"
     ports:
       - "80:80"
-      - 443:443
     links:
       - hub-db
     environment:
@@ -56,6 +55,17 @@ services:
       - secrets/postgres.env
     command: >
       jupyterhub -f /srv/jupyterhub/jupyterhub_config.py --debug
+
+  nginx:  
+    image: nginx
+    links: 
+      - hub
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./secrets/jupyterhub.crt:/data/cert.crt
+      - ./secrets/jupyterhub.key:/data/key.key
+    ports:
+      - 443:443
 
 volumes:
   data:
