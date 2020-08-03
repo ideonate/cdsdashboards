@@ -1,4 +1,5 @@
-FROM jupyterhub/k8s-hub:0.9.0
+ARG BASE_IMAGE=jupyterhub/k8s-hub:0.9.0
+FROM $BASE_IMAGE
 
 ARG CDSVERSION=0.0.19
 

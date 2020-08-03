@@ -10,6 +10,9 @@ Please see any specific notes in the :ref:`changelog` - for example, changes may
 In general, you just need to remember to upgrade both your hub and user environments. If you only have one environment in your installation, you 
 should run *both* the hub and user upgrade commands in your environment.
 
+Especially in containerised environments (Docker or Kubernetes), existing singleuser servers may need to be deleted. They can be recreated by re-accessing 
+the dashboard through the Dashboards page.
+
 LocalProcessSpawner or SystemdSpawner
 =====================================
 

@@ -56,7 +56,14 @@ notebook_image: pull singleuser/Dockerfile
 		--build-arg DOCKER_NOTEBOOK_IMAGE=$(DOCKER_NOTEBOOK_IMAGE) \
 		singleuser
 
+hub_image: hub/Dockerfile
+	docker build -t $(LOCAL_HUB_IMAGE) \
+		--build-arg JUPYTERHUB_VERSION=$(JUPYTERHUB_VERSION) \
+		--build-arg BASE_IMAGE=$(DOCKER_HUB_IMAGE) \
+		-f hub/Dockerfile \
+		../..
+
 build: check-files network volumes
 	docker-compose build
 
-.PHONY: network volumes check-files pull notebook_image build
+.PHONY: network volumes check-files pull notebook_image hub_image build

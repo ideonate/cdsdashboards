@@ -1,5 +1,7 @@
 ARG JUPYTERHUB_VERSION
-FROM ideonate/jupyterhub-cdscurrent:$JUPYTERHUB_VERSION
+ARG BASE_IMAGE=jupyterhub/jupyterhub:${JUPYTERHUB_VERSION}
+
+FROM ${BASE_IMAGE}
 
 # Copy TLS certificate and key
 ENV SSL_CERT /srv/jupyterhub/secrets/jupyterhub.crt

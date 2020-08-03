@@ -10,7 +10,17 @@ c = get_config()
 
 c.JupyterHub.allow_named_servers = True
 
+c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
+from cdsdashboards.app import CDS_TEMPLATE_PATHS
+from cdsdashboards.hubextension import cds_extra_handlers
+
+c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
+c.JupyterHub.extra_handlers = cds_extra_handlers
+
+c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'
+
+c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variabledocker.VariableDockerSpawner'
 
 
 # We rely on environment variables to configure JupyterHub so that we
@@ -18,9 +28,9 @@ c.JupyterHub.allow_named_servers = True
 # configuration parameter.
 
 # Spawn single-user servers as Docker containers
-c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
+#c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 # Spawn containers from this image
-c.DockerSpawner.container_image = os.environ['DOCKER_NOTEBOOK_IMAGE']
+c.DockerSpawner.image = os.environ['DOCKER_NOTEBOOK_IMAGE']
 # JupyterHub requires a single-user instance of the Notebook server, so we
 # default to using the `start-singleuser.sh` script included in the
 # jupyter/docker-stacks *-notebook images as the Docker run command when
@@ -54,10 +64,12 @@ c.DockerSpawner.debug = True
 c.JupyterHub.hub_ip = 'jupyterhub'
 c.JupyterHub.hub_port = 8080
 
+
+c.JupyterHub.port = 80
 # TLS config
-c.JupyterHub.port = 443
-c.JupyterHub.ssl_key = os.environ['SSL_KEY']
-c.JupyterHub.ssl_cert = os.environ['SSL_CERT']
+#c.JupyterHub.port = 443
+#c.JupyterHub.ssl_key = os.environ['SSL_KEY']
+#c.JupyterHub.ssl_cert = os.environ['SSL_CERT']
 
 # Authenticate users with GitHub OAuth
 c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'

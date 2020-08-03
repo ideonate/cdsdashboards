@@ -24,6 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile.jupyterhub
       args:
+        BASE_IMAGE: ${LOCAL_HUB_IMAGE}
         JUPYTERHUB_VERSION: ${JUPYTERHUB_VERSION}
     restart: always
     image: jupyterhub
@@ -35,7 +36,7 @@ services:
       # Bind Docker volume on host for JupyterHub database and cookie secrets
       - "data:${DATA_VOLUME_CONTAINER}"
     ports:
-      - "443:443"
+      - "80:80"
     links:
       - hub-db
     environment:
