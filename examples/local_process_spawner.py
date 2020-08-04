@@ -76,9 +76,9 @@ c.CDSDashboardsConfig.conda_envs = ['env1', 'env2', 'myenv', 'scipyenv']
 #c.VariableMixin.voila_template = 'materialstream'
 
 
-#c.VariableMixin.proxy_last_activity_interval = 10
+c.VariableMixin.proxy_last_activity_interval = 10
 
-#c.VariableMixin.proxy_force_alive = False
+c.VariableMixin.proxy_force_alive = True
 
 
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
@@ -104,7 +104,9 @@ import os
 #  When setting this, you should also set ssl_cert
 #c.JupyterHub.ssl_key = os.environ['SSL_KEY']
 
-#c.JupyterHub.internal_ssl = True
+c.JupyterHub.internal_ssl = False
+
+#c.JupyterHub.bind_url = 'https://0.0.0.0:443'
 
 c.JupyterHub.bind_url = 'http://0.0.0.0:80'
 

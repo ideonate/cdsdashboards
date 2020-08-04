@@ -23,4 +23,4 @@ Something like:
 
 To run nginx in a docker container, reverse-proxying to a locally-running JupyterHub instance:
 
-``docker run -v `pwd`/nginx-local.conf:/etc/nginx/nginx.conf -v `pwd`/secrets/jupyterhub.crt:/data/cert.crt -v `pwd`/secrets/jupyterhub.key:/data/key.key -p 443:443 nginx``
+``docker run --rm -v `pwd`/nginx-local.conf:/etc/nginx/nginx.conf -v `pwd`/secrets/jupyterhub.crt:/data/cert.crt -v `pwd`/secrets/jupyterhub.key:/data/key.key -p 443:443 nginx``
