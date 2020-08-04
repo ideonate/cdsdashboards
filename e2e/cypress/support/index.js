@@ -1,4 +1,10 @@
 
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false here prevents Cypress from
+  // failing the test
+  return false
+})
+
 do_login = () => {
   
   cy.visit('/hub/home')
