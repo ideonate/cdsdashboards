@@ -45,7 +45,7 @@ The key package for the hub environment is cdsdashboards itself; for the user en
 Installing Presentation Frameworks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the user environment you must also install any 'presentation packages' - e.g. Voila, which is a user-friendly and safe way to display 
+In the user environment you must also install any 'presentation packages' - e.g. Voilà, which is a user-friendly and safe way to display 
 Jupyter notebooks to non-technical users:
 
 ::
@@ -93,7 +93,7 @@ After setting the spawner, you need to specify these options:
 
 The allow_named_servers option is a standard JupyterHub option where every user gets more than just their single 'My Server' Jupyter environment. 
 They can add extra environments by specifying a name. ContainDS Dashboards makes use of this by running the presentation servers as named servers - 
-they are really servers just like the original Jupyter notebook servers, but running Voila or another system instead.
+they are really servers just like the original Jupyter notebook servers, but running Voilà or another system instead.
 
 Instead of the original LocalProcessSpawner, you actually need to use a slightly enhanced version of that spawner called VariableLocalProcessSpawner 
 - that is set by assigning to c.JupyterHub.spawner_class as above. 

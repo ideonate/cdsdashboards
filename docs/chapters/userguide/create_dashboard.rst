@@ -57,7 +57,7 @@ See :ref:`Conda env configuration details<conda_envs>`.
 Specify the URL-path to the ipynb file, relative to the Jupyter server's home folder or to the git repo root. In the first example above, Presentation.ipynb 
 was at the top level in our Jupyter tree, so we just enter Presentation.ipynb; and in the second example it was at the root of the git repo.
 
-For some framework types including Voila, you can leave the Relative Path blank or pointing to a folder and Voila will just show the entire tree to the 
+For some framework types including Voilà, you can leave the Relative Path blank or pointing to a folder and Voilà will just show the entire tree to the 
 dashboard viewer so they can choose between the relevant files for themselves.
 
 **Note that your Dashboard will be accessible by any other JupyterHub user.**
@@ -68,7 +68,7 @@ Building the Dashboard
 ~~~~~~~~~~~~~~~~~~~~~~
 
 When you click Save, the dashboard will be built automatically. This just means that a new named server is created based on your new Dashboard, 
-running Voila instead of the regular Jupyter server.
+running Voilà instead of the regular Jupyter server.
 
 This is what you should see while the build is taking place:
 

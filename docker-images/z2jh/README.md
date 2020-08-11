@@ -10,6 +10,8 @@ docker build -t ideonate/cdsdashboards-jupyter-k8s-hub:0.9.0-0.0.19 -f ./Dockerf
 
 ## config.yaml
 
+imagePullPolicy: IfNotPresent
+
 hub:
   allowNamedServers: true
   image:
@@ -175,3 +177,28 @@ mk port-forward svc/proxy-public 8000:80
 
 minikube delete
 ```
+
+
+## Build local hub image
+
+Don't tag local images as 'latest' otherwise k8s will always attempt to pull first.
+
+Ensure `imagePullPolicy: IfNotPresent` is in the config.yaml.
+
+```
+eval $(minikube docker-env)
+
+cd ~/Dev/cdsdashboards
+
+docker build -t cdsdashboards-jupyter-k8s-hub:now -f ./docker-images/z2jh/hub/Dockerfile .
+
+cd docker-images/singleuser-example/containds-all-example
+
+docker build -t containds-all-example:now --build-arg FRAMEWORKS_LINE=streamlit .
+
+```
+
+
+
+
+

@@ -86,7 +86,7 @@ Version 0.0.16
 Released 5 June 2020
 
 - Help text on Dashboard Edit page, explaining relative path is required. Help button links to project docs.
-- Problems with underlying frameworks (e.g. Voila, Dash) are now displayed with detailed error messages in place of the Dashboard.
+- Problems with underlying frameworks (e.g. Voilà, Dash) are now displayed with detailed error messages in place of the Dashboard.
 
 Please remember to upgrade your hub environment (cdsdashboards package) and also your user environment (cdsdashboards or just jhsingle-native-proxy package).
 
@@ -109,7 +109,7 @@ Version 0.0.13
 
 Released 1 June 2020
 
-- Streamlit added as a framework option, in addition to Voila.
+- Streamlit added as a framework option, in addition to Voilà.
 - server_name_template configuration option added to change the URL of Dashboard servers (default :code:`c.CDSDashboardsConfig.server_name_template = 'dash-{urlname}-{date}-{time}'`).
 - presentation_types configuration option added (default: :code:`c.CDSDashboardsConfig.presentation_types = ['voila', 'streamlit']`)
 

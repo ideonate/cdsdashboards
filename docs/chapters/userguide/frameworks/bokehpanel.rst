@@ -54,9 +54,9 @@ The Bokeh/Panel app is displayed:
 
 See :ref:`working with dashboards<working>` to understand more about how Dashboards operate, including sharing them with colleagues.
 
-Panel and Voila
+Panel and Voilà
 ~~~~~~~~~~~~~~~
 
-Note that for Panel apps built in ipynb notebooks, it is also possible to select the 'voila' framework to deploy them as dashboards. Voila 
+Note that for Panel apps built in ipynb notebooks, it is also possible to select the 'voila' framework to deploy them as dashboards. Voilà 
 is more closely related to the Jupyter notebook server, whereas selecting 'bokeh' as the framework uses the equivalent of the 'dash serve' command. 
 It will most often make sense to select 'bokeh', but it is worth being aware that 'voila' is a possible backup for Panel notebooks.

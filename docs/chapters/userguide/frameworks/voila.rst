@@ -1,6 +1,6 @@
 .. _voila:
 
-Jupyter (Voila) Dashboards
+Jupyter (Voilà) Dashboards
 --------------------------
 
 How to build a Jupyter notebook-based Dashboard, from your 'My Server' Jupyter tree.
@@ -17,8 +17,8 @@ For this notebook to work you may need matplotlib, numpy, and ipywidgets to be i
 .. figure:: ../../../_static/screenshots/userguide/frameworks/JupyterTree.png
    :alt: Jupyter with ipynb and py files
 
-You can run the Jupyter notebook as usual in your Jupyter server - and there is a 'Voila Preview' button so you can see how 
-the final dashboard will appear. Voila is the name of the technology that is essentially a user-friendly and secure version of Jupyter notebooks: 
+You can run the Jupyter notebook as usual in your Jupyter server - and there is a 'Voilà Preview' button so you can see how 
+the final dashboard will appear. Voilà is the name of the technology that is essentially a user-friendly and secure version of Jupyter notebooks: 
 code cells are hidden, and the user can only view the intended end result. They can interact with widgets if they are present in the notebook though.
 
 Click 'Control Panel' to go back to JupyterHub.
@@ -36,7 +36,7 @@ Fill in a name and optionally a description.
 Select the framework required. For our Jupyter notebook (ipynb) file, we need to leave this as 'voila'.
 
 Specify the URL-path to the ipynb file, relative to the Jupyter server's home folder. In our case, Presentation.ipynb was at the top level in our 
-Jupyter tree, so we just enter Presentation.ipynb. If in doubt, leave blank and Voila will just show the entire tree to the Dashboard user so 
+Jupyter tree, so we just enter Presentation.ipynb. If in doubt, leave blank and Voilà will just show the entire tree to the Dashboard user so 
 they can locate the file themselves.
 
 **Note that your Dashboard will be accessible by any other JupyterHub user.**

@@ -45,7 +45,7 @@ in the `dockerspawner <https://github.com/jupyterhub/dockerspawner>`__ package i
 
 The allow_named_servers option is a standard JupyterHub option where every user gets more than just their single 'My Server' Jupyter environment. 
 They can add extra environments by specifying a name. ContainDS Dashboards makes use of this by running the presentation servers as named servers - 
-they are really servers just like the original Jupyter notebook servers, but running Voila or another system instead.
+they are really servers just like the original Jupyter notebook servers, but running Voilà or another system instead.
 
 For 'named servers' to run correctly with DockerSpawner, you need to specify a name_template based on both username and servername - the example 
 above is fine.
@@ -79,33 +79,33 @@ The image you use for the single-user server should have
 are fairly small, so the easiest thing is to :code:`pip install cdsdashboards[user]` or :code:`conda install -c conda-forge cdsdashboards-singleuser` 
 to install every ContainDS Dashboards component.
 
-It also needs Voila, Streamlit, or whichever frameworks you want to use.
+It also needs Voilà, Streamlit, or whichever frameworks you want to use.
 
 Please see `docker-singleuser-images <https://github.com/ideonate/cdsdashboards/tree/master/docker-images/singleuser-example>`__ for an example, 
 or use the ones created for you already:
 
-Containing Voila, Streamlit, Plotly Dash, and Bokeh/Panel as presentation types:
+Containing Voilà, Streamlit, Plotly Dash, and Bokeh/Panel as presentation types:
 
 - `containds-all-basic <https://hub.docker.com/r/ideonate/containds-all-basic>`__ (Standard Python environment)
 - `containds-all-scipy <https://hub.docker.com/r/ideonate/containds-all-scipy>`__ (Extra scientific Python packages installed)
 
-Using Voila as the presentation type:
+Using Voilà as the presentation type:
 
 - `jh-voila-oauth-singleuser <https://hub.docker.com/r/ideonate/jh-voila-oauth-singleuser>`__ (Standard Python environment)
 - `jh-voila-oauth-scipy <https://hub.docker.com/r/ideonate/jh-voila-oauth-scipy>`__ (Extra scientific Python packages installed)
 - `jh-voila-oauth-r <https://hub.docker.com/r/ideonate/jh-voila-oauth-r>`__ (More than just Python)
 - `jh-voila-oauth-datascience <https://hub.docker.com/r/ideonate/jh-voila-oauth-datascience>`__ (R language)
 
-Using R Shiny or Voila as the presentation type:
+Using R Shiny or Voilà as the presentation type:
 
 - `containds-rshiny <https://hub.docker.com/r/ideonate/containds-rshiny>`__ (R with Shiny)
 
-Using all built-in presentation types - Voila, Streamlit, Plotly Dash, and Bokeh/Panel, and R Shiny:
+Using all built-in presentation types - Voilà, Streamlit, Plotly Dash, and Bokeh/Panel, and R Shiny:
 
 - `containds-allr-datascience <https://hub.docker.com/r/ideonate/containds-allr-datascience>`__ (Sci Python plus R and Shiny)
 
 These are based on the similarly-named `Jupyter Docker Stacks <https://jupyter-docker-stacks.readthedocs.io/en/latest/>`__ images, just 
-with extra support for Voila and ContainDS Dashboards. The ContainDS Dockerfile versions are 
+with extra support for Voilà and ContainDS Dashboards. The ContainDS Dockerfile versions are 
 on `GitHub here <https://github.com/ideonate/cdsdashboards-jupyter-docker>`__.
 
 Options

@@ -16,7 +16,7 @@ It presumes you have already created a Dashboard following one of:
 Running and Rebuilding Dashboards
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Back in the Home page in JupyterHub, you can see that the Dashboard is really just running a new Jupyter server (albeit one runnning Voila instead 
+Back in the Home page in JupyterHub, you can see that the Dashboard is really just running a new Jupyter server (albeit one runnning Voilà instead 
 of the regular Jupyter server):
 
 .. figure:: ../../_static/screenshots/userguide/working/DashboardNamedServer.png
@@ -71,10 +71,10 @@ Since it is not their server, ContainDS Dashboards will require the other user t
 .. figure:: ../../_static/screenshots/userguide/working/OthersOAuth.png
    :alt: OAuth screen
 
-When they accept, they will be able to see the results. Here is a Voila (Jupyter notebook) Dashboard:
+When they accept, they will be able to see the results. Here is a Voilà (Jupyter notebook) Dashboard:
 
 .. figure:: ../../_static/screenshots/userguide/working/OthersResults.png
-   :alt: Other User sees Voila Dashboard
+   :alt: Other User sees Voilà Dashboard
 
 And here is a Streamlit app:
 

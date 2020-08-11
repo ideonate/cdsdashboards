@@ -19,8 +19,8 @@ Below, we have both an ipynb (Jupyter notebook) and a py file. We will be able t
 .. figure:: ../../_static/screenshots/userguide/prepare_dashboard/JupyterTree.png
    :alt: Jupyter with ipynb and py files
 
-For Jupyter notebooks, of course you can run them as usual in your Jupyter server - and there is a 'Voila Preview' button so you can see how 
-the final dashboard will appear. Voila is the name of the technology that is essentially a user-friendly and secure version of Jupyter notebooks: 
+For Jupyter notebooks, of course you can run them as usual in your Jupyter server - and there is a 'Voilà Preview' button so you can see how 
+the final dashboard will appear. Voilà is the name of the technology that is essentially a user-friendly and secure version of Jupyter notebooks: 
 code cells are hidden, and the user can only view the intended end result. They can interact with widgets if they are present in the notebook though.
 
 Streamlit, Plotly Dash, Bokeh/Panel, and R Shiny apps can't normally be run at this stage (in Jupyter), so for now you would upload Python/R files 

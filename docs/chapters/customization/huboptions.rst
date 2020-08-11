@@ -45,7 +45,7 @@ Presentation Types
 ~~~~~~~~~~~~~~~~~~
 
 By default, all supported presentation frameworks will be available for new dashboards. 
-`Voila <https://github.com/voila-dashboards/voila>`__ (for user-friendly display of Jupyter notebooks), 
+`Voilà <https://github.com/voila-dashboards/voila>`__ (for user-friendly display of Jupyter notebooks), 
 `Streamlit <https://www.streamlit.io/>`__, and `Plotly Dash <https://plotly.com/dash/>`__ are the supported frameworks for dashboards.
 
 To change the available set - for example, to remove streamlit and plotlydash as a possible selection for your users on the New Dashboard page, 
@@ -69,17 +69,17 @@ The default is to allow all built-in types:
 
     c.CDSDashboardsConfig.presentation_types = ['voila', 'streamlit', 'plotlydash', 'bokeh', 'rshiny']
 
-Voila template
+Voilà template
 ~~~~~~~~~~~~~~
 
-To change the default template for Voila presentations, add the following to your jupyterhub_config.py:
+To change the default template for Voilà presentations, add the following to your jupyterhub_config.py:
 
 ::
 
     c.VariableMixin.voila_template = 'default'
 
 The template must already be installed in your user Python environment. 
-Specify a blank string to instruct no template to be specified on the Voila command line.
+Specify a blank string to instruct no template to be specified on the Voilà command line.
 
 Server Timeouts and Keep Alive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -101,7 +101,7 @@ If proxy_force_alive is True (default) then the dashboard will report that there
 dashboard running so it is available for users in the future. Some JupyterHubs may cull idle servers after a certain amount of inactivity. This makes more 
 sense for single user Jupyter servers where the user might expect to restart their own server, but is often not desirable for dashboards.
 
-The proxy_request_timeout setting is an the timeout in seconds to allow the subprocess to startup. For large Voila notebooks, this may need to be increased. 
+The proxy_request_timeout setting is an the timeout in seconds to allow the subprocess to startup. For large Voilà notebooks, this may need to be increased. 
 The default value of 0 means that no value is passed as --request-timeout to jhsingle-native-proxy which then causes it to use its own default of 300. Note 
 this default behavior is different to the proxy_last_activity_interval because a proxy_last_activity_interval value of 0 means something to jhsingle-native-proxy.
 
@@ -175,9 +175,9 @@ If you have trouble making your Conda envs available to dashboards, please :ref:
 relatively common but non-standard Conda installations.
 
 Note that Jupyter notebooks (ipynb files) may already contain the details of the Conda env in which they were created - since the different Conda 'kernels' 
-are already available to Jupyter if registered using ipykernel. Therefore, Voila may already be capable of switching to the desired Conda env (kernel) 
+are already available to Jupyter if registered using ipykernel. Therefore, Voilà may already be capable of switching to the desired Conda env (kernel) 
 when it runs the notebook, and thus you may not need to specify Conda envs through :code:`c.CDSDashboardsConfig.conda_envs` at all in order for everything 
-to work if Voila is the only relevant dashboard framework type.
+to work if Voilà is the only relevant dashboard framework type.
 
 See also :ref:`conda_kernels_voila`.
 

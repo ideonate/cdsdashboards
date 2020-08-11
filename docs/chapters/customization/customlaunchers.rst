@@ -4,7 +4,7 @@
 Custom Launchers
 ----------------
 
-It is possible to add your own presentation types (i.e. frameworks, like the built-in Streamlit or Voila) by specifying the details of 
+It is possible to add your own presentation types (i.e. frameworks, like the built-in Streamlit or Voilà) by specifying the details of 
 a new launcher.  You can also modify the built-in types to suit your environment if necessary.
 
 This is an advanced topic for which programming experience would be beneficial.

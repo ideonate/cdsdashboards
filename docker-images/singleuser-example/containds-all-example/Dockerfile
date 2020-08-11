@@ -4,7 +4,7 @@ ARG BASE_REPO=jupyterhub/singleuser
 FROM $BASE_REPO:$TAG
 
 # git is now used to source files for cdsdashboards
-RUN conda install --quiet --yes -c conda-forge git voila
+RUN conda install --quiet --yes -c conda-forge git
 
 RUN rm -rf /home/jovyan/work
 
@@ -19,7 +19,9 @@ RUN pip install $JHSINGLENATIVEPROXY_LINE plotlydash-tornado-cmd>=0.0.4 bokeh-ro
 
 # Install the frameworks
 
-RUN pip install streamlit dash bokeh panel holoviews
+ARG FRAMEWORKS_LINE="voila streamlit dash bokeh panel holoviews"
+
+RUN pip install $FRAMEWORKS_LINE
 
 # Set the voila default template
 

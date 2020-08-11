@@ -30,10 +30,6 @@ class VariableSameUserSpawner(SameUserSpawner, VariableMixin, metaclass=MetaVari
 c.JupyterHub.spawner_class = VariableSameUserSpawner
 
 
-c.JupyterHub.redirect_to_server = False
-c.JupyterHub.default_url = '/hub/dashboards'
-
-
 c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.processbuilder.ProcessBuilder'
 
 c.LocalProcessSpawner.notebook_dir = '/Users/dan/Dev/cdsdashboards/examples/local_process_folder/{username}'
@@ -110,3 +106,15 @@ c.JupyterHub.internal_ssl = False
 
 c.JupyterHub.bind_url = 'http://0.0.0.0:80'
 
+#c.ConfigurableHTTPProxy.command = ['configurable-http-proxy', '--no-x-forward']
+
+
+c.JupyterHub.redirect_to_server = False
+
+def default_url_fn(user):
+    if user:
+        if user.admin:
+            return '/hub/admin'
+    return '/hub/dashboards'
+
+c.JupyterHub.default_url = default_url_fn #'/hub/dashboards'

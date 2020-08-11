@@ -4,7 +4,7 @@ ContainDS Dashboards
 
 A Dashboard publishing solution for Data Science teams to share results with decision makers.
 
-Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish Jupyter notebooks (`Voila <https://voila.readthedocs.io/en/stable/>`__), 
+Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish Jupyter notebooks (`Voilà <https://voila.readthedocs.io/en/stable/>`__), 
 Streamlit, Plotly Dash, Bokeh / Panel, and R Shiny apps as user-friendly interactive dashboards to share with non-technical colleagues.
 
 The `cdsdashboards <https://github.com/ideonate/cdsdashboards>`__ open source package allows data scientists to instantly and reliably publish interactive 

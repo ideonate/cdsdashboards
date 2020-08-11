@@ -20,7 +20,7 @@ as user-friendly interactive dashboards to share with non-technical colleagues.
 
 Currently supports:
 
-- Jupyter notebooks (`Voila <https://github.com/voila-dashboards/voila>`__)
+- Jupyter notebooks (`Voilà <https://github.com/voila-dashboards/voila>`__)
 - `Streamlit <https://streamlit.io/>`__ apps
 - `Plotly Dash <https://plotly.com/dash/>`__ apps
 - `Bokeh <https://docs.bokeh.org/>`__ apps
@@ -60,10 +60,10 @@ Other logged-in JupyterHub users see the dashboard in their list
    :alt: Screenshot of Other User sees dashboard
 
 
-Click to launch as a server - Dashboard Voila built automatically
+Click to launch as a server - Dashboard Voilà built automatically
 
 .. figure:: ../_static/screenshots/4_Dashboard_Voila_built_automatically.png
-   :alt: Screenshot of Dashboard Voila built automatically
+   :alt: Screenshot of Dashboard Voilà built automatically
 
 
 Uses OAuth to gain access
@@ -72,10 +72,10 @@ Uses OAuth to gain access
    :alt: Screenshot of Uses OAuth to gain access
 
 
-Other user sees a safe user-friendly Voila version of the original notebook
+Other user sees a safe user-friendly Voilà version of the original notebook
 
 .. figure:: ../_static/screenshots/6_Voila_Dashboard.png
-   :alt: Screenshot of Voila Dashboard
+   :alt: Screenshot of Voilà Dashboard
 
 
 Or build dashboards using other frameworks - Streamlit, Plotly Dash, Bokeh, Panel, R Studio or anything else

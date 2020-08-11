@@ -51,16 +51,16 @@ Conda Kernels or Packages not found
 If your usual Conda environment doesn't seem to be available for your dashboard, you may need to allow your users to select which Conda 
 environment is required when they create the dashboard. See :ref:`Conda env configuration details<conda_envs>`.
 
-For Voila, there is an extra consideration that a specific Conda Kernel may also be specified within the ipynb file metadata:
+For Voilà, there is an extra consideration that a specific Conda Kernel may also be specified within the ipynb file metadata:
 
-Where the Voila debug logs show: :code:`Could not find a kernel named 'conda-env-myenv-py', will use  'python3'` or similar, this means 
-Voila cannot find one of the Conda environments that you have made available to your notebooks. It may be that the notebook has come from 
+Where the Voilà debug logs show: :code:`Could not find a kernel named 'conda-env-myenv-py', will use  'python3'` or similar, this means 
+Voilà cannot find one of the Conda environments that you have made available to your notebooks. It may be that the notebook has come from 
 a different server, so the kernel does not exist. Check to see if the kernel does exist and that it works correctly for 
 Jupyter notebooks when run normally. Often, a kernel is registered in Jupyter to correspond to a each available Conda env.
 
-If it seems that only Voila cannot find the kernel, it may be because you are using nb_conda_kernels. This is an extension for Jupyter 
+If it seems that only Voilà cannot find the kernel, it may be because you are using nb_conda_kernels. This is an extension for Jupyter 
 that auto-discovers all Conda envs and makes them available as kernels. However, because they are auto-dsicovered within Jupyter each time, 
-they are not properly registered for external services such as Voila to locate.
+they are not properly registered for external services such as Voilà to locate.
 
 Auto-discovery of Conda envs is convenient, but nb_conda_kernels has not been maintained recently and some work is required to bring 
 compatibility with the latest Jupyter releases. Our suggestion is to remove nb_conda_kernels and register each Conda env manually - with the 
@@ -90,7 +90,7 @@ Remove nb_conda_kernels from the appropriate conda env:
 
 If you don't remove nb_conda_kernels then each conda env will appear twice.
 
-If you must keep auto-discovery of new environments, it is recommended to also manually register each env (ipykernel install) that may be used for Voila Dashboards, 
+If you must keep auto-discovery of new environments, it is recommended to also manually register each env (ipykernel install) that may be used for Voilà Dashboards, 
 perhaps with slightly different names to the auto-discovered equivalents.
 
 Problems after upgrading
@@ -114,7 +114,7 @@ For example in The Littlest JupyterHub, this default service can be disabled as 
 Dashboard just shows Jupyter server as normal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If the dashboard appears to be a regular Jupyter server instead of the presentation (e.g. Voila, Streamlit etc) then it may be that you are 
+If the dashboard appears to be a regular Jupyter server instead of the presentation (e.g. Voilà, Streamlit etc) then it may be that you are 
 still using the standard spawners. You need to use the 'Variable' spawners supplied with ContainDS Dashboards.
 
 See :ref:`setup` for details of which c.JupyterHub.spawner_class to set.

@@ -96,7 +96,7 @@ folder when it starts up. An example is using `ElasticFileSystem on AWS <https:/
 **Dynamic storage** (the default) is where a new 'persistent volume' is generally created for each new Jupyter server that starts up.
 
 When a user creates a new Dashboard, it will be based within a new named server. The Dashboard is really just a 
-new separate Jupyter server that happens to be running a presentation front-end (e.g. Voila) instead of the usual Jupyter notebook server. We just 
+new separate Jupyter server that happens to be running a presentation front-end (e.g. Voilà) instead of the usual Jupyter notebook server. We just 
 need to ensure that required files (e.g. ipynb notebooks or py/R files) for the dashbboard are present on the new dashboard server.
 
 The dashboard's source files can come from the Jupyter Tree or a Git Repo (:ref:`read more here <prepare_dashboard>`).

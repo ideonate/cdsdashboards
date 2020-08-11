@@ -6,7 +6,7 @@ Run a private on-premise or cloud-based JupyterHub with extensions to instantly 
 interactive dashboards to share with non-technical colleagues.
 
 Currently supported frameworks:
-- Jupyter notebooks ([Voila](https://voila.readthedocs.io/en/stable/))
+- Jupyter notebooks ([Voilà](https://voila.readthedocs.io/en/stable/))
 - [Streamlit](https://streamlit.io/) apps
 - [Plotly Dash](https://plotly.com/dash/) apps
 - [Bokeh](https://docs.bokeh.org/) / [Panel](https://panel.holoviz.org/) apps and notebooks
@@ -28,7 +28,7 @@ Any authorised JupyterHub user can view the dashboard.
 - Data scientist creates a new Dashboard to clone their Jupyter server
 - Other logged-in JupyterHub users see the dashboard in their list
 - Click to launch as a server, using OAuth to gain access
-- User sees a safe user-friendly version of the original notebook - served by Voila, Streamlit, Dash, Bokeh, R Shiny etc.
+- User sees a safe user-friendly version of the original notebook - served by Voilà, Streamlit, Dash, Bokeh, R Shiny etc.
 
 All of this works through a new Dashboards menu item added to JupyterHub's header.
 
@@ -47,15 +47,15 @@ _Other logged-in JupyterHub users see the dashboard in their list_
 
 _Click to launch as a server_
 
-![Dashboard Voila built automatically](./docs/_static/screenshots/4_Dashboard_Voila_built_automatically.png "Dashboard Voila built automatically")
+![Dashboard Voilà built automatically](./docs/_static/screenshots/4_Dashboard_Voila_built_automatically.png "Dashboard Voilà built automatically")
 
 _Uses OAuth to gain access_
 
 ![Other user OAuths](./docs/_static/screenshots/5_Other_user_OAuths.png "Other user OAuths")
 
-_Other user sees a safe user-friendly Voila version of the original notebook_
+_Other user sees a safe user-friendly Voilà version of the original notebook_
 
-![Voila Dashboard](./docs/_static/screenshots/6_Voila_Dashboard.png "Voila Dashboard")
+![Voilà Dashboard](./docs/_static/screenshots/6_Voila_Dashboard.png "Voilà Dashboard")
 
 _Or other app frameworks_
 

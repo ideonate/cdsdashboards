@@ -44,7 +44,7 @@ Also install cdsdashboards in the user environment, including extra dependencies
 Installing Presentation Frameworks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the user environment you must also install any 'presentation packages' - e.g. Voila, which is a user-friendly and safe way to display 
+In the user environment you must also install any 'presentation packages' - e.g. Voilà, which is a user-friendly and safe way to display 
 Jupyter notebooks to non-technical users:
 
 ::
@@ -60,7 +60,7 @@ Also install Streamlit and/or Plotly Dash if you are planning to use those frame
     sudo -E /opt/tljh/user/bin/python3 -m pip install dash
 
 The key package for the hub environment is cdsdashboards itself; for the user environment the crucial package is jhsingle-native-proxy as well 
-as any 'presentation package' - Voila, which is a user-friendly and safe way to display Jupyter notebooks to non-technical users.
+as any 'presentation package' - Voilà, which is a user-friendly and safe way to display Jupyter notebooks to non-technical users.
 
 Changes to jupyterhub_config.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -91,7 +91,7 @@ tljh-config (but that doesn't matter if you're just trying it out).
 
 The allow_named_servers option is a standard JupyterHub option where every user gets more than just their single 'My Server' Jupyter environment. 
 They can add extra environments by specifying a name. ContainDS Dashboards makes use of this by running the presentation servers as named servers - 
-they are really servers just like the original Jupyter notebook servers, but running Voila or another system instead.
+they are really servers just like the original Jupyter notebook servers, but running Voilà or another system instead.
 
 Instead of the original UserCreatingSpawner, you actually need to use a slightly enhanced version of that spawner called  
 - that is set by assigning to c.JupyterHub.spawner_class as above. At the time of writing, the default SystemdSpawner does not work correctly with 
