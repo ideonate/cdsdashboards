@@ -87,4 +87,4 @@ For more background on this project and our related ContainDS Desktop product, p
 
 Contact [support@containds.com](mailto:support@containds.com) with any comments or questions at all. Thank you.
 
-[![Documentation Status](https://readthedocs.org/projects/cdsdashboards/badge/?version=stable)](https://cdsdashboards.readthedocs.io/en/stable/?badge=stable)
+[![Documentation Status](https://readthedocs.org/projects/cdsdashboards/badge/?version=stable)](https://cdsdashboards.readthedocs.io/en/stable/?badge=stable) [![Join the chat at https://gitter.im/ideonate/ContainDS](https://badges.gitter.im/ideonate/ContainDS.svg)](https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
