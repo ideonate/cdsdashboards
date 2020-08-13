@@ -32,6 +32,14 @@ RUN rm /etc/jupyter/jupyter_notebook_config_extra.py
 
 COPY voila.json /etc/jupyter
 
+# Enable local conda envs
+
+RUN conda init bash
+
+# Startup hook for obtaining GitHub OAuth tokens and user details
+
+COPY github-tokens.sh /usr/local/bin/before-notebook.d/github-tokens.sh
+
 
 # Fix permissions on /etc/jupyter as root
 USER root

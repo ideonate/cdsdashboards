@@ -5,6 +5,7 @@ from traitlets import Unicode, Integer, Dict, Bool
 from traitlets.config import Configurable
 
 from jupyterhub.spawner import _quote_safe
+from jupyterhub.traitlets import Command
 
 def _get_voila_template(args, spawner):
 
@@ -86,6 +87,17 @@ class VariableMixin(Configurable):
         """
     ).tag(config=True)
 
+    default_presentation_cmd = Command(
+        ['python3', '-m', 'jhsingle_native_proxy.main'],
+        allow_none=False,
+        help="""
+        The command to run presentations through jhsingle_native_proxy, can be a string or list.
+        Default is ['python3', '-m', 'jhsingle_native_proxy.main']
+        Change to e.g. ['start.sh', 'python3', '-m', 'jhsingle_native_proxy.main'] to ensure start hooks are
+        run in the singleuser Docker images.
+        """
+    ).tag(config=True)
+
     voila_template = Unicode(
         '',
         help="""
@@ -135,6 +147,8 @@ class VariableMixin(Configurable):
             launcher = self.merged_presentation_launchers[presentation_type]
             if 'cmd' in launcher:
                 self.cmd = launcher['cmd']
+            else:
+                self.cmd = self.default_presentation_cmd
 
         return await super().start()
 

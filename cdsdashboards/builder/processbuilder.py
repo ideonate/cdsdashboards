@@ -49,7 +49,7 @@ class ProcessBuilder(Builder):
             'presentation_path': dashboard.start_path,
             'git_repo': git_repo,
             'conda_env': conda_env,
-            'cmd': ['python3', '-m', 'jhsingle_native_proxy.main'],
+            #
             'environment': {
                 'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
                 'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)

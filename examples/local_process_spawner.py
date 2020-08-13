@@ -59,7 +59,7 @@ c.VariableMixin.extra_presentation_launchers = {
     }
 }
 
-c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel', 'unavailable']
+#c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel', 'unavailable']
 
 
 c.CDSDashboardsConfig.show_source_git = True

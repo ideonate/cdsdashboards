@@ -56,11 +56,19 @@ ContainDS Dashboards now works on single-server JupyterHubs and also Kubernetes-
 
 To continue installation please see :ref:`setup`.
 
-Mailing List
-~~~~~~~~~~~~
+Support and Mailing List
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please `sign up to our email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
+For more background on this project and our related ContainDS Desktop product, please see our website: 
+`containds.com <https://containds.com/>`__.
+
+Please contact `support@containds.com <mailto:support@containds.com>`__ with any comments or questions at all.
+
+Also `sign up to our email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
 features and security advice.
+
+And there is a `Gitter room <https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`__ 
+for general chat with other community members.
 
 Documentation Contents
 ~~~~~~~~~~~~~~~~~~~~~~

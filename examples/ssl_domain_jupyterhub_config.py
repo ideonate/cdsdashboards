@@ -1,3 +1,4 @@
+import os
 
 c.JupyterHub.allow_named_servers = True
 
@@ -10,7 +11,48 @@ config_for_dashboards(c)
 c.JupyterHub.template_vars = {'cds_hide_user_named_servers': False, 'cds_hide_user_dashboard_servers': False}
 
 
-c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
+#c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
+
+
+# GitHub login trial
+
+from oauthenticator.github import GitHubOAuthenticator
+c.GitHubOAuthenticator.scope = ['read:org', 'public_repo', 'repo', 'user:email']
+
+class MyGitHubAuthenticator(GitHubOAuthenticator):
+    
+    from tornado import gen
+
+    @gen.coroutine
+    def pre_spawn_start(self, user, spawner):
+        auth_state = yield user.get_auth_state()
+        import pprint
+        pprint.pprint(auth_state)
+        if not auth_state:
+            # user has no auth state
+            return
+        # define some environment variables from auth_state
+        spawner.environment['GITHUB_TOKEN'] = auth_state['access_token']
+        spawner.environment['GITHUB_USER'] = auth_state['github_user']['login']
+        spawner.environment['GITHUB_EMAIL'] = auth_state['github_user']['email']
+
+
+c.JupyterHub.authenticator_class = MyGitHubAuthenticator
+
+
+c.GitHubOAuthenticator.enable_auth_state = True
+
+if 'JUPYTERHUB_CRYPT_KEY' not in os.environ:
+    import warnings
+
+    warnings.warn(
+        "Need JUPYTERHUB_CRYPT_KEY env for persistent auth_state.\n"
+        "    export JUPYTERHUB_CRYPT_KEY=$(openssl rand -hex 32)"
+    )
+    c.CryptKeeper.keys = [ os.urandom(32) ]
+    c.CryptKeeper.n_threads = 1
+
+c.CryptKeeper.n_threads = 2
 
 c.JupyterHub.bind_url = 'https://0.0.0.0:443'
 
@@ -49,8 +91,8 @@ c.DockerSpawner.remove = True
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
-c.DockerSpawner.image = 'ideonate/containds-allr-datascience:0.2.0'
-#c.DockerSpawner.image = 'containds-all-example:latest'
+#c.DockerSpawner.image = 'ideonate/containds-allr-datascience:0.2.0'
+c.DockerSpawner.image = 'containds-all-example:now'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
 
@@ -76,8 +118,6 @@ c.JupyterHub.redirect_to_server = False
 c.JupyterHub.default_url = '/hub/dashboards'
 
 
-import os
-
 #  Generate certs:
 # openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout myjupyterhub.net/jupyterhub.key -out myjupyterhub.net/jupyterhub.crt
 
@@ -90,3 +130,7 @@ c.JupyterHub.ssl_cert = os.environ['SSL_CERT']
 #
 #  When setting this, you should also set ssl_cert
 c.JupyterHub.ssl_key = os.environ['SSL_KEY']
+
+
+c.CDSDashboardsConfig.conda_envs = ['env1', 'env2', 'cds']
+

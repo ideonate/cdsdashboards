@@ -85,6 +85,8 @@ Please do get in touch if you try out the package, or would like to but need som
 
 For more background on this project and our related ContainDS Desktop product, please see our website: [containds.com](https://containds.com/).
 
-Contact [support@containds.com](mailto:support@containds.com) with any comments or questions at all. Thank you.
+Contact [support@containds.com](mailto:support@containds.com) with any comments or questions at all.
+
+There is a [Gitter room](https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) for general chat with other community members, e.g. for confguration and use case tips.
 
 [![Documentation Status](https://readthedocs.org/projects/cdsdashboards/badge/?version=stable)](https://cdsdashboards.readthedocs.io/en/stable/?badge=stable) [![Join the chat at https://gitter.im/ideonate/ContainDS](https://badges.gitter.im/ideonate/ContainDS.svg)](https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
