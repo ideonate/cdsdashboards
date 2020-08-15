@@ -194,7 +194,7 @@ docker build -t cdsdashboards-jupyter-k8s-hub:now -f ./docker-images/z2jh/hub/Do
 
   cd docker-images/singleuser-example/containds-all-example
 
-docker build -t containds-all-example:now --build-arg FRAMEWORKS_LINE=streamlit .
+docker build -t containds-all-example:now --build-arg FRAMEWORKS_LINE="voila streamlit" .
 
 ```
 

@@ -47,18 +47,6 @@ c.JupyterHub.allow_named_servers = True
 import os
 dirname = os.path.dirname(__file__)
 
-c.VariableMixin.extra_presentation_launchers = {
-    'custom-panel': {
-        'args': [
-            'python3', '{presentation_basename}', '{port}', '{origin_host}', '{base_url}'
-            ],
-        'debug_args': [],
-        'env': {
-            'PYTHONPATH': os.path.join(dirname, 'local_process_folder/{username}/{presentation_dirname}')
-        }
-    }
-}
-
 #c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel', 'unavailable']
 
 
@@ -111,10 +99,10 @@ c.JupyterHub.bind_url = 'http://0.0.0.0:80'
 
 c.JupyterHub.redirect_to_server = False
 
-def default_url_fn(user):
-    if user:
-        if user.admin:
-            return '/hub/admin'
-    return '/hub/dashboards'
+#def default_url_fn(user):
+#    if user:
+#        if user.admin:
+#            return '/hub/admin'
+#    return '/hub/dashboards'
 
-c.JupyterHub.default_url = default_url_fn #'/hub/dashboards'
+c.JupyterHub.default_url = '/hub/dashboards'

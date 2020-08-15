@@ -51,7 +51,8 @@ class VariableMixin(Configurable):
             'args': ['--destport=0', 'streamlit', 'run', '{presentation_path}', 
                 '{--}server.port={port}',
                 '{--}server.headless=True',
-                '{--}browser.serverAddress={origin_host}'],
+                '{--}browser.serverAddress={origin_host}',
+                '{--}browser.gatherUsageStats=false'],
             'debug_args': [], # The default is {--}debug, we don't want that
             'extra_args_fn': _get_streamlit_debug # But --log_level=debug has to come earlier in the cmdline
         },
