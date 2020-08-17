@@ -8,7 +8,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 exec(open(pjoin(here,'cdsdashboards/version.py')).read()) # Load __version__
 
 install_requires = [
-    'tornado>=5.1',
+    'tornado>=6.0.4', # Mainly for jhsingle-native-proxy but best to keep consistent
     'traitlets',
     'jupyterhub>=1.0.0',
     'alembic',

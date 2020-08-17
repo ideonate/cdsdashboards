@@ -3,17 +3,17 @@ FROM $BASE_IMAGE
 
 RUN apt-get update && apt-get --assume-yes install git
 
-RUN mkdir /tmp/cdsdashboard_current
+# Might have put this in /tmp, but it could be useful to have around later for debugging
+RUN mkdir /opt/cdsdashboard_current
 
-ADD . /tmp/cdsdashboard_current/
+ADD . /opt/cdsdashboard_current/
 
 COPY ./e2e/setup-helper/startup-script.sh /usr/local/bin/startup-script.sh
 
-RUN cd /tmp/cdsdashboard_current \
+RUN cd /opt/cdsdashboard_current \
         && /opt/tljh/hub/bin/python3 setup.py sdist \
         && /opt/tljh/hub/bin/python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz` \
-        && /opt/tljh/user/bin/python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz`[user] \
-        && cd .. && rm -rf ./cdsdashboard_current
+        && /opt/tljh/user/bin/python3 -m pip install ./`ls dist/cdsdashboards-*.tar.gz`[user]
 
 RUN /opt/tljh/user/bin/python3 -m pip install voila streamlit dash bokeh panel
 
