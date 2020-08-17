@@ -51,3 +51,4 @@ c.DockerSpawner.name_template = "tests-{prefix}-{username}-{servername}"
 
 c.DockerSpawner.image = 'ideonate/containds-all-basic:latest'
 
+c.VariableMixin.voila_template = ''

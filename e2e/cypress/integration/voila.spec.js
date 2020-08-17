@@ -15,8 +15,9 @@ it('voila dashboard', () => {
 
   do_create_and_start_dashboard('Voila Test', 'Test.ipynb', 'voila')
   
-  cy.get('#rendered_cells > main > div > div > div > div > div:nth-child(3) > div > div > div > div > pre')
+  cy.get('#rendered_cells > div:nth-child(4) > div > div > div > div > pre')
     .should('contain', 'Voila top level is working')
+  
 
   do_stop_dashserver('dash-voila-test')
 

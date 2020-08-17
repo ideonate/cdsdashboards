@@ -2,6 +2,8 @@ c.JupyterHub.bind_url = 'https://0.0.0.0:80'
 
 c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
 
+c.DummyAuthenticator.password = 'password'
+
 c.Authenticator.admin_users = {'dan'}
 c.Authenticator.whitelist = {'dan'}
 
