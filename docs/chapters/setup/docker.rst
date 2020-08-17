@@ -93,8 +93,8 @@ Using Voilà as the presentation type:
 
 - `jh-voila-oauth-singleuser <https://hub.docker.com/r/ideonate/jh-voila-oauth-singleuser>`__ (Standard Python environment)
 - `jh-voila-oauth-scipy <https://hub.docker.com/r/ideonate/jh-voila-oauth-scipy>`__ (Extra scientific Python packages installed)
-- `jh-voila-oauth-r <https://hub.docker.com/r/ideonate/jh-voila-oauth-r>`__ (More than just Python)
-- `jh-voila-oauth-datascience <https://hub.docker.com/r/ideonate/jh-voila-oauth-datascience>`__ (R language)
+- `jh-voila-oauth-r <https://hub.docker.com/r/ideonate/jh-voila-oauth-r>`__ (R language)
+- `jh-voila-oauth-datascience <https://hub.docker.com/r/ideonate/jh-voila-oauth-datascience>`__ (More than just Python and scipy)
 
 Using R Shiny or Voilà as the presentation type:
 
@@ -102,11 +102,14 @@ Using R Shiny or Voilà as the presentation type:
 
 Using all built-in presentation types - Voilà, Streamlit, Plotly Dash, and Bokeh/Panel, and R Shiny:
 
-- `containds-allr-datascience <https://hub.docker.com/r/ideonate/containds-allr-datascience>`__ (Sci Python plus R and Shiny)
+- `containds-allr-datascience <https://hub.docker.com/r/ideonate/containds-allr-datascience>`__ (Datascience plus R and Shiny)
 
 These are based on the similarly-named `Jupyter Docker Stacks <https://jupyter-docker-stacks.readthedocs.io/en/latest/>`__ images, just 
-with extra support for Voilà and ContainDS Dashboards. The ContainDS Dockerfile versions are 
+with extra support for ContainDS Dashboards. The ContainDS Dockerfile versions are 
 on `GitHub here <https://github.com/ideonate/cdsdashboards-jupyter-docker>`__.
+
+The image should contain a start.sh script on the path (all those listed here do), otherwise the cmd to be run must 
+be :ref:`configured <default_presentation_cmd>` differently.
 
 Options
 ~~~~~~~

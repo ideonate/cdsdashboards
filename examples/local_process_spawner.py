@@ -36,7 +36,7 @@ c.LocalProcessSpawner.notebook_dir = '/Users/dan/Dev/cdsdashboards/examples/loca
 
 c.Spawner.start_timeout = 6000
 
-c.Spawner.debug = False
+c.Spawner.debug = True
 
 c.Authenticator.admin_users = {'dan'}
 

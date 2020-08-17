@@ -149,3 +149,15 @@ configuration. For example:
 
 The whole custom launchers feature is experimental, and you are encouraged to :ref:`contact <contact>` the authors to discuss any requirements. 
 
+.. _default_presentation_cmd:
+
+cmd and args
+============
+
+The cmd that is run to start the launcher is set by :code:`c.VariableMixin.default_presentation_cmd` (a list). This can be overridden in your 
+jupyterhub_config, or on a per-launcher basis by setting a 'cmd' key/value in your launcher dict.
+
+The default value of default_presentation_cmd is set to :code:`['start.sh', 'python3', '-m', 'jhsingle_native_proxy.main']` for 
+DockerSpawner/KubeSpawner setups, and is :code:`['python3', '-m', 'jhsingle_native_proxy.main']` for process spawners. 
+
+args can be overriden per-launcher only.

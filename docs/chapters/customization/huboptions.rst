@@ -69,6 +69,25 @@ The default is to allow all built-in types:
 
     c.CDSDashboardsConfig.presentation_types = ['voila', 'streamlit', 'plotlydash', 'bokeh', 'rshiny']
 
+.. _default_allow_all:
+
+Default User Access to Dashboards
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Control whether 'All Users' or 'Selected Users' is selected by default on the 'New Dashboard' page.
+
+By default, 'All Users' will be selected.
+
+To change this, in your jupyterhub_config.py file:
+
+::
+
+    c.CDSDashboardsConfig.default_allow_all = False
+
+Now the 'New Dashboard' page will have 'Selected Users' highlighted by default. If the dashboard creator does not change this, and does not 
+specify any user names in the list, then no-one apart from themselves will have access to the dashboard.
+
+
 Voilà template
 ~~~~~~~~~~~~~~
 
@@ -181,24 +200,13 @@ to work if Voilà is the only relevant dashboard framework type.
 
 See also :ref:`conda_kernels_voila`.
 
+Presentation Cmd
+~~~~~~~~~~~~~~~~
 
-.. _default_allow_all:
+The command run to start a dashboard server can be changed by setting :code:`c.VariableMixin.default_presentation_cmd` (similar to changing Spawner.cmd, but 
+only affecting dashboard servers). It can also be overridden to affect each presentation type (e.g. streamlit only).
 
-Default User Access to Dashboards
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Control whether 'All Users' or 'Selected Users' is selected by default on the 'New Dashboard' page.
-
-By default, 'All Users' will be selected.
-
-To change this, in your jupyterhub_config.py file:
-
-::
-
-    c.CDSDashboardsConfig.default_allow_all = False
-
-Now the 'New Dashboard' page will have 'Selected Users' highlighted by default. If the dashboard creator does not change this, and does not 
-specify any user names in the list, then no-one apart from themselves will have access to the dashboard.
+See :ref:`custom launchers <customlaunchers>` and :ref:`default_presentation_cmd`.
 
 Mailing List for Updates
 ~~~~~~~~~~~~~~~~~~~~~~~~

@@ -4,6 +4,17 @@
 Changelog
 ---------
 
+Version 0.3.1
+~~~~~~~~~~~~~
+
+Released 17 Aug 2020
+
+- Streamlit fix where xrsf protection was preventing file uploads. Now pass origin (browser.serverAddress) to streamlit command, requires jhsingle-native-proxy>=0.5.0.
+- Added default_presentation_cmd to VariableMixin which is set to ['start.sh', 'python3', '-m', 'jhsingle_native_proxy.main'] for DockerSpawner/KubeSpawner
+  setups, and remains as ['python3', '-m', 'jhsingle_native_proxy.main'] for process spawners. The start.sh script sources files in /usr/local/bin/before-notebook.d
+  which is useful for e.g. incorporating GitHub tokens into the environment. This requires the singleuser image to contain the start.sh script of course (those 
+  based on docker-stacks should do already).
+
 Version 0.3.0
 ~~~~~~~~~~~~~
 

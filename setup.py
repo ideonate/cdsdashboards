@@ -17,14 +17,14 @@ install_requires = [
 
 extras_require = {
     'user': [
-        'jhsingle-native-proxy>=0.4.2',
+        'jhsingle-native-proxy>=0.5.0',
         'plotlydash-tornado-cmd>=0.0.4',
         'bokeh-root-cmd>=0.0.5',
         'rshiny-server-cmd>=0.0.2',
         'voila-materialstream>=0.2.6' # Does not install voila itself
     ],
     'user-voila' : [
-        'jhsingle-native-proxy>=0.4.2',
+        'jhsingle-native-proxy>=0.5.0',
         'voila>=0.1.14',
         'voila-materialstream>=0.2.6'
     ]
