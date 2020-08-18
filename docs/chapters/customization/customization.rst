@@ -14,6 +14,9 @@ that should be available for Dashboards.
 :ref:`finetune` explores generic JupyterHub settings that may make sense now that you have non-technical users logging in. For example, 
 launching straight into 'My Server' may not be the best landing page for those users.
 
+:ref:`github` explains how to integrate with GitHub for easy login and/or to easily pull from private repos straight into dashboards 
+(and Jupyter notebook environments too).
+
 :ref:`customlaunchers` is an advanced topic explaining how you can add your own presentation types (frameworks) or adjust the way that 
 the built-in presentation servers are launched.
 
@@ -25,9 +28,6 @@ the built-in presentation servers are launched.
    huboptions
    useroptions
    finetune
+   github
    customlaunchers
-  
-
-
-
-
+   

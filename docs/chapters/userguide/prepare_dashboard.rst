@@ -30,6 +30,8 @@ It is also possible to use a Jupyter extension such as `jupyterlab-git <https://
 into your Jupyter tree so you can manually interact with the git repo's project structure. (Alternatively, just skip the Jupyter tree completely 
 and provide a git repo directly to the new dashboard, as described next.)
 
+.. _gitrepo:
+
 Git Repo
 --------
 
@@ -40,8 +42,11 @@ file storage. The folder name will be derived from the git repo URL.
 
 The 'git' command line tool must be installed in your user environment for the 'git repo' source type to work.
 
-Supplying your git repo URL works straight away for a public repo, or an open repo hosted in the same internal network as your JupyterHub. It 
-is possible to access a private git repo if you supply the username:password as part of the git URL.
+Supplying your git repo URL works straight away for a public repo, or an open repo hosted in the same internal network as your JupyterHub.
+
+To access private Git repos, you can set access tokens in all singleuser servers' Git config through GitHub login or similar (see :ref:`github`).
+
+It is also possible to access a private git repo if you supply the username:password as part of the git URL.
 
 For example, suppose you want to pull from a private git repo on GitHub, at https://github.com/myorg/privaterepo.git.
 
