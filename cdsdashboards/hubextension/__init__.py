@@ -17,6 +17,8 @@ cds_extra_handlers = [
 
     (r'dashboards-new', DashboardEditHandler),
 
+    (r'dashboards-new/(?P<path>[^/]+?)', DashboardEditHandler),
+
     (r'dashboards', AllDashboardsHandler),
     
     (r'dashboards/(?P<dashboard_urlname>[^/]+?)/edit', DashboardEditHandler, {}, 'cds_dashboard_config_handler'),

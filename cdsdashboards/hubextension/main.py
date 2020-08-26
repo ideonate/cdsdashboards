@@ -1,4 +1,4 @@
-import sys, re
+import sys, re, os, urllib.parse
 
 from tornado.web import authenticated
 
@@ -43,7 +43,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
     @authenticated
     @check_database_upgrade
-    async def get(self, dashboard_urlname=None):
+    async def get(self, dashboard_urlname=None, path=None):
 
         current_user = await self.get_current_user()
 
@@ -73,6 +73,13 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_presentation_type = dashboard.presentation_type
             dashboard_options = dashboard.options
             user_permissions = dashboard.allow_all and 'anyusers' or 'selectedusers'
+
+        if path is not None:
+            path = urllib.parse.unquote(path)
+            _, file = os.path.split(path)
+            name, _ = os.path.splitext(file)
+            dashboard_name = name
+            dashboard_start_path = path
 
         # Get List of possible visitor users
         existing_group_users = None
@@ -141,7 +148,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
     @authenticated
     @check_database_upgrade
-    async def post(self, dashboard_urlname=None):
+    async def post(self, dashboard_urlname=None, path=None):
 
         current_user = await self.get_current_user()
 
