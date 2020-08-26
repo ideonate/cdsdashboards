@@ -50,10 +50,10 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
         dashboard = None
-        dashboard_name = ''
-        dashboard_description = ''
+        dashboard_name = self.get_argument('name', '').strip()
+        dashboard_description = self.get_argument('description', '').strip()
         dashboard_presentation_type = ''
-        dashboard_start_path = ''
+        dashboard_start_path = self.get_argument('start_path', '').strip()
         dashboard_options = {}
         user_permissions = cdsconfig.default_allow_all and 'anyusers' or 'selectedusers'
 

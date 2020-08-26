@@ -19,7 +19,7 @@ fi
 echo "STAGES: $stages"
 
 
-functests="login voila db11upgrade db13upgrade"
+functests="login voila db11upgrade db13upgrade prepopulate_form"
 
 if [ ! -z "${E2E_FUNCTESTS}" ]; then
     functests="${E2E_FUNCTESTS}"
