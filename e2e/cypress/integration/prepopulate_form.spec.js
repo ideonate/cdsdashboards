@@ -1,5 +1,5 @@
 it("should prepopulate the dashboard edition form", () => {
-  do_loging();
+  do_login();
 
   cy.visit(
     "/hub/dashboards-new?name=My%20Dashboard&description=A%20populated%0Aform&start_path=%2Ftree%2Fpath%2Ffile.ipynb"
