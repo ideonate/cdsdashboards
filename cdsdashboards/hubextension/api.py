@@ -1,14 +1,45 @@
+import json
+
 from tornado.web import authenticated, HTTPError
 
 from jupyterhub.apihandlers.base import APIHandler
 
 from ..orm import Dashboard
-from .base import DashboardBaseMixin
+from .base import DashboardBaseMixin, check_database_upgrade
 from ..app import BuildersStore
 
 
 class DashboardBaseAPIHandler(APIHandler, DashboardBaseMixin):
     pass
+
+
+class DashboardsAPIHandler(DashboardBaseAPIHandler):
+
+    @authenticated
+    @check_database_upgrade
+    async def get(self):
+        """Return the list of dashboards for the current user."""
+
+        current_user = await self.get_current_user()
+
+        def to_json(dashboard):
+            return {
+                "name": dashboard.name,
+                "url": "{}hub/dashboards/{}".format(self.settings['base_url'], dashboard.urlname),
+                "description": dashboard.description,
+                "path": dashboard.start_path,
+                "username": dashboard.user.name
+            }
+
+        my_dashboards = current_user.dashboards_own
+        body = {"_owned": list(map(to_json, my_dashboards))}
+
+        visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
+        for username, dashboards in visitor_dashboard_groups:
+            body[username] = list(map(to_json, dashboards))
+
+        self.set_status(200)
+        self.finish(json.dumps(body))
 
 
 class DashboardAPIHandler(DashboardBaseAPIHandler):
