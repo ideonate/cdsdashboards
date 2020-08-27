@@ -29,4 +29,11 @@ jobs:
       run: cd e2e && ./run_all.sh
       env:
         E2E_STAGES: localprocess tljh localprocessjh10
-        
+
+    - name: Save Cypress screenshots and videos
+      uses: actions/upload-artifact@v2
+      with:
+        name: e2e-cypress
+        path: |
+          e2e/cypress/screenshots/
+          e2e/cypress/videos/
