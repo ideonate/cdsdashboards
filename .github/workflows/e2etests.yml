@@ -28,6 +28,7 @@ jobs:
         E2E_STAGES: localprocess tljh localprocessjh10
 
     - name: Save Cypress screenshots and videos
+      if: ${{ success() }} || ${{ failure() }}
       uses: actions/upload-artifact@v2
       with:
         name: e2e-cypress
