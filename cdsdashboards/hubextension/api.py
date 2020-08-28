@@ -35,7 +35,7 @@ class DashboardsAPIHandler(DashboardBaseAPIHandler):
         body = {"_owned": list(map(to_json, my_dashboards))}
 
         visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
-        for username, dashboards in visitor_dashboard_groups:
+        for username, dashboards in visitor_dashboard_groups.items():
             body[username] = list(map(to_json, dashboards))
 
         self.set_status(200)
