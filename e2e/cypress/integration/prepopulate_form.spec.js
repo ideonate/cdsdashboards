@@ -6,11 +6,11 @@ it("should prepopulate the dashboard edition form", () => {
   );
 
   cy.get('#dashboard-name')
-    .should('contain', 'My Dashboard')
+    .should('to.have.value', 'My Dashboard')
 
   cy.get('#dashboard-description')
-    .should('contain', 'A populated\nform')
+    .should('to.have.text', 'A populated\nform')
 
   cy.get('#dashboard-start-path')
-    .should('contain', '/tree/path/file.ipynb')
+    .should('to.have.value', '/tree/path/file.ipynb')
 });
