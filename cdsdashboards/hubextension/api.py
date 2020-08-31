@@ -1,6 +1,9 @@
+import json
+
 from tornado.web import authenticated, HTTPError
 
 from jupyterhub.apihandlers.base import APIHandler
+from jupyterhub.utils import url_path_join
 
 from ..orm import Dashboard
 from .base import DashboardBaseMixin
@@ -9,6 +12,67 @@ from ..app import BuildersStore
 
 class DashboardBaseAPIHandler(APIHandler, DashboardBaseMixin):
     pass
+
+
+class DashboardsAPIHandler(DashboardBaseAPIHandler):
+
+    @authenticated
+    async def get(self):
+        """Return the list of dashboards for the current user."""
+
+        current_user = await self.get_current_user()
+
+        def to_json(dashboard):
+            return {
+                "name": dashboard.name,
+                "url": "{}hub/dashboards/{}".format(self.settings['base_url'], dashboard.urlname),
+                "description": dashboard.description,
+                "path": dashboard.start_path,
+                "username": dashboard.user.name
+            }
+
+        my_dashboards = current_user.dashboards_own
+        body = {"_owned": list(map(to_json, my_dashboards))}
+
+        visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
+        for username, dashboards in visitor_dashboard_groups.items():
+            body[username] = list(map(to_json, dashboards))
+
+        self.set_status(200)
+        self.finish(json.dumps(body))
+
+    def check_referer(self):  # These request is allowed from user server
+        """Check Origin for cross-site API requests.
+
+        Copied from WebSocket with changes:
+
+        - allow unspecified host/referer (e.g. scripts)
+        """
+        host = self.request.headers.get("Host")
+        referer = self.request.headers.get("Referer")
+
+        # If no header is provided, assume it comes from a script/curl.
+        # We are only concerned with cross-site browser stuff here.
+        if not host:
+            self.log.warning("Blocking API request with no host")
+            return False
+        if not referer:
+            self.log.warning("Blocking API request with no referer")
+            return False
+
+        host_path = url_path_join(host, self.hub.base_url)
+        user_path = url_path_join(host, 'user/')
+        referer_path = referer.split('://', 1)[-1] + '/'
+        if not referer_path.startswith(host_path) and not referer_path.startswith(user_path):
+            self.log.warning(
+                "Blocking Cross Origin API request.  Referer: %s, Host: %s, User host: %s",
+                referer,
+                host_path,
+                user_path
+            )
+            return False
+
+        return True
 
 
 class DashboardAPIHandler(DashboardBaseAPIHandler):

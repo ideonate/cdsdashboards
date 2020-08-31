@@ -8,7 +8,7 @@ from jupyterhub.handlers.static import CacheControlStaticFilesHandler
 from .main import AllDashboardsHandler, DashboardEditHandler, MainViewDashboardHandler, ClearErrorDashboardHandler, UpgradeDashboardsHandler
 from .events import ProgressDashboardHandler
 from .._data import DATA_FILES_PATH
-from .api import DashboardAPIHandler
+from .api import DashboardsAPIHandler, DashboardAPIHandler
 
 
 cds_extra_handlers = [
@@ -25,6 +25,7 @@ cds_extra_handlers = [
 
     (r'dashboards-static/(.*)', CacheControlStaticFilesHandler, dict(path=os.path.join(DATA_FILES_PATH, 'static'))),
 
+    (r'dashboards-api', DashboardsAPIHandler),
     (r'dashboards-api/(?P<dashboard_urlname>[^/]+?)', DashboardAPIHandler),
     (r'dashboards-api/(?P<dashboard_urlname>[^/]+?)/progress', ProgressDashboardHandler),
 
