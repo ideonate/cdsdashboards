@@ -99,10 +99,4 @@ c.JupyterHub.bind_url = 'http://0.0.0.0:80'
 
 c.JupyterHub.redirect_to_server = False
 
-#def default_url_fn(user):
-#    if user:
-#        if user.admin:
-#            return '/hub/admin'
-#    return '/hub/dashboards'
-
 c.JupyterHub.default_url = '/hub/dashboards'
