@@ -35,3 +35,9 @@ The proxy_request_timeout setting is an the timeout in seconds to allow the subp
 The default value of 0 means that no value is passed as --request-timeout to jhsingle-native-proxy which then causes it to use its own default of 300. Note 
 this default behavior is different to the proxy_last_activity_interval because a proxy_last_activity_interval value of 0 means something to jhsingle-native-proxy.
 
+JupyterLab Extension
+--------------------
+
+There is a companion JupyterLab extension allowing one-click set up of Voila dashboards based on the current ipynb notebook in a regular Jupyter 
+server. It also provides direct links to edit existing dashboards. See 
+`JupyterLab ContainDS extension <https://www.npmjs.com/package/@ideonate/jupyter-containds>`__.

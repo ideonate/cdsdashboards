@@ -10,7 +10,7 @@ Version 0.3.3
 Released 31 Aug 2020
 
 - Allows use of the companion `JupyterLab extension <https://www.npmjs.com/package/@ideonate/jupyter-containds>`__ to publish and edit dashboards directly from a 
-JupyterLab session inside a regular singleuser Jupyter server running in JupyterHub.
+  JupyterLab session inside a regular singleuser Jupyter server running in JupyterHub.
 
 Version 0.3.2
 ~~~~~~~~~~~~~

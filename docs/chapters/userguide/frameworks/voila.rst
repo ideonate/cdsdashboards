@@ -51,3 +51,10 @@ The user-friendly and safe version of the notebook is displayed:
    :alt: Dashboard screen
 
 See :ref:`working with dashboards<working>` to understand more about how Dashboards operate, including sharing them with colleagues.
+
+JupyterLab Extension
+~~~~~~~~~~~~~~~~~~~~
+
+There is a companion JupyterLab extension allowing one-click set up of Voila dashboards based on the current ipynb notebook in a regular Jupyter 
+server. It also provides direct links to edit existing dashboards. See 
+`JupyterLab ContainDS extension <https://www.npmjs.com/package/@ideonate/jupyter-containds>`__.
