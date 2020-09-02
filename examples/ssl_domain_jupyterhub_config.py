@@ -40,7 +40,7 @@ class MyGitHubAuthenticator(GitHubOAuthenticator):
 c.JupyterHub.authenticator_class = MyGitHubAuthenticator
 
 
-c.GitHubOAuthenticator.enable_auth_state = True
+#c.GitHubOAuthenticator.enable_auth_state = True
 
 if 'JUPYTERHUB_CRYPT_KEY' not in os.environ:
     import warnings
@@ -92,7 +92,7 @@ c.DockerSpawner.remove = True
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
 #c.DockerSpawner.image = 'ideonate/containds-allr-datascience:0.2.0'
-c.DockerSpawner.image = 'containds-all-example:latest'
+c.DockerSpawner.image = 'ideonate/containds-all-basic:latest'
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
 
@@ -133,4 +133,3 @@ c.JupyterHub.ssl_key = os.environ['SSL_KEY']
 
 
 c.CDSDashboardsConfig.conda_envs = ['env1', 'env2', 'cds']
-
