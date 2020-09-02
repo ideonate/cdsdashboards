@@ -107,6 +107,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         
         merged_presentation_types = cdsconfig.merged_presentation_types
         all_conda_envs = cdsconfig.conda_envs
+        allow_custom_conda_env = cdsconfig.allow_custom_conda_env
 
         html = self.render_template(
             "editdashboard.html",
@@ -123,6 +124,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             conda_env=conda_env,
             presentation_types=merged_presentation_types,
             all_conda_envs=all_conda_envs,
+            allow_custom_conda_env=allow_custom_conda_env,
             spawner_id=spawner_id,
             current_user=current_user,
             user_permissions=user_permissions,
@@ -176,7 +178,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         if dashboard_name == '':
             errors.name = 'Please enter a name'
         elif not self.name_regex.match(dashboard_name):
-            errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>. Max 100 chars.'
+            errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>\'". Max 100 chars.'
 
         if '..' in dashboard_start_path:
             errors.start_path = 'Path must not contain ..'
@@ -187,6 +189,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         merged_presentation_types = cdsconfig.merged_presentation_types
         all_conda_envs = cdsconfig.conda_envs
+        allow_custom_conda_env = cdsconfig.allow_custom_conda_env
         
         if not dashboard_presentation_type in merged_presentation_types:
             errors.presentation_type = 'Framework {} invalid - it must be one of the allowed types: {}'.format(
@@ -222,7 +225,11 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         conda_env = self.get_argument('conda_env', '').strip()
 
         if conda_env != '':
-            if conda_env not in all_conda_envs:
+            if allow_custom_conda_env:
+                if not self.conda_env_regex.match(conda_env):
+                    errors.conda_env = 'Please use letters and digits, spaces or these characters _-!@$()*+?<>/\\\'".'
+                    conda_env = ''
+            elif conda_env not in all_conda_envs:
                 errors.conda_env = 'Please select a valid Conda env (\'{}\' is not in the allowed list)'.format(conda_env)
                 conda_env = ''
 
@@ -331,6 +338,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 conda_env=conda_env,
                 presentation_types=merged_presentation_types,
                 all_conda_envs=all_conda_envs,
+                allow_custom_conda_env=allow_custom_conda_env,
                 spawner_id=spawner_id,
                 spawners=spawners,
                 show_source_servers=cdsconfig.show_source_servers,

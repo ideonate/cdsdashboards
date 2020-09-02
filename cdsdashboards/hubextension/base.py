@@ -45,6 +45,8 @@ class DashboardBaseMixin:
 
     name_regex = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9\._\- \/~\:\!\@\$#\[\]\(\)\&\*\+\?\<\>\.\'\" ,;\%\=]{0,99}$')
 
+    conda_env_regex = re.compile(r'^[a-zA-Z0-9\._\- \/~\:\!\@\$#\[\]\(\)\&\*\+\?\<\>\.\'\" ,;\%\=]+$')
+
     start_path_regex = re.compile(r'^[A-Za-z0-9\-\._~\:\/\?#\[\]@\!\$\&\(\)\*\+\'\" ,;\%\=]*$')
 
     def calc_urlname(self, dashboard_name):

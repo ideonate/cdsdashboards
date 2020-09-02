@@ -190,6 +190,13 @@ envs supplied e.g. by :code:`conda env list` and matching by the name of the rig
 
 It may be possible for env names to be duplicated, in which case only the first match can ever be activated.
 
+::
+
+    c.CDSDashboardsConfig.allow_custom_conda_env = True
+
+This will allow the dashboard creator to type any arbitrary Conda env name (including a full path if desired). If :code:`c.CDSDashboardsConfig.conda_envs` 
+is also set, these options will be available as suggestions in a list (depending on browser support).
+
 If you have trouble making your Conda envs available to dashboards, please :ref:`get in touch<contact>` since more work may be required to cater for 
 relatively common but non-standard Conda installations.
 

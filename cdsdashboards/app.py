@@ -145,6 +145,13 @@ class CDSDashboardsConfig(SingletonConfigurable):
         """
     ).tag(config=True)
 
+    allow_custom_conda_env= Bool(
+        False,
+        help="""
+        If True then dashboard creators can type any value for the Conda env to use, even if none is provided in the conda_envs list of pre-defined env names.
+        If False (default), only Conda env names listed in the conda_envs setting can be selected - if any are present.
+        """
+    ).tag(config=True)
 
 class UpgradeDB(Application):
     """Upgrade the CDSDashboards database schema."""
