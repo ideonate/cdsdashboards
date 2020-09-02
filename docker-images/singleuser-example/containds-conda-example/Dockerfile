@@ -23,10 +23,11 @@ ARG FRAMEWORKS_LINE="voila streamlit"
 
 RUN pip install $FRAMEWORKS_LINE
 
-# Set the voila default template
+# Install Voila and ContainDS JupyterLab extensions
 
 USER $NB_UID
 
+RUN jupyter labextension install @jupyter-voila/jupyterlab-preview @ideonate/jupyter-containds
 
 # Fix permissions on /etc/jupyter as root
 USER root
