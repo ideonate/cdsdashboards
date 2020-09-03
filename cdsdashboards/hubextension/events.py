@@ -41,8 +41,8 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
             return {
                 'progress': 100,
                 'ready': True,
-                'message': "Server ready at {}".format(url),
-                'html_message': 'Server ready at <a href="{0}" target="_blank">{0}</a>'.format(url),
+                'message': "Redirecting to server at {}".format(url),
+                'html_message': 'Redirecting to server at <a href="{0}" target="_blank">{0}</a>'.format(url),
                 'url': url,
             }
 

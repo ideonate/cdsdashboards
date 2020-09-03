@@ -40,12 +40,11 @@ require(["jquery"], function($) {
     
         if (evt.ready) {
             evtSource.close();
+
+            window.location = evt.url;
             
-            launchA.attr('href', evt.url);
-
-            launchA.attr('target', '_blank');
-
-            launchA.show();
+//            launchA.attr('href', evt.url);
+//            launchA.show();
         }
     
         if (evt.failed) {

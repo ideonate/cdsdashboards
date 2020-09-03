@@ -24,7 +24,6 @@
         </div>
     </div>
 
-    {% if need_follow_progress %}
     <div class="row">
         <div class="text-center">
           {% block message %}
@@ -46,19 +45,13 @@
           </details>
         </div>
     </div>
-    {% endif %}
 
     <div class="row">
         <div class="text-center">
           
           <a id="launch" role="button" class="btn btn-lg btn-primary" 
-          {% if not need_follow_progress and dashboard.final_spawner %}
-            href="/user/{{ dashboard_user.name }}/{{ dashboard.final_spawner.name }}"
-            target="_blank"
-          {% else %}
             href="#"
             style="display: none"
-          {% endif %}
           >
               Go to Dashboard
               </a>

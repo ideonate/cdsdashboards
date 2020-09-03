@@ -403,6 +403,9 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         need_follow_progress = await self.maybe_start_build(dashboard, dashboard_user)
 
+        if not need_follow_progress:
+            return self.redirect("/user/{}/{}".format(dashboard_user.name, dashboard.final_spawner.name))
+
         base_url = self.settings['base_url']
 
         html = self.render_template(
@@ -411,7 +414,6 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             dashboard=dashboard,
             current_user=current_user,
             dashboard_user=dashboard_user,
-            need_follow_progress=need_follow_progress,
             progress_url=url_path_join(base_url, 'hub', 'dashboards-api', dashboard_urlname, 'progress')
         )
         self.write(html)
