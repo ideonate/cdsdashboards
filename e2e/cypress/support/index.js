@@ -41,11 +41,6 @@ do_create_and_start_dashboard = (name, path, framework) => {
   cy.get('#main > div > div > form > div > input[type=submit]')
     .click()
 
-  cy.get('#launch')
-    .should('contain', 'Go to Dashboard')
-    .should('be.visible', { timeout: 20000 })
-    .invoke('removeAttr', 'target').click() // Don't want to open in new tab
-
 }
 
 do_stop_dashserver = (id) => {
