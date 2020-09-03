@@ -11,36 +11,7 @@ from ..app import BuildersStore
 
 
 class DashboardBaseAPIHandler(APIHandler, DashboardBaseMixin):
-    pass
-
-
-class DashboardsAPIHandler(DashboardBaseAPIHandler):
-
-    @authenticated
-    async def get(self):
-        """Return the list of dashboards for the current user."""
-
-        current_user = await self.get_current_user()
-
-        def to_json(dashboard):
-            return {
-                "name": dashboard.name,
-                "url": "{}hub/dashboards/{}".format(self.settings['base_url'], dashboard.urlname),
-                "description": dashboard.description,
-                "path": dashboard.start_path,
-                "username": dashboard.user.name
-            }
-
-        my_dashboards = current_user.dashboards_own
-        body = {"_owned": list(map(to_json, my_dashboards))}
-
-        visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
-        for username, dashboards in visitor_dashboard_groups.items():
-            body[username] = list(map(to_json, dashboards))
-
-        self.set_status(200)
-        self.finish(json.dumps(body))
-
+    
     def check_referer(self):  # These request is allowed from user server
         """Check Origin for cross-site API requests.
 
@@ -75,7 +46,35 @@ class DashboardsAPIHandler(DashboardBaseAPIHandler):
         return True
 
 
-class DashboardAPIHandler(DashboardBaseAPIHandler):
+class DashboardsAPIHandler(DashboardBaseAPIHandler):
+
+    @authenticated
+    async def get(self):
+        """Return the list of dashboards for the current user."""
+
+        current_user = await self.get_current_user()
+
+        def to_json(dashboard):
+            return {
+                "name": dashboard.name,
+                "url": "{}hub/dashboards/{}".format(self.settings['base_url'], dashboard.urlname),
+                "description": dashboard.description,
+                "path": dashboard.start_path,
+                "username": dashboard.user.name
+            }
+
+        my_dashboards = current_user.dashboards_own
+        body = {"_owned": list(map(to_json, my_dashboards))}
+
+        visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
+        for username, dashboards in visitor_dashboard_groups.items():
+            body[username] = list(map(to_json, dashboards))
+
+        self.set_status(200)
+        self.finish(json.dumps(body))
+
+
+class DashboardDeleteAPIHandler(DashboardBaseAPIHandler):
 
     @authenticated
     async def delete(self, dashboard_urlname):
@@ -121,3 +120,15 @@ class DashboardAPIHandler(DashboardBaseAPIHandler):
 
         self.set_header('Content-Type', 'text/plain')
         self.set_status(202)
+
+
+class UserSelfAPIHandler(DashboardBaseAPIHandler):
+
+    @authenticated
+    async def get(self):
+        """Return the current user."""
+
+        current_user = await self.get_current_user()
+
+        self.set_status(200)
+        self.finish(json.dumps(self.user_model(current_user)))
