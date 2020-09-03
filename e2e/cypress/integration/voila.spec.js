@@ -43,13 +43,8 @@ it('voila dashboard', () => {
   cy.get('#main > div > div > form > div > input[type=submit]')
     .click()
 
-  cy.get('#launch')
-    .should('contain', 'Go to Dashboard')
-    .should('be.visible', { timeout: 20000 })
-    .invoke('removeAttr', 'target').click() // Don't want to open in new tab
-
   cy.get('#Sin-and-Cos-Graph-demo')
-    .should('contain', 'Sin and Cos Graph demo')
+    .should('contain', 'Sin and Cos Graph demo', { timeout: 20000 })
 
   do_stop_dashserver('dash-voila-test')
 
