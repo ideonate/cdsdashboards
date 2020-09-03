@@ -77,7 +77,7 @@ This is what you should see while the build is taking place:
 
 Any errors during the build will be visible here.
 
-Once the Dashboard is built, click the 'Go to Dashboard' button to open the dashboard in a new tab.
+Once the Dashboard is built you will be automatically redirected to it.
 
 The user-friendly and safe version of the notebook is displayed:
 

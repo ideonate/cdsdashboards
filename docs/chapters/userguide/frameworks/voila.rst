@@ -43,7 +43,7 @@ they can locate the file themselves.
 
 Click 'Save'.
 
-Once the Dashboard is built, click the 'Go to Dashboard' button to open the dashboard in a new tab.
+Once the Dashboard is built you will be automatically redirected to it.
 
 The user-friendly and safe version of the notebook is displayed:
 

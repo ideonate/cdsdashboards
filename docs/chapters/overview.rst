@@ -28,8 +28,10 @@ Currently supports:
 - `R Shiny <https://shiny.rstudio.com/>`__ apps
 - Any :ref:`custom web app<customlaunchers>` server or framework
 
-Any authorised JupyterHub user can view the dashboard. This means that you can protect the dashboard with any authentication that works 
+Selected authorised JupyterHub users can view the dashboard. This means that you can protect the dashboard with any authentication that works 
 with JupyterHub - including single-sign-on through corporate email accounts or LDAP.
+
+Dashboard scripts and notebooks can be sourced from a Git repo or from your Jupyter tree.
 
 How it works
 ~~~~~~~~~~~~
@@ -48,7 +50,7 @@ Data scientist creates a Jupyter Notebook as normal
    :alt: Screenshot of Original Jupyter Notebook
 
    
-Data scientist creates a new Dashboard to clone their Jupyter server
+Data scientist creates a new Dashboard to clone their Jupyter server, or take files from a Git repo
 
 .. figure:: ../_static/screenshots/2_Create_New_Dashboard.png
    :alt: Screenshot of Create New Dashboard
@@ -58,13 +60,6 @@ Other logged-in JupyterHub users see the dashboard in their list
 
 .. figure:: ../_static/screenshots/3_Other_User_sees_dashboard.png
    :alt: Screenshot of Other User sees dashboard
-
-
-Click to launch as a server - Dashboard Voilà built automatically
-
-.. figure:: ../_static/screenshots/4_Dashboard_Voila_built_automatically.png
-   :alt: Screenshot of Dashboard Voilà built automatically
-
 
 Uses OAuth to gain access
 

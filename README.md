@@ -18,7 +18,7 @@ notebooks or other scripts as secure interactive web apps.
 
 Source files can be pulled from a Git repo or from the user's Jupyter tree.
 
-Any authorised JupyterHub user can view the dashboard.
+Any authorised JupyterHub user can view the dashboard, or choose to give permission only to named users.
 
 **See [full documentation](https://cdsdashboards.readthedocs.io/)**
 
@@ -44,10 +44,6 @@ _Data scientist creates a new Dashboard to clone their Jupyter server_
 _Other logged-in JupyterHub users see the dashboard in their list_
 
 ![Other User sees dashboard](./docs/_static/screenshots/3_Other_User_sees_dashboard.png "Other User sees dashboard")
-
-_Click to launch as a server_
-
-![Dashboard Voilà built automatically](./docs/_static/screenshots/4_Dashboard_Voila_built_automatically.png "Dashboard Voilà built automatically")
 
 _Uses OAuth to gain access_
 

@@ -42,7 +42,7 @@ Jupyter tree, so we just enter intro.py.
 
 Click 'Save'.
 
-Once the Dashboard is built, click the 'Go to Dashboard' button to open the dashboard in a new tab.
+Once the Dashboard is built you will be automatically redirected to it.
 
 The Streamlit app is displayed:
 

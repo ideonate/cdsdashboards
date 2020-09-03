@@ -45,7 +45,7 @@ Building the Dashboard
 When you click Save, the dashboard will be built automatically. This just means that a new named server is created based on your new Dashboard, 
 but running the Bokeh server instead of Jupyter.
 
-Once the Dashboard is built, click the 'Go to Dashboard' button to open the dashboard in a new tab.
+Once the Dashboard is built you will be automatically redirected to it.
 
 The Bokeh/Panel app is displayed:
 

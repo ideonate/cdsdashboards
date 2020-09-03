@@ -10,7 +10,7 @@ Streamlit, Plotly Dash, Bokeh / Panel, and R Shiny apps as user-friendly interac
 The `cdsdashboards <https://github.com/ideonate/cdsdashboards>`__ open source package allows data scientists to instantly and reliably publish interactive 
 notebooks or other scripts as secure interactive web apps.
 
-Any authorised JupyterHub user can view the dashboard, so for example this can be linked to single sign on through corporate email accounts.
+Selected JupyterHub users can view the dashboard, so for example this can be linked to single sign on through corporate email accounts.
 
 Source files can be obtained from a Git repo, or directly from the dashboard publisher's Jupyter tree.
 

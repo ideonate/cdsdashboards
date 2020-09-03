@@ -4,6 +4,18 @@
 Changelog
 ---------
 
+Version 0.3.4
+~~~~~~~~~~~~~
+
+Released 3 Sep 2020
+
+- Automatically redirect to dashboard when ready (no 'Go to Dashboard' button anymore).
+- allow_custom_conda_env config option means dashboard creator can type their own conda env name or path.
+- More chars (' and ") allowed in start path file names.
+- Added /hub/dashboards-api/hub-info/user endpoint to aid getting current user info in dashboards.
+- Includes jhsingle-native-proxy 0.5.4, changes current working folder to the git root if dashboard created from a git repo source.
+
+
 Version 0.3.3
 ~~~~~~~~~~~~~
 
