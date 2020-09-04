@@ -1,0 +1,17 @@
+{% extends "page.html" %}
+
+{% block main %}
+<div id="main" class="container">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+         
+            <h2>All Groups</h2>
+
+            {% for group in groups %}
+                <p><a href="{{ base_url }}hub/groupslist/{{ group.name | escape }}">{{ group.name | escape }}</a></p>
+            {% endfor %}
+ 
+        </div>
+    </div>
+</div>
+{% endblock main %}

@@ -13,8 +13,63 @@ from ..pluggymanager import pm
 from ..app import BuildersStore, CDSConfigStore
 
 
+class SpawnPermissionsController():
+
+    _instance = None
+
+    @classmethod
+    def get_instance(cls, cdsconfig, db):
+        """
+        Supply a config object to get the singleton instance - only normally available from web handlers
+        """
+        if cls._instance:
+            return cls._instance
+        
+        cls._instance = cls(cdsconfig, db)
+        return cls._instance
+
+    def __init__(self, cdsconfig, db):
+        self.spawn_allow_group = cdsconfig.spawn_allow_group
+        self.spawn_block_group = cdsconfig.spawn_block_group
+
+        self.spawn_allow_group_orm = None
+        self.spawn_block_group_orm = None
+
+        created_group = False
+
+        if self.spawn_allow_group != '':
+            group = Group.find(db, self.spawn_allow_group)
+            if group is None:
+                group = Group(name=self.spawn_allow_group)
+                db.add(group)
+                created_group = True
+            self.spawn_allow_group_orm = group
+
+        if self.spawn_block_group != '':
+            group = Group.find(db, self.spawn_block_group)
+            if group is None:
+                group = Group(name=self.spawn_block_group)
+                db.add(group)
+                created_group = True
+            self.spawn_block_group_orm = group
+
+        if created_group:
+            self.db.commit()
+
+    def can_user_spawn(self, orm_user):
+        if self.spawn_block_group_orm:
+            if orm_user in self.spawn_block_group_orm.users:
+                return False
+        elif self.spawn_allow_group_orm:
+            return orm_user in self.spawn_allow_group_orm.users
+        return True
+
+
 class DashboardBaseHandler(BaseHandler, DashboardBaseMixin):
-    pass
+    
+    def can_user_spawn(self, user):
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+        return SpawnPermissionsController.get_instance(cdsconfig, self.db).can_user_spawn(user.orm_user)
 
 
 class AllDashboardsHandler(DashboardBaseHandler):
@@ -22,6 +77,8 @@ class AllDashboardsHandler(DashboardBaseHandler):
     @authenticated
     @check_database_upgrade
     async def get(self):
+
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
         current_user = await self.get_current_user()
 
@@ -34,7 +91,8 @@ class AllDashboardsHandler(DashboardBaseHandler):
             base_url=self.settings['base_url'],
             my_dashboards=my_dashboards,
             visitor_dashboard_groups=visitor_dashboard_groups,
-            current_user=current_user
+            current_user=current_user,
+            can_spawn=self.can_user_spawn(current_user)
         )
         self.write(html)
 
@@ -46,6 +104,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
     async def get(self, dashboard_urlname=None):
 
         current_user = await self.get_current_user()
+
+        if not self.can_user_spawn(current_user):
+            return self.send_error(403)
 
         cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
@@ -146,6 +207,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
     async def post(self, dashboard_urlname=None):
 
         current_user = await self.get_current_user()
+
+        if not self.can_user_spawn(current_user):
+            return self.send_error(403)
 
         dashboard = None
         group = None
@@ -290,7 +354,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 db.add(dashboard)
 
                 if self.sync_group(group, selected_users_orm):
-                    self.db.add(group)
+                    db.add(group)
                     
                 db.commit()
 
@@ -500,6 +564,83 @@ class UpgradeDashboardsHandler(DashboardBaseHandler):
             base_url=self.settings['base_url']
         )
         self.write(html)
+
+
+class GroupsAllHandler(DashboardBaseHandler):
+
+    @authenticated
+    async def get(self):
+
+        current_user = await self.get_current_user()
+
+        if not current_user.admin:
+            return self.send_error(403)
+
+        groups = self.db.query(Group).all()
+
+        html = self.render_template(
+            "allgroups.html",
+            base_url=self.settings['base_url'],
+            groups=groups
+        )
+        self.write(html)
+
+class GroupsSingleHandler(DashboardBaseHandler):
+
+    @authenticated
+    async def get(self, groupname):
+
+        current_user = await self.get_current_user()
+
+        if not current_user.admin:
+            return self.send_error(403)
+
+        group = Group.find(self.db, groupname)
+
+        if group is None:
+            return self.send_error(404)
+
+        errors = DefaultObjDict()
+
+        existing_group_users = group.users
+
+        all_users_tuples = self.get_visitor_tuples(None, existing_group_users)
+
+        html = self.render_template(
+            "editgroup.html",
+            base_url=self.settings['base_url'],
+            group=group,
+            errors=errors,
+            all_users_tuples=all_users_tuples
+        )
+        self.write(html)
+
+    @authenticated
+    async def post(self, groupname):
+
+        current_user = await self.get_current_user()
+
+        if not current_user.admin:
+            return self.send_error(403)
+
+        group = Group.find(self.db, groupname)
+
+        if group is None:
+            return self.send_error(404)
+
+        errors = DefaultObjDict()
+
+        existing_group_users = group.users
+
+        selected_users = self.get_arguments('selected_users[]')
+
+        selected_users_orm = self.db.query(User).filter(User.name.in_(selected_users)).all()
+
+        if self.sync_group(group, selected_users_orm):
+            self.db.add(group)            
+            self.db.commit()
+
+        self.redirect('{}hub/groupslist'.format(self.settings['base_url']))
 
 
 # Register plugin hooks so we use the Basic handlers by default, unless overridden

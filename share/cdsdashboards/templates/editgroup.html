@@ -1,0 +1,78 @@
+{% extends "page.html" %}
+
+{% block main %}
+<div id="main" class="container">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+
+            <h2>
+                Editing Group {{ group.name | escape }}
+            </h2>
+            
+            <form method="post" class="group-edit-form">
+
+                <h3>User Members</h3>
+
+                    <select multiple name="selected_users[]" id="selected_users" class="selectator" style="width: 300px">
+
+                    {% for visitor_tuple in all_users_tuples %}
+
+                        <option value="{{ visitor_tuple[1] | escape }}" {%if visitor_tuple[0] %}selected{% endif %}>{{ visitor_tuple[1] | escape }}</option>
+
+                    {% endfor %}
+
+                    </select>
+
+
+
+                {% if errors.user_permissions %}
+    
+                <p class="error">{{ errors.user_permissions | escape }}</p>
+    
+                {% endif %}
+
+
+               
+                      
+                {% if errors.all %}
+    
+                <p class="error">{{ errors.all | escape }}</p>
+    
+                {% endif %}
+
+                <div class="dashboard-buttons">
+
+                    <input type="submit" value="Save" id="group-save" /> or <a href='{{ base_url }}hub/groupslist'>Cancel</a>
+
+                </div>
+
+            </form>
+
+
+        </div>
+    </div>
+    <a href="https://cdsdashboards.readthedocs.io/en/stable/chapters/userguide/userguide.html" 
+    id="help-floater" target="_blank" title="View ContainDS Dashboards user guide">Help</a>
+</div>
+{% endblock main %}
+
+{% block script %}
+{{ super () }}
+<link rel="stylesheet" href="../../dashboards-static/components/selectator/fm.selectator.jquery.css"/>
+<script type="text/javascript">
+require(
+    [
+        "jquery", 
+        "../../dashboards-static/components/selectator/fm.selectator.jquery.js"
+    ], 
+    function($, selectator, easytabs) {
+        "use strict";
+
+        $('#selected_users').selectator({
+            showAllOptionsOnFocus: true
+        });
+
+    });
+
+</script>
+{% endblock script %}

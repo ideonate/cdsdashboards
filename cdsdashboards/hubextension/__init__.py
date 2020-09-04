@@ -5,7 +5,8 @@ from traitlets.config import SingletonConfigurable
 
 from jupyterhub.handlers.static import CacheControlStaticFilesHandler
 
-from .main import AllDashboardsHandler, DashboardEditHandler, MainViewDashboardHandler, ClearErrorDashboardHandler, UpgradeDashboardsHandler
+from .main import AllDashboardsHandler, DashboardEditHandler, MainViewDashboardHandler, ClearErrorDashboardHandler, \
+        UpgradeDashboardsHandler, GroupsAllHandler, GroupsSingleHandler
 from .events import ProgressDashboardHandler
 from .._data import DATA_FILES_PATH
 from .api import DashboardsAPIHandler, DashboardDeleteAPIHandler, UserSelfAPIHandler
@@ -29,6 +30,9 @@ cds_extra_handlers = [
     (r'dashboards-api/hub-info/user', UserSelfAPIHandler),
     (r'dashboards-api/(?P<dashboard_urlname>[^/]+?)', DashboardDeleteAPIHandler),
     (r'dashboards-api/(?P<dashboard_urlname>[^/]+?)/progress', ProgressDashboardHandler),
+
+    (r'groupslist', GroupsAllHandler),
+    (r'groupslist/(?P<groupname>[^/]+?)', GroupsSingleHandler),
 
 ]
 

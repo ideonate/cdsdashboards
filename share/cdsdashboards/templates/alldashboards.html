@@ -4,57 +4,61 @@
 <div id="main" class="container">
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
-        
-            <h2>Your own dashboards</h2>
 
-            <p id="dashboards-none" {% if my_dashboards %}class="hidden"{% endif %}>You have not created any dashboards yet</p>
-
-            {% if my_dashboards %}
+            {% if can_spawn %}
             
-            <table class="dashboard-table table table-striped">
-                <thead>
-                <tr>
-                    <th>Dashboard name</th>
-                    <th>View URL</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
+                <h2>Your own dashboards</h2>
 
-                <tbody>
+                <p id="dashboards-none" {% if my_dashboards %}class="hidden"{% endif %}>You have not created any dashboards yet</p>
 
-                {% for dash in my_dashboards %}
+                {% if my_dashboards %}
+                
+                <table class="dashboard-table table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Dashboard name</th>
+                        <th>View URL</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
 
-                <tr class="home-dashboard-row" data-dashboard-name="{{ dash.urlname }}">
-                    {# name #}
-                    <td>{{ dash.name | escape }} </td>
-                    {# url #}
-                    <td>
-                    <a class="dashboard-link" href="{{ base_url }}hub/dashboards/{{ dash.urlname }}" target="_blank">
-                        hub/dashboards/{{ dash.urlname }}
-                    </a>
-                    </td>
-                    {# actions #}
-                    <td>
-                    <a role="button" class="edit-dashboard btn btn-xs btn-primary" id="edit-dash-{{ dash.urlname }}"
-                        href="{{ base_url }}hub/dashboards/{{ dash.urlname }}/edit">
-                        edit</a>
-                    <a role="button" class="delete-dashboard btn btn-xs btn-danger" id="delete-dash-{{ dash.urlname }}">delete</a>
-                    </td>
-                </tr>
+                    <tbody>
 
-                {% endfor %}
+                    {% for dash in my_dashboards %}
 
-                </tbody>
-            </table>
-            {% endif %}
+                    <tr class="home-dashboard-row" data-dashboard-name="{{ dash.urlname }}">
+                        {# name #}
+                        <td>{{ dash.name | escape }} </td>
+                        {# url #}
+                        <td>
+                        <a class="dashboard-link" href="{{ base_url }}hub/dashboards/{{ dash.urlname }}" target="_blank">
+                            hub/dashboards/{{ dash.urlname }}
+                        </a>
+                        </td>
+                        {# actions #}
+                        <td>
+                        <a role="button" class="edit-dashboard btn btn-xs btn-primary" id="edit-dash-{{ dash.urlname }}"
+                            href="{{ base_url }}hub/dashboards/{{ dash.urlname }}/edit">
+                            edit</a>
+                        <a role="button" class="delete-dashboard btn btn-xs btn-danger" id="delete-dash-{{ dash.urlname }}">delete</a>
+                        </td>
+                    </tr>
 
-            <div class="row">
-                <div class="text-center">
-                    <a id="start" role="button" class="btn btn-lg btn-primary" href="dashboards-new">
-                        New Dashboard
-                    </a>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                {% endif %}
+
+                <div class="row">
+                    <div class="text-center">
+                        <a id="start" role="button" class="btn btn-lg btn-primary" href="dashboards-new">
+                            New Dashboard
+                        </a>
+                    </div>
                 </div>
-            </div>
+
+            {% endif %}
 
             <h2>Dashboards from others</h2>
 

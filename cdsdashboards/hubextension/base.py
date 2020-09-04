@@ -123,10 +123,12 @@ class DashboardBaseMixin:
 
         return user_dashboard_groups
 
-    def get_visitor_users(self, exclude_user_id):
-        return self.db.query(User).filter(User.id != exclude_user_id).all()
+    def get_visitor_users(self, exclude_user_id=None):
+        if exclude_user_id is not None:
+            return self.db.query(User).filter(User.id != exclude_user_id).all()
+        return self.db.query(User).all()
 
-    def get_visitor_tuples(self, exclude_user_id, existing_group_users=None):
+    def get_visitor_tuples(self, exclude_user_id=None, existing_group_users=None):
         possible_visitor_users = self.get_visitor_users(exclude_user_id)
 
         visitor_users = []
@@ -322,4 +324,3 @@ class DashboardBaseMixin:
         self.db.delete(spawner.orm_spawner)
         user.spawners.pop(server_name, None)
         self.db.commit()
-

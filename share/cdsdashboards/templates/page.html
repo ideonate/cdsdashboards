@@ -3,6 +3,10 @@
 {% block nav_bar_left_items %}
 {{ super() }}
 
+{% if user.admin %}
+    <li><a href="{{base_url}}groupslist">Group</a></li>
+{% endif %}
+
 <li><a href="{{base_url}}dashboards">Dashboards</a></li>
 
 {% endblock %}
