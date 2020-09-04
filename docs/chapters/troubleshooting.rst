@@ -148,3 +148,29 @@ core `JupyterHub code <https://github.com/jupyterhub/jupyterhub/blob/76c9111d806
 
 It can be safely ignored, and hasn't in itself been known to cause any problems with dashboards.
 
+.. _streamlit_components:
+
+Streamlit Components aren't working
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In newer browsers, `Streamlit Components <https://www.streamlit.io/components>`__ may not work correctly. This is because components make heavy use of iframes 
+which do not always send cookies so ContainDS Dashboards isn't able to identify the user correctly. You'll see something like this in the Javascript Console:
+
+    A cookie associated with a cross-site resource was set without the 'SameSite' attribute. It has been blocked, as Chrome now only delivers 
+    cookies with cross-site requests if they are set with 'SameSite=None' and 'Secure'.
+
+To fix, your site needs to be running under HTTPS and your user environment needs to be running Python 3.8 or later.
+
+In your jupyterhub_config, add:
+
+::
+
+    c.VariableMixin.extra_presentation_launchers = {
+        'streamlit': {
+            'env': {'JUPYTERHUB_COOKIE_OPTIONS': '{"SameSite": "None", "Secure": true}'}
+        }
+    }
+
+or you could set that environment variable at a higher level to affect all singleuser servers, for example 
+through :code:`c.Spawner.environment` or :code:`c.Spawner.env_keep`. 
+See `JupyterHub Spawner docs <https://jupyterhub.readthedocs.io/en/stable/api/spawner.html#jupyterhub.spawner.Spawner.environment>`__.
