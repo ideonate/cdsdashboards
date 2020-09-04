@@ -164,6 +164,7 @@ class CDSDashboardsConfig(SingletonConfigurable):
         If both are non-blank, spawn_block_group will take priority.
         """
     ).tag(config=True)
+    
 
 class CDSConfigStore():
 

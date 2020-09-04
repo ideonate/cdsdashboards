@@ -23,7 +23,7 @@ do_create_and_start_dashboard = (name, path, framework) => {
 
   cy.visit('/hub/home')
 
-  cy.get('#thenavbar > ul:nth-child(1) > li:nth-child(4) > a')
+  cy.get('#thenavbar > ul:nth-child(1) > li:nth-child(5) > a')
     .should('contain', 'Dashboards').click()
 
   cy.get('#start')

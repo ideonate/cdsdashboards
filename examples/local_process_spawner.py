@@ -67,7 +67,7 @@ c.CDSDashboardsConfig.conda_envs = ['env1', 'env2', 'cds']
 #c.VariableMixin.voila_template = 'materialstream'
 
 
-c.CDSDashboardsConfig.spawn_allow_group = 'spawners-group'
+#c.CDSDashboardsConfig.spawn_allow_group = 'spawners-group'
 
 
 c.VariableMixin.proxy_last_activity_interval = 10

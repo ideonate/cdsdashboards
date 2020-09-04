@@ -7,15 +7,14 @@ from async_generator import aclosing
 from tornado.web import HTTPError
 from tornado.log import app_log
 
-from jupyterhub.orm import User
+from jupyterhub.orm import User, Group
 from jupyterhub.utils import iterate_until
 
 from ..util import maybe_future
 from ..orm import Dashboard
-from ..app import BuildersStore
+from ..app import BuildersStore, CDSConfigStore
 from ..dbutil import is_upgrade_needed
 from ..util import DefaultObjDict
-
 
 def spawner_to_dict(spawner):
     name = spawner.name
@@ -35,6 +34,61 @@ def check_database_upgrade(f):
             return self.redirect("{}hub/dashboards-db-upgrade".format(self.settings['base_url']))
         return f(self, *args, **kwargs)
     return handler
+
+
+class SpawnPermissionsController():
+
+    _instance = None
+
+    @classmethod
+    def get_instance(cls, cdsconfig, db):
+        """
+        Supply a config object to get the singleton instance - only normally available from web handlers
+        """
+        if cls._instance:
+            return cls._instance
+
+        if cdsconfig is None:
+            raise Exception('SpawnPermissionsController must be run first within a handler - please visit any JupyterHub webpage then try again')
+        
+        cls._instance = cls(cdsconfig, db)
+        return cls._instance
+
+    def __init__(self, cdsconfig, db):
+        self.spawn_allow_group = cdsconfig.spawn_allow_group
+        self.spawn_block_group = cdsconfig.spawn_block_group
+
+        self.spawn_allow_group_orm = None
+        self.spawn_block_group_orm = None
+
+        created_group = False
+
+        if self.spawn_allow_group != '':
+            group = Group.find(db, self.spawn_allow_group)
+            if group is None:
+                group = Group(name=self.spawn_allow_group)
+                db.add(group)
+                created_group = True
+            self.spawn_allow_group_orm = group
+
+        if self.spawn_block_group != '':
+            group = Group.find(db, self.spawn_block_group)
+            if group is None:
+                group = Group(name=self.spawn_block_group)
+                db.add(group)
+                created_group = True
+            self.spawn_block_group_orm = group
+
+        if created_group:
+            self.db.commit()
+
+    def can_user_spawn(self, orm_user):
+        if self.spawn_block_group_orm:
+            if orm_user in self.spawn_block_group_orm.users:
+                return False
+        elif self.spawn_allow_group_orm:
+            return orm_user in self.spawn_allow_group_orm.users
+        return True
 
 
 class DashboardBaseMixin:
@@ -324,3 +378,7 @@ class DashboardBaseMixin:
         self.db.delete(spawner.orm_spawner)
         user.spawners.pop(server_name, None)
         self.db.commit()
+
+    def can_user_spawn(self, user):
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+        return SpawnPermissionsController.get_instance(cdsconfig, self.db).can_user_spawn(user.orm_user)

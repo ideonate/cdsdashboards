@@ -7,6 +7,7 @@ from jupyterhub.handlers.static import CacheControlStaticFilesHandler
 
 from .main import AllDashboardsHandler, DashboardEditHandler, MainViewDashboardHandler, ClearErrorDashboardHandler, \
         UpgradeDashboardsHandler, GroupsAllHandler, GroupsSingleHandler
+from .core import OurHomeHandler
 from .events import ProgressDashboardHandler
 from .._data import DATA_FILES_PATH
 from .api import DashboardsAPIHandler, DashboardDeleteAPIHandler, UserSelfAPIHandler
@@ -33,6 +34,8 @@ cds_extra_handlers = [
 
     (r'groupslist', GroupsAllHandler),
     (r'groupslist/(?P<groupname>[^/]+?)', GroupsSingleHandler),
+
+    (r'home-cds', OurHomeHandler),
 
 ]
 

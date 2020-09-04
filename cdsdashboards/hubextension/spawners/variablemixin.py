@@ -7,6 +7,8 @@ from traitlets.config import Configurable
 from jupyterhub.spawner import _quote_safe
 from jupyterhub.traitlets import Command
 
+from ..base import SpawnPermissionsController, CDSConfigStore
+
 def _get_voila_template(args, spawner):
 
     voila_template = getattr(spawner, 'voila_template', '')
@@ -282,6 +284,11 @@ class VariableMixin(Configurable):
         s = re.sub('[^a-z0-9]', '-', s) # Replace any non-alphanumeric chars with dash
         s = re.sub('^-+|-+$|-(?=-)', '', s) # Remove dashes from start/end and reduce multiple dashes to just one dash
         return s
+
+    def run_pre_spawn_hook(self):
+        if not SpawnPermissionsController.get_instance(CDSConfigStore.get_instance(self.config), self.db).can_user_spawn(self.user.orm_user):
+            raise Exception('User {} is not allowed to spawn a server'.format(self.user.name))
+        return super().run_pre_spawn_hook()
 
 
 class MetaVariableMixin(type(Configurable)):

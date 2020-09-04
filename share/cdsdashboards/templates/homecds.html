@@ -1,0 +1,14 @@
+{% extends "templates/home.html" %}
+
+{% block main %}
+<div class="container">
+
+    <h2>Dashboard User</h2>
+
+    <p>You are only allowed to <a href="{{ base_url }}hub/dashboards">view existing dashboards</a>.</p>
+
+    <p>Please contact the administrator if you should be allowed to start Jupyter servers and create your own dashboards.</p>
+  
+ </div>
+ {% endblock main %}
+  

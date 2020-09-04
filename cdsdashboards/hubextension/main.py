@@ -13,63 +13,9 @@ from ..pluggymanager import pm
 from ..app import BuildersStore, CDSConfigStore
 
 
-class SpawnPermissionsController():
-
-    _instance = None
-
-    @classmethod
-    def get_instance(cls, cdsconfig, db):
-        """
-        Supply a config object to get the singleton instance - only normally available from web handlers
-        """
-        if cls._instance:
-            return cls._instance
-        
-        cls._instance = cls(cdsconfig, db)
-        return cls._instance
-
-    def __init__(self, cdsconfig, db):
-        self.spawn_allow_group = cdsconfig.spawn_allow_group
-        self.spawn_block_group = cdsconfig.spawn_block_group
-
-        self.spawn_allow_group_orm = None
-        self.spawn_block_group_orm = None
-
-        created_group = False
-
-        if self.spawn_allow_group != '':
-            group = Group.find(db, self.spawn_allow_group)
-            if group is None:
-                group = Group(name=self.spawn_allow_group)
-                db.add(group)
-                created_group = True
-            self.spawn_allow_group_orm = group
-
-        if self.spawn_block_group != '':
-            group = Group.find(db, self.spawn_block_group)
-            if group is None:
-                group = Group(name=self.spawn_block_group)
-                db.add(group)
-                created_group = True
-            self.spawn_block_group_orm = group
-
-        if created_group:
-            self.db.commit()
-
-    def can_user_spawn(self, orm_user):
-        if self.spawn_block_group_orm:
-            if orm_user in self.spawn_block_group_orm.users:
-                return False
-        elif self.spawn_allow_group_orm:
-            return orm_user in self.spawn_allow_group_orm.users
-        return True
-
-
 class DashboardBaseHandler(BaseHandler, DashboardBaseMixin):
     
-    def can_user_spawn(self, user):
-        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
-        return SpawnPermissionsController.get_instance(cdsconfig, self.db).can_user_spawn(user.orm_user)
+    pass
 
 
 class AllDashboardsHandler(DashboardBaseHandler):
