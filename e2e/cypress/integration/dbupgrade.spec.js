@@ -3,7 +3,7 @@ it('upgrade db', () => {
   
   do_login()
 
-  cy.get('#thenavbar > ul:nth-child(1) > li:nth-child(5) > a')
+  cy.get('#thenavbar > ul:nth-child(1) > li:nth-child(4) > a')
     .should('contain', 'Dashboards').click()
 
   cy.get('.dashboard-edit-form input')
@@ -12,7 +12,7 @@ it('upgrade db', () => {
   cy.get('#main')
     .should('contain', 'Database upgrade successful!')
 
-  cy.get('#thenavbar > ul:nth-child(1) > li:nth-child(5) > a')
+  cy.get('#thenavbar > ul:nth-child(1) > li:nth-child(4) > a')
     .should('contain', 'Dashboards').click()
 
   cy.get('#start')

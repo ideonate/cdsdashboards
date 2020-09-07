@@ -59,3 +59,7 @@ ul.dashboard-selectable-tabs li.active {
 .dashboard-tab-container > div {
     margin-left: 20px;
 }
+
+.groupslist-menuitem p {
+    text-align: right;
+}

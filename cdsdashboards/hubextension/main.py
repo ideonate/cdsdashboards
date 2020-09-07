@@ -522,7 +522,7 @@ class GroupsAllHandler(DashboardBaseHandler):
         if not current_user.admin:
             return self.send_error(403)
 
-        groups = self.db.query(Group).all()
+        groups = self.db.query(Group).order_by(Group.name).all()
 
         html = self.render_template(
             "allgroups.html",

@@ -6,7 +6,7 @@ it('login as dan', () => {
   cy.get('#start')
     .should('contain', 'My Server')
 
-  cy.get('#thenavbar > ul:nth-child(1) > li:nth-child(5) > a')
+  cy.get('#thenavbar > ul:nth-child(1) > li:nth-child(4) > a')
     .should('contain', 'Dashboards').click()
 
   cy.get('#start')
