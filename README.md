@@ -85,4 +85,7 @@ Contact [support@containds.com](mailto:support@containds.com) with any comments 
 
 There is a [Gitter room](https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) for general chat with other community members, e.g. for confguration and use case tips.
 
-[![Documentation Status](https://readthedocs.org/projects/cdsdashboards/badge/?version=stable)](https://cdsdashboards.readthedocs.io/en/stable/?badge=stable) [![Join the chat at https://gitter.im/ideonate/ContainDS](https://badges.gitter.im/ideonate/ContainDS.svg)](https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/ideonate/ContainDS](https://badges.gitter.im/ideonate/ContainDS.svg)](https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Documentation Status](https://readthedocs.org/projects/cdsdashboards/badge/?version=stable)](https://cdsdashboards.readthedocs.io/en/stable/?badge=stable)
+[![Latest release](https://img.shields.io/pypi/v/cdsdashboards?color=blue)](https://pypi.org/project/cdsdashboards/) 
+[![Latest release](https://anaconda.org/conda-forge/cdsdashboards/badges/version.svg)](https://anaconda.org/conda-forge/cdsdashboards)
