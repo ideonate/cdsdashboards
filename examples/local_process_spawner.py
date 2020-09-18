@@ -49,6 +49,12 @@ dirname = os.path.dirname(__file__)
 
 #c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel', 'unavailable']
 
+c.VariableMixin.extra_presentation_launchers = {
+    'streamlit': {
+        'env': {'JUPYTERHUB_COOKIE_OPTIONS': '{"SameSite": "None", "Secure": true}'}
+    }
+}
+
 
 c.CDSDashboardsConfig.show_source_git = True
 c.CDSDashboardsConfig.show_source_servers = False
@@ -82,18 +88,16 @@ import os
 ## Path to SSL certificate file for the public facing interface of the proxy
 #
 #  When setting this, you should also set ssl_key
-#c.JupyterHub.ssl_cert = os.environ['SSL_CERT']
+c.JupyterHub.ssl_cert = os.environ['SSL_CERT']
 
 ## Path to SSL key file for the public facing interface of the proxy
 #
 #  When setting this, you should also set ssl_cert
-#c.JupyterHub.ssl_key = os.environ['SSL_KEY']
+c.JupyterHub.ssl_key = os.environ['SSL_KEY']
 
 c.JupyterHub.internal_ssl = False
 
-#c.JupyterHub.bind_url = 'https://0.0.0.0:443'
-
-c.JupyterHub.bind_url = 'http://0.0.0.0:80'
+c.JupyterHub.bind_url = 'https://0.0.0.0:443'
 
 #c.ConfigurableHTTPProxy.command = ['configurable-http-proxy', '--no-x-forward']
 

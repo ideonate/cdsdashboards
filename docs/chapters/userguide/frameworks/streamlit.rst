@@ -50,3 +50,8 @@ The Streamlit app is displayed:
    :alt: Dashboard screen
 
 See :ref:`working with dashboards<working>` to understand more about how Dashboards operate, including sharing them with colleagues.
+
+Problems with Components
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+If `Streamlit Components <https://www.streamlit.io/components>`__ are not working, please see :ref:`streamlit_components`.

@@ -24,6 +24,10 @@ def _get_streamlit_debug(args, spawner):
         pass
     return args
 
+def _fixed_format(s, **kwargs):
+    for k,v in kwargs.items():
+        s = s.replace(''.join(('{',k,'}')), v)
+    return s
 
 class VariableMixin(Configurable):
 
@@ -264,7 +268,7 @@ class VariableMixin(Configurable):
                 self.log.info('presentation_dirname: {}'.format(presentation_dirname))
 
                 for k,v in launcher['env'].items():
-                    env[k] = v.format(
+                    env[k] = _fixed_format(v, 
                         base_url=self.server.base_url,
                         presentation_dirname=presentation_dirname,
                         presentation_path=presentation_path,
