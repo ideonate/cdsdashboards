@@ -70,6 +70,18 @@ features and security advice.
 And there is a `Gitter room <https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`__ 
 for general chat with other community members.
 
+Sponsorship
+~~~~~~~~~~~
+
+If you are using ContainDS Dashboards in production please consider subscribing to a support plan. This will back future development of the 
+project and is a great way to satisfy your business stakeholders that you are adopting sustainable and supported software.
+
+It also helps you reach your corporate social responsibility goals since our open source software is used by academic and non-profit organizations. 
+
+Optionally, your name and logo can be featured on GitHub and our website.
+
+More `Sponsorship details are on GitHub <https://github.com/sponsors/ideonate>`__.
+
 Documentation Contents
 ~~~~~~~~~~~~~~~~~~~~~~
 
