@@ -188,8 +188,7 @@ class VariableMixin(Configurable):
 
         if presentation_path != '' and not '..' in presentation_path:
             # Should have been validated when dashboard created, but .. is particularly dangerous
-            if presentation_path.startswith("/"):
-                presentation_path = presentation_path[1:]
+            presentation_path = re.sub('^/+', '', presentation_path) # Remove leading slash(es) to ensure it is relative to home folder
             notebook_dir = os.path.join(notebook_dir, presentation_path)
 
         if 'args' in launcher:

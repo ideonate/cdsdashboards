@@ -55,4 +55,8 @@ gdebi shiny-server-1.5.13.944-amd64.deb
 systemctl stop shiny-server
 
 
-Try example 2 here https://shiny.rstudio.com/articles/basics.html
+# Try example 2 here https://shiny.rstudio.com/articles/basics.html
+
+
+# Visit 127.0.0.1:12000/hub/home
+# login with admin/password
