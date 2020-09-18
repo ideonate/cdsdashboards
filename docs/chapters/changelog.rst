@@ -4,6 +4,15 @@
 Changelog
 ---------
 
+Version 0.3.5
+~~~~~~~~~~~~~
+
+Released 18 Sep 2020
+
+- Stricter checks that dashboard start_path is not absolute.
+- Fix to allow Streamlit components to work in iframes (requires config - see :ref:`streamlit_components`).
+- Corresponds to jhsingle_native_proxy release 0.5.6 (always passes an absolute presentation_path to subcommand).
+
 Version 0.3.4
 ~~~~~~~~~~~~~
 
@@ -14,7 +23,6 @@ Released 3 Sep 2020
 - More chars (' and ") allowed in start path file names.
 - Added /hub/dashboards-api/hub-info/user endpoint to aid getting current user info in dashboards.
 - Includes jhsingle-native-proxy 0.5.4, changes current working folder to the git root if dashboard created from a git repo source.
-
 
 Version 0.3.3
 ~~~~~~~~~~~~~
