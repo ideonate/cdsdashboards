@@ -192,6 +192,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         if '..' in dashboard_start_path:
             errors.start_path = 'Path must not contain ..'
+        elif len(dashboard_start_path) and dashboard_start_path[0] == '/':
+            errors.start_path = 'Path must be relative to Jupyter tree home or Git repo root (not starting with /)'
         elif not self.start_path_regex.match(dashboard_start_path):
             errors.start_path = 'Please enter valid URL path characters'
 
