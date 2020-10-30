@@ -146,7 +146,11 @@ class VariableMixin(Configurable):
         if self.user_options:
             trait_names = set(self.trait_names()) - {'user_options'}
             for k in trait_names.intersection(self.user_options.keys()):
-                setattr(self, k, self.user_options[k])
+                merged_trait = self.user_options[k]
+                if type(getattr(self, k, None)) == dict:
+                    # Merge dicts if one already exists for this trait
+                    merged_trait = {**getattr(self, k), **merged_trait}
+                setattr(self, k, merged_trait)
 
         # Any update for cmd needs to be set here (args and env have their own overridden functions)
         presentation_type = self._get_presentation_type()

@@ -48,13 +48,15 @@ class ProcessBuilder(Builder):
             'presentation_type': dashboard.presentation_type or 'voila',
             'presentation_path': dashboard.start_path,
             'git_repo': git_repo,
-            'conda_env': conda_env,
-            #
-            'environment': {
+            'conda_env': conda_env})
+        
+        if 'environment' not in new_server_options:
+            new_server_options['environment'] = {}
+
+        new_server_options['environment'].update({
                 'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
                 'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)
-                }
-            })
+                })
 
         return (new_server_name, new_server_options)
 
