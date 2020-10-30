@@ -1,0 +1,15 @@
+{% extends "templates/page.html" %}
+
+{% block nav_bar_left_items %}
+{{ super() }}
+
+<li><a href="{{base_url}}dashboards">Dashboards</a></li>
+
+{% endblock %}
+
+{% block stylesheet %}
+<meta http-equiv="Content-Language" content="en">
+<link rel="stylesheet" href="{{base_url}}dashboards-static/css/style.css" type="text/css" />
+{{ super() }}
+
+{% endblock %}
