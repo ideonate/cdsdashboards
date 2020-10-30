@@ -17,3 +17,4 @@ redirect to their 'My Server' when they hit the home page:
     c.JupyterHub.redirect_to_server = False
     c.JupyterHub.default_url = '/hub/dashboards'
 
+Please also see :ref:`restrictusers`.

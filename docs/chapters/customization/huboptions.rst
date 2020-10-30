@@ -215,6 +215,16 @@ only affecting dashboard servers). It can also be overridden to affect each pres
 
 See :ref:`custom launchers <customlaunchers>` and :ref:`default_presentation_cmd`.
 
+Allow or Block Users from Spawning/Dashboards
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The settings :code:`c.CDSDashboardsConfig.spawn_allow_group` and :code:`c.CDSDashboardsConfig.spawn_block_group` can be used to restrict which users 
+can start Jupyter servers or create their own dashboards by adding users to a JupyterHub Group. This is useful if you have non-technical users 
+in JupyterHub who want to use others' dashboards, but who should not be allowed to create their own.
+
+Please see :ref:`restrictusers`.
+
+
 Mailing List for Updates
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
