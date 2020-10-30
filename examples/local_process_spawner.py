@@ -75,10 +75,10 @@ c.VariableMixin.proxy_last_activity_interval = 10
 c.VariableMixin.proxy_force_alive = True
 
 
-from cdsdashboards.app import CDS_TEMPLATE_PATHS
+from cdsdashboards.app import CDS_TEMPLATE_PATHS_RESTRICTED
 from cdsdashboards.hubextension import cds_extra_handlers
 
-c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
+c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS_RESTRICTED
 c.JupyterHub.extra_handlers = cds_extra_handlers
 
 

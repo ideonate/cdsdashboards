@@ -30,15 +30,13 @@ from .pluggymanager import pm
 from . import hookimpl
 
 
-CDS_TEMPLATE_PATH = os.path.join(DATA_FILES_PATH, 'templates')
+_TEMPLATE_PATH_OPEN = os.path.join(DATA_FILES_PATH, 'templates-open')
+_TEMPLATE_PATH_RESTRICTED = os.path.join(DATA_FILES_PATH, 'templates-restricted')
+_TEMPLATE_PATH_COMMON = os.path.join(DATA_FILES_PATH, 'templates-common')
 
-@hookimpl
-def get_hubextension_app_template_paths():
-    return CDS_TEMPLATE_PATH
 
-pm.register(sys.modules[__name__])
-
-CDS_TEMPLATE_PATHS = pm.hook.get_hubextension_app_template_paths()
+CDS_TEMPLATE_PATHS = [_TEMPLATE_PATH_OPEN, _TEMPLATE_PATH_COMMON]
+CDS_TEMPLATE_PATHS_RESTRICTED = [_TEMPLATE_PATH_RESTRICTED, _TEMPLATE_PATH_COMMON]
 
 _all_allowed_presentation_types = ['voila', 'streamlit', 'plotlydash', 'bokeh', 'rshiny']
 
