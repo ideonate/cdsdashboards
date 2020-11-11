@@ -4,6 +4,17 @@
 Changelog
 ---------
 
+Version 0.4.0
+~~~~~~~~~~~~~
+
+Released 11 Nov 2020
+
+- Functionality to split users into non-technical or developers groups.
+- UI alternatives for /hub/home-cds to prevent non-technical users being presented with 'My Server' or dashboard buttons.
+- Group management UI in admin pages.
+- See :ref:`restrictusers` for more details.
+- Merge trait dicts (e.g. Env vars) in Spawners, fix of `issue 43 <https://github.com/ideonate/cdsdashboards/issues/43>`__.
+
 Version 0.3.5
 ~~~~~~~~~~~~~
 
