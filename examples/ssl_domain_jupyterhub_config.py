@@ -11,48 +11,48 @@ config_for_dashboards(c)
 c.JupyterHub.template_vars = {'cds_hide_user_named_servers': False, 'cds_hide_user_dashboard_servers': False}
 
 
-#c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
+c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
 
 
 # GitHub login trial
 
-from oauthenticator.github import GitHubOAuthenticator
-c.GitHubOAuthenticator.scope = ['read:org', 'public_repo', 'repo', 'user:email']
+#from oauthenticator.github import GitHubOAuthenticator
+#c.GitHubOAuthenticator.scope = ['read:org', 'public_repo', 'repo', 'user:email']
 
-class MyGitHubAuthenticator(GitHubOAuthenticator):
+#class MyGitHubAuthenticator(GitHubOAuthenticator):
     
-    from tornado import gen
+#    from tornado import gen
 
-    @gen.coroutine
-    def pre_spawn_start(self, user, spawner):
-        auth_state = yield user.get_auth_state()
-        import pprint
-        pprint.pprint(auth_state)
-        if not auth_state:
-            # user has no auth state
-            return
-        # define some environment variables from auth_state
-        spawner.environment['GITHUB_TOKEN'] = auth_state['access_token']
-        spawner.environment['GITHUB_USER'] = auth_state['github_user']['login']
-        spawner.environment['GITHUB_EMAIL'] = auth_state['github_user']['email']
+#    @gen.coroutine
+#    def pre_spawn_start(self, user, spawner):
+#        auth_state = yield user.get_auth_state()
+#        import pprint
+#        pprint.pprint(auth_state)
+#        if not auth_state:
+#            # user has no auth state
+#            return
+#        # define some environment variables from auth_state
+#        spawner.environment['GITHUB_TOKEN'] = auth_state['access_token']
+#        spawner.environment['GITHUB_USER'] = auth_state['github_user']['login']
+#        spawner.environment['GITHUB_EMAIL'] = auth_state['github_user']['email']
 
 
-c.JupyterHub.authenticator_class = MyGitHubAuthenticator
+#c.JupyterHub.authenticator_class = MyGitHubAuthenticator
 
 
 #c.GitHubOAuthenticator.enable_auth_state = True
 
-if 'JUPYTERHUB_CRYPT_KEY' not in os.environ:
-    import warnings
+#if 'JUPYTERHUB_CRYPT_KEY' not in os.environ:
+#    import warnings
 
-    warnings.warn(
-        "Need JUPYTERHUB_CRYPT_KEY env for persistent auth_state.\n"
-        "    export JUPYTERHUB_CRYPT_KEY=$(openssl rand -hex 32)"
-    )
-    c.CryptKeeper.keys = [ os.urandom(32) ]
-    c.CryptKeeper.n_threads = 1
+ #   warnings.warn(
+ #       "Need JUPYTERHUB_CRYPT_KEY env for persistent auth_state.\n"
+ #       "    export JUPYTERHUB_CRYPT_KEY=$(openssl rand -hex 32)"
+ #   )
+ #   c.CryptKeeper.keys = [ os.urandom(32) ]
+ #   c.CryptKeeper.n_threads = 1
 
-c.CryptKeeper.n_threads = 2
+#c.CryptKeeper.n_threads = 2
 
 c.JupyterHub.bind_url = 'https://0.0.0.0:443'
 
