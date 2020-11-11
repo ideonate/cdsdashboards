@@ -94,6 +94,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         spawner_id = ''
         source_type = dashboard_options.get('source_type', 'jupytertree')
         git_repo = ''
+        git_repo_branch = ''
 
         if cdsconfig.show_source_servers:
 
@@ -105,6 +106,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         if cdsconfig.show_source_git:
             git_repo = dashboard_options.get('git_repo', '')
+            git_repo_branch = dashboard_options.get('git_repo_branch', '')
         else:
             source_type = 'jupytertree'
 
@@ -128,6 +130,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             dashboard_options=dashboard_options,
             source_type=source_type,
             git_repo=git_repo,
+            git_repo_branch=git_repo_branch,
             conda_env=conda_env,
             presentation_types=merged_presentation_types,
             all_conda_envs=all_conda_envs,
@@ -223,10 +226,12 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         dashboard_options = {}
 
         git_repo = ''
+        git_repo_branch = ''
         source_type = self.get_argument('source_type', '').strip()
 
         if cdsconfig.show_source_git and source_type == 'gitrepo':
             git_repo = self.get_argument('git_repo', '').strip()
+            git_repo_branch = self.get_argument('git_repo_branch', '').strip()
 
             if git_repo != '':
                 if not re.match('^((git|ssh|http(s)?)|(git@[\w\.]+))(:(//)?)([\w\.@\:/\-~]+)(/)?$', git_repo):
@@ -247,6 +252,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         dashboard_options['source_type'] = source_type
         dashboard_options['git_repo'] = git_repo
+        dashboard_options['git_repo_branch'] = git_repo_branch
         dashboard_options['conda_env'] = conda_env
 
         spawners = []
@@ -331,6 +337,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         if len(errors):
 
             git_repo = dashboard_options['git_repo'] = dashboard_options.get('git_repo', '')
+            git_repo_branch = dashboard_options['git_repo_branch'] = dashboard_options.get('git_repo_branch', '')
             conda_env = dashboard_options['conda_env'] = dashboard_options.get('conda_env', '')
             all_users_tuples = self.get_visitor_tuples(current_user.id, selected_users_orm)
 
@@ -346,6 +353,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 dashboard_options=dashboard_options,
                 user_permissions=user_permissions,
                 git_repo=git_repo,
+                git_repo_branch=git_repo_branch,
                 source_type=source_type,
                 conda_env=conda_env,
                 presentation_types=merged_presentation_types,

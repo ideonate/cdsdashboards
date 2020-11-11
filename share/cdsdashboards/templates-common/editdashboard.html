@@ -131,6 +131,11 @@
                         <p><input type="text" name="git_repo" id="git_repo" 
                                                         value="{{ git_repo | escape }}" /></p>
 
+                        <p><label for="source_type_git_branch">Git Repo Branch</label></p>
+
+                        <p><input type="text" name="git_repo_branch" id="git_repo_branch" 
+                                                        value="{{ git_repo_branch | escape }}" /></p>
+
                         {% if errors.git_repo %}
             
                         <p class="error">{{ errors.git_repo | escape }}</p>
