@@ -42,7 +42,7 @@ jobs:
           tags: ideonate/cdsdashboards-jupyter-k8s-hub:${{ env.cds_helm_chart_ver }}-sha-${{ steps.getshortsha.outputs.sha_short }}
           context: ./
           file: ./docker-images/z2jh/hub/Dockerfile
-          build_args: |
+          build-args: |
             BASE_IMAGE=jupyterhub/k8s-hub:${{ env.cds_helm_chart_ver }}
           push: ${{ github.event_name != 'pull_request' }}
 

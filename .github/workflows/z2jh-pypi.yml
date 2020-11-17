@@ -34,7 +34,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build docker 
+      - name: Build docker 1
         uses: docker/build-push-action@v2
         env: 
           cds_helm_chart_ver: 0.10.3
@@ -42,7 +42,46 @@ jobs:
           tags: ideonate/cdsdashboards-jupyter-k8s-hub:${{ env.cds_helm_chart_ver }}-${{ steps.getcdsversion.outputs.cdsversion }}
           context: ./
           file: ./docker-images/z2jh/hub/Dockerfile.pypi
-          build_args: |
+          build-args: |
+            CDSVERSION=${{ steps.getcdsversion.outputs.cdsversion }}
+            BASE_IMAGE=jupyterhub/k8s-hub:${{ env.cds_helm_chart_ver }}
+          push: ${{ github.event_name != 'pull_request' }}
+
+      - name: Build docker 2
+        uses: docker/build-push-action@v2
+        env: 
+          cds_helm_chart_ver: 0.10.0
+        with:
+          tags: ideonate/cdsdashboards-jupyter-k8s-hub:${{ env.cds_helm_chart_ver }}-${{ steps.getcdsversion.outputs.cdsversion }}
+          context: ./
+          file: ./docker-images/z2jh/hub/Dockerfile.pypi
+          build-args: |
+            CDSVERSION=${{ steps.getcdsversion.outputs.cdsversion }}
+            BASE_IMAGE=jupyterhub/k8s-hub:${{ env.cds_helm_chart_ver }}
+          push: ${{ github.event_name != 'pull_request' }}
+
+      - name: Build docker 3
+        uses: docker/build-push-action@v2
+        env: 
+          cds_helm_chart_ver: 0.9.1
+        with:
+          tags: ideonate/cdsdashboards-jupyter-k8s-hub:${{ env.cds_helm_chart_ver }}-${{ steps.getcdsversion.outputs.cdsversion }}
+          context: ./
+          file: ./docker-images/z2jh/hub/Dockerfile.pypi
+          build-args: |
+            CDSVERSION=${{ steps.getcdsversion.outputs.cdsversion }}
+            BASE_IMAGE=jupyterhub/k8s-hub:${{ env.cds_helm_chart_ver }}
+          push: ${{ github.event_name != 'pull_request' }}
+
+      - name: Build docker 4
+        uses: docker/build-push-action@v2
+        env: 
+          cds_helm_chart_ver: 0.9.0
+        with:
+          tags: ideonate/cdsdashboards-jupyter-k8s-hub:${{ env.cds_helm_chart_ver }}-${{ steps.getcdsversion.outputs.cdsversion }}
+          context: ./
+          file: ./docker-images/z2jh/hub/Dockerfile.pypi
+          build-args: |
             CDSVERSION=${{ steps.getcdsversion.outputs.cdsversion }}
             BASE_IMAGE=jupyterhub/k8s-hub:${{ env.cds_helm_chart_ver }}
           push: ${{ github.event_name != 'pull_request' }}
