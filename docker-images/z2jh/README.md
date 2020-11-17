@@ -5,7 +5,7 @@
 From docker-images/z2jh/hub:
 
 ```
-docker build -t ideonate/cdsdashboards-jupyter-k8s-hub:0.9.0-0.0.19 -f ./Dockerfile  ../../../
+docker build -t ideonate/cdsdashboards-jupyter-k8s-hub:0.10.3-0.4.0 -f ./Dockerfile  ../../../
 ```
 
 ## config.yaml
@@ -16,7 +16,7 @@ hub:
   allowNamedServers: true
   image:
     name: ideonate/cdsdashboards-jupyter-k8s-hub
-    tag: 0.9.0-0.0.20
+    tag: 0.10.3-0.4.0
 
   extraConfig:
     cds-handlers: |
@@ -167,7 +167,7 @@ alias mk="minikube kubectl --"
 
 mk create namespace khub
 
-helm upgrade --install khubrel jupyterhub/jupyterhub   --namespace khub    --version=0.9.0   --values config.yaml
+helm upgrade --install khubrel jupyterhub/jupyterhub   --namespace khub    --version=0.10.3   --values config.yaml
 
 mk config set-context --current --namespace=khub
 

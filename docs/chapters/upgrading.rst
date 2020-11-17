@@ -102,7 +102,7 @@ Here is an example snippet from a config.yaml:
       allowNamedServers: true
       image:
         name: ideonate/cdsdashboards-jupyter-k8s-hub
-        tag: 0.9.0-|cds_version|
+        tag: 0.10.3-|cds_version|
     
     ...
     

@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=jupyterhub/k8s-hub:0.9.0
+ARG BASE_IMAGE=jupyterhub/k8s-hub:0.10.3
 FROM $BASE_IMAGE
 
 USER root
