@@ -4,6 +4,14 @@
 Changelog
 ---------
 
+Version 0.4.1
+~~~~~~~~~~~~~
+
+Released 20 Nov 2020
+
+- Git branch can now be specified when creating a dashboard (thanks to contribution from [slemonide](https://github.com/slemonide))
+- Corresponds to [jhsingle-native-proxy 0.6.0](https://github.com/ideonate/jhsingle-native-proxy) with better handling of logs from subprocess
+
 Version 0.4.0
 ~~~~~~~~~~~~~
 

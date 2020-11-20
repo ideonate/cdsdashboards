@@ -178,6 +178,13 @@ mk port-forward svc/proxy-public 8000:80
 minikube delete
 ```
 
+You might first need to add jupyterhub helm repo:
+
+```
+helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+helm repo update
+```
+
 
 ## Build local hub image
 
