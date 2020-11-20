@@ -189,12 +189,16 @@ class VariableMixin(Configurable):
             notebook_dir = self.format_string(self.notebook_dir)
 
         git_repo = self.user_options.get('git_repo', '')
+        git_repo_branch = self.user_options.get('git_repo_branch', '')
         repofolder = ''
         if git_repo != '':
             repofolder = self._calc_repo_folder(git_repo)
             args.append('--repo={}'.format(_quote_safe(git_repo)))
             notebook_dir = os.path.join(notebook_dir, repofolder)
             args.append('--repofolder={}'.format(_quote_safe(notebook_dir)))
+
+            if git_repo_branch:
+              args.append('--repobranch={}'.format(_quote_safe(git_repo_branch)))
 
         if presentation_path != '' and not '..' in presentation_path:
             # Should have been validated when dashboard created, but .. is particularly dangerous
