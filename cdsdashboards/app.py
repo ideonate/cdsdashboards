@@ -162,7 +162,34 @@ class CDSDashboardsConfig(SingletonConfigurable):
         If both are non-blank, spawn_block_group will take priority.
         """
     ).tag(config=True)
+
+    include_auth_state = Bool(
+        False,
+        help="""
+        Whether to include `auth_state` as part of the user information returned by
+        dashboards-api/hub-info/user endpoint; default False.
+
+        Warning: `auth_state` can contained sensitive information about the user
+        (like credentials).
+        """
+    ).tag(config=True)
+
+    include_servers = Bool(
+        False,
+        help="""
+        Whether to include the user servers as part of the user information returned by
+        dashboards-api/hub-info/user endpoint; default False.
+        """
+    ).tag(config=True)
     
+    include_servers_state = Bool(
+        False,
+        help="""
+        Whether to include the user servers state as part of the user information returned by
+        dashboards-api/hub-info/user endpoint; default False.
+        """
+    ).tag(config=True)
+
 
 class CDSConfigStore():
 
