@@ -7,7 +7,7 @@ from jupyterhub.utils import url_path_join
 
 from ..orm import Dashboard
 from .base import DashboardBaseMixin
-from ..app import BuildersStore
+from ..app import BuildersStore, CDSConfigStore
 
 
 class DashboardBaseAPIHandler(APIHandler, DashboardBaseMixin):
@@ -130,5 +130,16 @@ class UserSelfAPIHandler(DashboardBaseAPIHandler):
 
         current_user = await self.get_current_user()
 
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
+        model = self.user_model(
+            current_user,
+            include_servers=cdsconfig.include_servers,
+            include_state=cdsconfig.include_servers_state
+        )
+
+        if cdsconfig.include_auth_state:
+            model["auth_state"] = await current_user.get_auth_state()
+
         self.set_status(200)
-        self.finish(json.dumps(self.user_model(current_user)))
+        self.finish(json.dumps(model))
