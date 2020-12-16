@@ -7,7 +7,8 @@ from jupyterhub.orm import Group, User
 
 from ..orm import Dashboard
 from .base import DashboardBaseMixin, check_database_upgrade, spawner_to_dict
-from ..util import DefaultObjDict, url_path_join
+from ..util import DefaultObjDict, url_path_join, maybe_future
+
 from .. import hookimpl
 from ..pluggymanager import pm
 from ..app import BuildersStore, CDSConfigStore
@@ -15,8 +16,12 @@ from ..app import BuildersStore, CDSConfigStore
 
 class DashboardBaseHandler(BaseHandler, DashboardBaseMixin):
     
-    pass
-
+    def render_template(self, name, sync=False, **ns):
+        """
+        JupyterHub 1.3+ returns an awaitable from render_template (if new param sync=False).
+        Older JH versions just return the template, so this function normalizes everything to an awaitable.
+        """
+        return maybe_future(super().render_template(name, **ns))
 
 class AllDashboardsHandler(DashboardBaseHandler):
 
@@ -32,7 +37,7 @@ class AllDashboardsHandler(DashboardBaseHandler):
 
         visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
 
-        html = self.render_template(
+        html = await self.render_template(
             "alldashboards.html",
             base_url=self.settings['base_url'],
             my_dashboards=my_dashboards,
@@ -118,7 +123,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         all_conda_envs = cdsconfig.conda_envs
         allow_custom_conda_env = cdsconfig.allow_custom_conda_env
 
-        html = self.render_template(
+        html = await self.render_template(
             "editdashboard.html",
             **self.template_vars(dict(
             base_url=self.settings['base_url'],
@@ -341,7 +346,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             conda_env = dashboard_options['conda_env'] = dashboard_options.get('conda_env', '')
             all_users_tuples = self.get_visitor_tuples(current_user.id, selected_users_orm)
 
-            html = self.render_template(
+            html = await self.render_template(
                 "editdashboard.html",
                 **self.template_vars(dict(
                 base_url=self.settings['base_url'],
@@ -428,7 +433,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         base_url = self.settings['base_url']
 
-        html = self.render_template(
+        html = await self.render_template(
             "viewdashboard.html",
             base_url=base_url,
             dashboard=dashboard,
@@ -478,7 +483,7 @@ class UpgradeDashboardsHandler(DashboardBaseHandler):
 
         is_sqlite = str(engine.url).startswith('sqlite:///')
 
-        html = self.render_template(
+        html = await self.render_template(
             "upgrade-db.html",
             is_admin=current_user.admin,
             base_url=self.settings['base_url'],
@@ -511,7 +516,7 @@ class UpgradeDashboardsHandler(DashboardBaseHandler):
             success = False
             error = str(e)
 
-        html = self.render_template(
+        html = await self.render_template(
             "upgrade-db.html",
             is_admin=current_user.admin,
             error=error,
@@ -534,7 +539,7 @@ class GroupsAllHandler(DashboardBaseHandler):
 
         groups = self.db.query(Group).order_by(Group.name).all()
 
-        html = self.render_template(
+        html = await self.render_template(
             "allgroups.html",
             base_url=self.settings['base_url'],
             groups=groups
@@ -562,7 +567,7 @@ class GroupsSingleHandler(DashboardBaseHandler):
 
         all_users_tuples = self.get_visitor_tuples(None, existing_group_users)
 
-        html = self.render_template(
+        html = await self.render_template(
             "editgroup.html",
             base_url=self.settings['base_url'],
             group=group,

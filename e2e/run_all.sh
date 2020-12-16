@@ -10,7 +10,7 @@ rm -rf ./cypress/screenshots
 # Exit build script on first failure
 set -e
 
-stages="dockerspawner localprocess tljh localprocessjh10"
+stages="dockerspawner dockerspawner12 localprocess tljh localprocess12 localprocessjh10"
 
 if [ ! -z "${E2E_STAGES}" ]; then
     stages="${E2E_STAGES}"

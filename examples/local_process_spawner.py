@@ -47,11 +47,16 @@ c.JupyterHub.allow_named_servers = True
 import os
 dirname = os.path.dirname(__file__)
 
-#c.CDSDashboardsConfig.extra_presentation_types = ['custom-panel', 'unavailable']
+c.CDSDashboardsConfig.extra_presentation_types = ['plotlydash-debug']
 
 c.VariableMixin.extra_presentation_launchers = {
-    'streamlit': {
-        'env': {'JUPYTERHUB_COOKIE_OPTIONS': '{"SameSite": "None", "Secure": true}'}
+    'plotlydash-debug': {
+        'args': [
+            'python3', '{presentation_path}', '{port}', '{origin_host}'
+            ],
+        'env': {
+            'PYTHONPATH': os.path.join(dirname, '/Users/dan/Dev/cdsdashboards/examples/local_process_folder/{username}/{presentation_dirname}')
+        }
     }
 }
 
@@ -108,3 +113,11 @@ c.JupyterHub.bind_url = 'https://0.0.0.0:443'
 c.JupyterHub.redirect_to_server = False
 
 c.JupyterHub.default_url = '/hub/dashboards'
+
+#def default_url_fn(handler):
+#    user = handler.current_user
+#    if user and user.admin:
+#        return '/hub/admin'
+#    return '/hub/home'
+
+#c.JupyterHub.default_url = default_url_fn

@@ -8,7 +8,7 @@ class OurHomeHandler(HomeHandler, DashboardBaseMixin):
         current_user = await self.get_current_user()
 
         if not self.can_user_spawn(current_user):
-            html = self.render_template(
+            html = await self.render_template(
                 "homecds.html",
                 base_url=self.settings['base_url'],
                 current_user=current_user
