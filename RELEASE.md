@@ -13,6 +13,7 @@ Tag cdsdashboards-jupyter-docker
 ## Release to PyPI
 
 Update version.py to the new version
+Update changelog
 
 delete dist folder
 

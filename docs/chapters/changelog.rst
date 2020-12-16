@@ -4,6 +4,14 @@
 Changelog
 ---------
 
+Version 0.4.2
+~~~~~~~~~~~~~
+
+Released 16 Dec 2020
+
+- Compatibility with JupyterHub 1.3
+- Options to return info about auth_state and servers from the experimental :ref:`userinfoapi`
+
 Version 0.4.1
 ~~~~~~~~~~~~~
 
