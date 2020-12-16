@@ -224,6 +224,19 @@ in JupyterHub who want to use others' dashboards, but who should not be allowed 
 
 Please see :ref:`restrictusers`.
 
+.. _userinfoapi_settings:
+
+User Info API
+~~~~~~~~~~~~~
+
+The experimental :ref:`userinfoapi` brings three relevant settings to jupyterhub_config.
+
+The setting :code:`c.CDSDashboardsConfig.include_auth_state` (default False) causes the User Info API to include auth_state about the current user. 
+Note this can contain sensitive information such as credentials, e.g. GitHub tokens if you are using GitHub as a login authenticator.
+
+In addition, :code:`c.CDSDashboardsConfig.include_servers` and :code:`c.CDSDashboardsConfig.include_servers_state` (both default False) can add further 
+information about the user's servers and their state.
+
 
 Mailing List for Updates
 ~~~~~~~~~~~~~~~~~~~~~~~~

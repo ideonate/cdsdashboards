@@ -13,4 +13,5 @@ This section explains how a user can prepare and publish a dashboard through the
    create_dashboard
    frameworks
    working
+   userinfoapi
 
