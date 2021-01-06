@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.4.3
+~~~~~~~~~~~~~
+
+Released 6 Jan 2021
+
+- Corresponds to [jhsingle-native-proxy 0.6.1](https://github.com/ideonate/jhsingle-native-proxy) with Python 3.9 compatibility
+
 Version 0.4.2
 ~~~~~~~~~~~~~
 
