@@ -156,16 +156,12 @@ auth:
 ```
 minikube start --driver=hyperkit
 
-(OR: minikube config set driver hyperkit)
-
-# To use minikube's docker registry e.g. for docker build:
-eval $(minikube docker-env)
+# (OR: minikube config set driver hyperkit)
 
 # Use mk instead of kubectl
-
 alias mk="minikube kubectl --"
 
-mk create namespace khub
+mk create namespace khub  # or instead pass --create-namespace to next command
 
 helm upgrade --install khubrel jupyterhub/jupyterhub   --namespace khub    --version=0.10.3   --values config.yaml
 
