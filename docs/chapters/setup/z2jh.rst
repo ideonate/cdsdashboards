@@ -33,7 +33,7 @@ has cdsdashboards installed on top of the base jupyterhub/k8s-hub image.
 If you are already using your own custom image for the hub, you may need to build on top of that 
 in a similar way to `our example Dockerfile <https://github.com/ideonate/cdsdashboards/blob/master/docker-images/z2jh/hub/Dockerfile.pypi>`__.
 
-Currently, we have built on top of the most recent Helm charts (see corresponding 
+Currently, we build on top of the most recent Helm chart available (see corresponding 
 `components and requirements <https://github.com/jupyterhub/helm-chart#versions-coupled-to-each-chart-release>`__).
 
 Our ideonate/cdsdashboards-jupyter-k8s-hub image is tagged as, for example, '0.10.3-0.4.0' meaning it is based on the z2jh version 
@@ -54,7 +54,7 @@ Merge the following settings in to your deployment's config.yaml file.
       allowNamedServers: true
       image:
         name: ideonate/cdsdashboards-jupyter-k8s-hub
-        tag: 0.10.3-|cds_version|
+        tag: |z2jh_helm_version|-|cds_version|
       extraConfig:
         cds-handlers: |
           from cdsdashboards.hubextension import cds_extra_handlers

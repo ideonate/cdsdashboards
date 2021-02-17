@@ -181,6 +181,12 @@ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
 helm repo update
 ```
 
+To connect into the hub pod:
+
+```
+mk get pods
+mk exec --stdin --tty hub-658cdb67d8-gw5kp  -- /bin/bash
+```
 
 ## Build local hub image
 

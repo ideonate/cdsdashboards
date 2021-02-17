@@ -60,6 +60,10 @@ html_static_path = ['_static']
 # Import cdsdashboards version number
 here = os.path.abspath(os.path.dirname(__file__))
 
-exec(open(os.path.join(here,'../cdsdashboards/version.py')).read()) # Load __version__
+# Load __version__
+exec(open(os.path.join(here,'../cdsdashboards/version.py')).read())
 
-rst_epilog = '.. |cds_version| replace:: {}'.format(__version__)
+# Read z2jh latest helm version
+z2jh_helm_version = open(os.path.join(here,'../helm-z2jh-latest.txt')).read().strip()
+
+rst_epilog = ".. |cds_version| replace:: {}\n".format(__version__) + ".. |z2jh_helm_version| replace:: {}\n".format(z2jh_helm_version)
