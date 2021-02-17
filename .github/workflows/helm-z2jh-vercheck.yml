@@ -13,14 +13,15 @@ jobs:
       - name: Fetch release version
         run: |
           curl -sL https://api.github.com/repos/jupyterhub/zero-to-jupyterhub-k8s/releases/latest | \
-          jq -r ".tag_name" > .helm-z2jh-latest.txt
+          jq -r ".tag_name" > helm-z2jh-latest.txt
       - name: Check for modified files
         id: git-check
         run: echo ::set-output name=modified::$([ -z "`git status --porcelain`" ] && echo "false" || echo "true")
       - name: Commit latest release version
         if: steps.git-check.outputs.modified == 'true'
         run: |
+          git add helm-z2jh-latest.txt
           git config --global user.name 'Dan Lester'
           git config --global user.email 'dan@ideonate.com'
-          git commit -am "New release version from z2jh"
+          git commit -m "New release version from z2jh"
           git push
