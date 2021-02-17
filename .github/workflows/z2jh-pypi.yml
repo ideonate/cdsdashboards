@@ -44,7 +44,7 @@ jobs:
       - name: Build docker 1
         uses: docker/build-push-action@v2
         env: 
-          cds_helm_chart_ver: ${{ steps.hello.z2jhverstep.text }}
+          cds_helm_chart_ver: ${{ steps.z2jhverstep.outputs.text }}
         with:
           tags: ideonate/cdsdashboards-jupyter-k8s-hub:${{ env.cds_helm_chart_ver }}-${{ steps.getcdsversion.outputs.cdsversion }}
           context: ./
