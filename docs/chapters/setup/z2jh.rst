@@ -36,8 +36,8 @@ in a similar way to `our example Dockerfile <https://github.com/ideonate/cdsdash
 Currently, we build on top of the most recent Helm chart available (see corresponding 
 `components and requirements <https://github.com/jupyterhub/helm-chart#versions-coupled-to-each-chart-release>`__).
 
-Our ideonate/cdsdashboards-jupyter-k8s-hub image is tagged as, for example, '0.10.3-0.4.0' meaning it is based on the z2jh version 
-0.10.3 and containing cdsdashboards version 0.0.19.
+Our ideonate/cdsdashboards-jupyter-k8s-hub image is tagged as, for example, '|z2jh_helm_version|-|cds_version|' meaning it is based on the z2jh version 
+|z2jh_helm_version| and containing cdsdashboards version |cds_version|.
 
 As well as setting the new hub image, you will also need a compatible 'singleuser' image, fulfilling the same 
 :ref:`requirements as for DockerSpawner <docker_singleuser_image>`. A suitable starting point is one of 
