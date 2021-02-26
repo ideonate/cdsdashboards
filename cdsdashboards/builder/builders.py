@@ -22,6 +22,7 @@ class Builder(LoggingConfigurable):
     # private attributes for tracking status
     _build_pending = False
     _build_future = None
+    _needs_user_options = False
 
     event_queue = []
 

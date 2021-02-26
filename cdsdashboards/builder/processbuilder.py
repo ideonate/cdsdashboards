@@ -41,6 +41,15 @@ class ProcessBuilder(Builder):
             finally:
                 spawner._spawn_pending = False
 
+        # Does this spawner need user options?
+        user_options = dashboard.options.get('user_options', None)
+        if not user_options:
+            spawner_options_form = await spawner.get_options_form()
+            if spawner_options_form:
+                app_log.info('Options form is present')
+                return (None, None, True) # Tell caller that we need to go to the options form
+
+        # Dashboard-specific options
         git_repo = dashboard.options.get('git_repo', '')
         git_repo_branch = dashboard.options.get('git_repo_branch', '')
         conda_env = dashboard.options.get('conda_env', '')
@@ -60,7 +69,7 @@ class ProcessBuilder(Builder):
                 'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)
                 })
 
-        return (new_server_name, new_server_options)
+        return (new_server_name, new_server_options, False)
 
     async def prespawn_server_options(self, dashboard, dashboard_user, ns):
         return {} # Empty options - override in subclasses if needed

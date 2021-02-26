@@ -318,13 +318,12 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 db.commit()
 
                 # Now cancel any existing build and force a rebuild
-                # TODO delete existing final_spawner
+                # TODO delete existing final_spawner?
                 builders_store = BuildersStore.get_instance(self.settings['config'])
                 builder = builders_store[dashboard]
 
                 async def do_restart_build(_):
                     await self.maybe_start_build(dashboard, current_user, True)
-                    self.log.debug('Force build start')
 
                 if builder.pending and builder._build_future and not builder._build_future.done():
 
@@ -426,7 +425,11 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         dashboard_user = self._user_from_orm(dashboard.user.name)
 
-        need_follow_progress = await self.maybe_start_build(dashboard, dashboard_user)
+        need_follow_progress, need_user_options_form = await self.maybe_start_build(dashboard, dashboard_user)
+
+        if need_user_options_form:
+            self.log.debug('Redirect to dashboard/options')
+            return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname, 'options'))
 
         if not need_follow_progress:
             return self.redirect("/user/{}/{}".format(dashboard_user.name, dashboard.final_spawner.name))

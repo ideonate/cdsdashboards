@@ -93,6 +93,7 @@ c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
 
 #c.DockerSpawner.image = 'ideonate/containds-allr-datascience:0.2.0'
 c.DockerSpawner.image = 'ideonate/containds-all-basic:latest'
+#c.DockerSpawner.allowed_images = ['ideonate/jh-voila-oauth-singleuser:latest', 'ideonate/containds-all-basic:latest']
 
 c.DockerSpawner.pull_policy = 'ifnotpresent'
 

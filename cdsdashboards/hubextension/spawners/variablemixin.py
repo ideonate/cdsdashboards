@@ -50,7 +50,10 @@ class VariableMixin(Configurable):
                 '{--}port={port}',
                 '{--}no-browser',
                 '{--}Voila.base_url={base_url}/',
-                '{--}Voila.server_url=/'],
+                '{--}Voila.server_url=/',
+                '{--}VoilaConfiguration.http_header_envs=[\'X-CDSDASHBOARDS-JH-USER\']',
+                '--forward-user-info',
+                '--query-user-info'],
             'extra_args_fn': _get_voila_template
         },
         'streamlit': {
