@@ -214,14 +214,13 @@ class DashboardBaseMixin:
 
         return False
 
-    async def maybe_start_build(self, dashboard, dashboard_user, force_start=False):
+    async def maybe_start_build(self, dashboard, dashboard_user, force_start=False, user_options=None):
 
         builders_store = BuildersStore.get_instance(self.settings['config'])
 
         builder = builders_store[dashboard]
 
         need_follow_progress = True
-        need_user_options_form = False
 
         def do_final_build(f):
             if f.cancelled() or f.exception() is None:
@@ -233,8 +232,8 @@ class DashboardBaseMixin:
             if builder._build_future and builder._build_future.done() and builder._build_future.exception() and not force_start and not builder._needs_user_options:
                 pass # Progress stream should display the error for us
 
-            elif builder._needs_user_options:
-                return (False, True)
+            elif builder._needs_user_options and not user_options:
+                return (False, builder._needs_user_options)
             else:
                 self.log.debug('starting builder')
 
@@ -265,13 +264,13 @@ class DashboardBaseMixin:
                     # Delete existing final spawner if it exists
                     await self.maybe_delete_existing_server(dashboard.final_spawner, dashboard_user)
 
-                    (new_server_name, new_server_options, need_user_options_form) =  await builder.start(dashboard, dashboard_user, self.db)
+                    (new_server_name, new_server_options, need_user_options_form) =  await builder.start(dashboard, dashboard_user, self.db, user_options)
 
                     if need_user_options_form:
                         builder._build_future = None
                         builder._build_pending = False
                         dashboard.final_spawner = None
-                        builder._needs_user_options = True
+                        builder._needs_user_options = need_user_options_form
                         return (need_follow_progress, need_user_options_form)
 
                     builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard, after build'})
@@ -348,7 +347,7 @@ class DashboardBaseMixin:
 
                 builder._build_future.add_done_callback(do_final_build)
 
-        return (need_follow_progress, need_user_options_form)
+        return (need_follow_progress, None)
 
     async def maybe_delete_existing_server(self, orm_spawner, dashboard_user):
         if not orm_spawner:

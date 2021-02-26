@@ -1,11 +1,11 @@
 from tornado.log import app_log
 
 from .builders import Builder, BuildException
-
+from ..util import maybe_future
 
 class ProcessBuilder(Builder):
  
-    async def start(self, dashboard, dashboard_user, db):
+    async def start(self, dashboard, dashboard_user, db, form_options=None):
         """Start the dashboard
 
         Returns:
@@ -42,13 +42,27 @@ class ProcessBuilder(Builder):
                 spawner._spawn_pending = False
 
         # Does this spawner need user options?
-        user_options = dashboard.options.get('user_options', None)
-        if not user_options:
+        #dashboard_user_options = dashboard.options.get('user_options', None)
+        if not form_options:
             spawner_options_form = await spawner.get_options_form()
             if spawner_options_form:
                 app_log.info('Options form is present')
-                return (None, None, True) # Tell caller that we need to go to the options form
+                return (None, None, spawner_options_form) # Tell caller that we need to go to the options form
 
+        else:
+
+            try:
+                user_options = await maybe_future(spawner.options_from_form(form_options))
+                new_server_options.update(user_options)
+            except Exception as e:
+                app_log.error(
+                    "Failed to spawn dashboard server with form", exc_info=True
+                )
+                spawner_options_form = await spawner.get_options_form()
+                if spawner_options_form:
+                    app_log.info('Options form is present after failure')
+                    return (None, None, spawner_options_form)
+                        
         # Dashboard-specific options
         git_repo = dashboard.options.get('git_repo', '')
         git_repo_branch = dashboard.options.get('git_repo_branch', '')
@@ -69,7 +83,7 @@ class ProcessBuilder(Builder):
                 'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)
                 })
 
-        return (new_server_name, new_server_options, False)
+        return (new_server_name, new_server_options, None)
 
     async def prespawn_server_options(self, dashboard, dashboard_user, ns):
         return {} # Empty options - override in subclasses if needed
