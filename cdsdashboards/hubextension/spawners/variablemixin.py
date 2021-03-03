@@ -300,6 +300,22 @@ class VariableMixin(Configurable):
             raise Exception('User {} is not allowed to spawn a server'.format(self.user.name))
         return super().run_pre_spawn_hook()
 
+    def options_from_form(self, options):
+        """
+        If there is an options_form present on a spawner, then when it is submitted by the user,
+        it clobbers any existing user_options - which may include 'presentation_*' etc data
+        from the dashboard.
+        For now, 
+        """
+        formdata = super().options_from_form(options)
+        if hasattr(self, 'orm_spawner') and self.orm_spawner and hasattr(self.orm_spawner, 'user_options') \
+                    and isinstance(self.orm_spawner.user_options, dict):
+            existing_user_options = self.orm_spawner.user_options.copy()
+            existing_user_options.update(formdata)
+            formdata = existing_user_options
+        return formdata
+
+
 
 class MetaVariableMixin(type(Configurable)):
     """

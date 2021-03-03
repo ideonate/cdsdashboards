@@ -430,7 +430,7 @@ class DashboardOptionsHandler(DashboardBaseHandler):
         builders_store = BuildersStore.get_instance(self.settings['config'])
         builder = builders_store[dashboard]
 
-        need_follow_progress, need_user_options_form = await self.maybe_start_build(dashboard, current_user, True)
+        need_follow_progress, need_user_options_form = await self.maybe_start_build(dashboard, current_user, False)
 
         if need_user_options_form:
             self.log.info('Display options form')

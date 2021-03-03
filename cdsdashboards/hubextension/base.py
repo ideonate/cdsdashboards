@@ -228,12 +228,14 @@ class DashboardBaseMixin:
             builder._build_pending = False
 
         if not builder.pending and (dashboard.final_spawner is None or force_start):
-            
-            if builder._build_future and builder._build_future.done() and builder._build_future.exception() and not force_start and not builder._needs_user_options:
+
+            if builder._needs_user_options and not user_options and not force_start:
+                return (False, builder._needs_user_options)
+
+            elif builder._build_future and builder._build_future.done() and builder._build_future.exception() \
+                        and not force_start:
                 pass # Progress stream should display the error for us
 
-            elif builder._needs_user_options and not user_options:
-                return (False, builder._needs_user_options)
             else:
                 self.log.debug('starting builder')
 
