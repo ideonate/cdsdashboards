@@ -14,7 +14,7 @@ from ..util import maybe_future
 from ..orm import Dashboard
 from ..app import BuildersStore, CDSConfigStore
 from ..dbutil import is_upgrade_needed
-from ..util import DefaultObjDict
+from ..util import DefaultObjDict, url_path_join
 
 def spawner_to_dict(spawner):
     name = spawner.name
@@ -221,6 +221,9 @@ class DashboardBaseMixin:
         builder = builders_store[dashboard]
 
         need_follow_progress = True
+
+        if force_start:
+            builder._needs_user_options = False
 
         def do_final_build(f):
             if f.cancelled() or f.exception() is None:

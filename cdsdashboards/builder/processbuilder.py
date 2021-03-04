@@ -1,7 +1,7 @@
 from tornado.log import app_log
 
 from .builders import Builder, BuildException
-from ..util import maybe_future
+from ..util import maybe_future, url_path_join
 
 class ProcessBuilder(Builder):
  
@@ -9,7 +9,9 @@ class ProcessBuilder(Builder):
         """Start the dashboard
 
         Returns:
-          (str, str): the (new_server_name, new_server_options) of the new dashboard server.
+          (str, str, None): the (new_server_name, new_server_options, None) of the new dashboard server.
+          or
+          (None, None, str): (None, None, user_options_form) if a user options form needs to be presented to the user.
 
         """
 
@@ -42,7 +44,6 @@ class ProcessBuilder(Builder):
                 spawner._spawn_pending = False
 
         # Does this spawner need user options?
-        #dashboard_user_options = dashboard.options.get('user_options', None)
         if not form_options:
             spawner_options_form = await spawner.get_options_form()
             if spawner_options_form:
