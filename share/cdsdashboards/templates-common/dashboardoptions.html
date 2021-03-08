@@ -17,13 +17,10 @@
             <p>Created: {{ dashboard.created.strftime('%Y-%m-%d %H:%M:%S') }}</p>
             {% endif %}
 
-            {% if dashboard.started %}
-            <p>Started: {{ dashboard.started.strftime('%Y-%m-%d %H:%M:%S') }}</p>
-            {% endif %}
-
-        </div>
+          </div>
 
         <div class="col-lg-10 col-lg-offset-1">
+          {% if user_options_form and not options_not_allowed %}
           <form enctype="multipart/form-data" id="spawn_form" action="{{url}}" method="post" role="form">
             {{user_options_form | safe}}
             <br>
@@ -34,6 +31,10 @@
               </div>
             </div>
           </form>        
+          {% else %}
+          <p>The dashboard owner needs to start this dashboard in order to choose some options.</p>
+          <p>Please ask them to view the dashboard first and choose their options.</p>
+          {% endif %}
         </div>
     </div>
 

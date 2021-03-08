@@ -277,6 +277,8 @@ class DashboardBaseMixin:
                         dashboard.final_spawner = None
                         builder._needs_user_options = need_user_options_form
                         return (need_follow_progress, need_user_options_form)
+                    else:
+                        builder._needs_user_options = False
 
                     builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard, after build'})
 

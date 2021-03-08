@@ -434,13 +434,20 @@ class DashboardOptionsHandler(DashboardBaseHandler):
 
         if need_user_options_form:
             self.log.info('Display options form')
+            options_not_allowed = False
+
+            if current_user.name != dashboard.user.name:
+                need_user_options_form = None
+                options_not_allowed = True
+
             html = await self.render_template(
                 "dashboardoptions.html",
                 base_url=self.settings['base_url'],
                 dashboard=dashboard,
                 current_user=current_user,
                 dashboard_user=dashboard.user,
-                user_options_form=need_user_options_form
+                user_options_form=need_user_options_form,
+                options_not_allowed=options_not_allowed
             )
             return self.write(html)
 
@@ -461,6 +468,9 @@ class DashboardOptionsHandler(DashboardBaseHandler):
             return self.send_error(404)
 
         if not dashboard.is_orm_user_allowed(current_user.orm_user):
+            return self.send_error(403)
+
+        if current_user.name != dashboard.user.name:
             return self.send_error(403)
 
         form_options = {}

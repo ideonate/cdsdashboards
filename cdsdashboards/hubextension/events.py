@@ -68,7 +68,7 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
 
         build_future = builder._build_future
 
-        if not builder._build_pending:
+        if not builder._build_pending and not builder._needs_user_options:
             # not pending, no progress to fetch
             # check if spawner has just failed
             f = build_future
