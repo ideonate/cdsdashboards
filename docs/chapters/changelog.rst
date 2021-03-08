@@ -9,7 +9,7 @@ Version 0.4.3
 
 Released 6 Jan 2021
 
-- Corresponds to [jhsingle-native-proxy 0.6.1](https://github.com/ideonate/jhsingle-native-proxy) with Python 3.9 compatibility
+- Corresponds to `jhsingle-native-proxy 0.6.1 <https://github.com/ideonate/jhsingle-native-proxy>`__ with Python 3.9 compatibility
 
 Version 0.4.2
 ~~~~~~~~~~~~~
@@ -24,8 +24,8 @@ Version 0.4.1
 
 Released 20 Nov 2020
 
-- Git branch can now be specified when creating a dashboard (thanks to contribution from [slemonide](https://github.com/slemonide))
-- Corresponds to [jhsingle-native-proxy 0.6.0](https://github.com/ideonate/jhsingle-native-proxy) with better handling of logs from subprocess
+- Git branch can now be specified when creating a dashboard (thanks to contribution from `slemonide <https://github.com/slemonide>`__)
+- Corresponds to `jhsingle-native-proxy 0.6.0 <https://github.com/ideonate/jhsingle-native-proxy>`__ with better handling of logs from subprocess
 
 Version 0.4.0
 ~~~~~~~~~~~~~
