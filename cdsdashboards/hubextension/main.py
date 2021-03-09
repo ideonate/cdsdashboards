@@ -318,22 +318,15 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 db.commit()
 
                 # Now cancel any existing build and force a rebuild
-                # TODO delete existing final_spawner?
+
                 builders_store = BuildersStore.get_instance(self.settings['config'])
                 builder = builders_store[dashboard]
 
-                async def do_restart_build(_):
-                    await self.maybe_start_build(dashboard, current_user, True)
+                dashboard_user = self._user_from_orm(dashboard.user.name)
 
-                if builder.pending and builder._build_future and not builder._build_future.done():
-
-                    self.log.debug('Cancelling build')
-                    builder._build_future.add_done_callback(do_restart_build)
-                    builder._build_future.cancel()
-
-                else:
-                    await do_restart_build(None)
-
+                next_page = await self.maybe_start_build(dashboard, dashboard_user, True)
+                # next_page can be progress/options/dashboard, but actually can't be anything because with force_start==True
+                # it will have set things off async!
 
             except Exception as e:
                 errors.all = str(e)
@@ -374,7 +367,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             )
             return self.write(html)
         
-        self.redirect("{}hub/dashboards/{}".format(self.settings['base_url'], dashboard.urlname))
+        self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname))
+
 
     def read_spawner(self, dashboard, spawners, dashboard_options, errors, require_source_server):
 
@@ -425,16 +419,17 @@ class DashboardOptionsHandler(DashboardBaseHandler):
         if not dashboard.is_orm_user_allowed(current_user.orm_user):
             return self.send_error(403)
 
-        # TODO Maybe need a config option to not let any viewer set these options.
-
         builders_store = BuildersStore.get_instance(self.settings['config'])
         builder = builders_store[dashboard]
 
-        need_follow_progress, need_user_options_form = await self.maybe_start_build(dashboard, current_user, False)
+        dashboard_user = self._user_from_orm(dashboard.user.name)
 
-        if need_user_options_form:
+        next_page = await self.maybe_start_build(dashboard, dashboard_user, False)
+
+        if next_page == 'options':
             self.log.info('Display options form')
             options_not_allowed = False
+            need_user_options_form = builder._needs_user_options
 
             if current_user.name != dashboard.user.name:
                 need_user_options_form = None
@@ -483,17 +478,7 @@ class DashboardOptionsHandler(DashboardBaseHandler):
         builders_store = BuildersStore.get_instance(self.settings['config'])
         builder = builders_store[dashboard]
         
-        async def do_restart_build(_):
-            await self.maybe_start_build(dashboard, current_user, True, form_options)
-
-        if builder.pending and builder._build_future and not builder._build_future.done():
-
-            self.log.debug('Cancelling build')
-            builder._build_future.add_done_callback(do_restart_build)
-            builder._build_future.cancel()
-
-        else:
-            await do_restart_build(None)
+        next_page = await self.maybe_start_build(dashboard, current_user, True, form_options)
 
         return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname))
 
@@ -516,13 +501,13 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         dashboard_user = self._user_from_orm(dashboard.user.name)
 
-        need_follow_progress, need_user_options_form = await self.maybe_start_build(dashboard, dashboard_user)
+        next_page = await self.maybe_start_build(dashboard, dashboard_user)
 
-        if need_user_options_form:
+        if next_page == 'options':
             self.log.debug('Redirect to dashboard/options')
             return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname, 'options'))
 
-        if not need_follow_progress:
+        if next_page == 'dashboard':
             return self.redirect("/user/{}/{}".format(dashboard_user.name, dashboard.final_spawner.name))
 
         base_url = self.settings['base_url']
