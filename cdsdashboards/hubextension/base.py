@@ -133,7 +133,7 @@ class DashboardBaseMixin:
 
             await sleep(0.01)
 
-            if builder._build_future.done():
+            if builder._build_future and builder._build_future.done():
                 break
 
             if new_server_name in dashboard_user.spawners and dashboard_user.spawners[new_server_name].pending \
