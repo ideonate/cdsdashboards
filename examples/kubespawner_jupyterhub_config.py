@@ -15,7 +15,7 @@ c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
 
 c.JupyterHub.bind_url = 'https://0.0.0.0:443'
 
-c.JupyterHub.db_url = 'sqlite:///examples/sqlitedbs/ssl_domain_jupyterhub_config.sqlite'
+c.JupyterHub.db_url = 'sqlite:///examples/sqlitedbs/kubespawner_jupyterhub_config.sqlite'
 
 c.JupyterHub.default_url = '/hub/home'
 
@@ -95,9 +95,8 @@ if True:
         'display_name': 'Large',
         'slug': 'large',
         'kubespawner_override': {
-            'image': 'training/datascience:label',
             'cpu_limit': 1,
-            'mem_limit': '1G',
+            'mem_limit': '1G'
         }
     }]
 
