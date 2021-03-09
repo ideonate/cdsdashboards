@@ -144,7 +144,7 @@ class DashboardBaseMixin:
                 app_log.debug('Found spawner for progress')
 
                 async with aclosing(
-                    iterate_until(builder._build_future, spawner._generate_progress())
+                    iterate_until(maybe_future(builder._build_future), spawner._generate_progress())
                 ) as spawnevents:
                     try:
                         async for event in spawnevents:
