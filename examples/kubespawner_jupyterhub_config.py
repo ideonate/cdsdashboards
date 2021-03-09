@@ -59,9 +59,47 @@ c.KubeSpawner.notebook_dir = notebook_dir
 
 c.KubeSpawner.pvc_name_template = 'pvc-{username}'
 
-#c.KubeSpawner.volumes = [{ 'name': 'jupyterhub-user-{username}', 'persistentVolumeClaim': {notebook_dir} }]
+c.KubeSpawner.volumes = [{ 'name': 'jupyterhub-user-{username}', 'persistentVolumeClaim': {notebook_dir} }]
+
 c.KubeSpawner.storage_access_modes = ['ReadWriteMany']
 c.KubeSpawner.storage_capacity = '1G'
+c.KubeSpawner.storage_pvc_ensure = True
+
+c.KubeSpawner.volumes = [
+        {
+            'name': 'data',
+            'persistentVolumeClaim': {
+                'claimName': c.KubeSpawner.pvc_name_template
+            }
+        }
+    ]
+c.KubeSpawner.volume_mounts = [
+    {
+        'mountPath': '/home/jovyan',
+        'name': 'data'
+    }
+]
+
+# User options
+if True:
+    c.KubeSpawner.profile_list = [
+    {
+        'display_name': 'Small',
+        'slug': 'small',
+        'default': True,
+        'kubespawner_override': {
+            'cpu_limit': 1,
+            'mem_limit': '512M'
+        }
+    }, {
+        'display_name': 'Large',
+        'slug': 'large',
+        'kubespawner_override': {
+            'image': 'training/datascience:label',
+            'cpu_limit': 1,
+            'mem_limit': '1G',
+        }
+    }]
 
 c.Spawner.start_timeout = 6000
 
