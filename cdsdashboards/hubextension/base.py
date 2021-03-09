@@ -288,9 +288,10 @@ class DashboardBaseMixin:
 
                     self.db.expire(dashboard) # May have changed during async code above
 
+                    final_spawner = None
+
                     if new_server_name in dashboard_user.orm_user.orm_spawners:
-                        builder._build_future = None
-                        builder._build_pending = False
+                        final_spawner = dashboard_user.spawners[new_server_name]
                         dashboard.final_spawner = dashboard_user.orm_user.orm_spawners[new_server_name]
 
                     # TODO if not, then what?
@@ -298,6 +299,9 @@ class DashboardBaseMixin:
                     dashboard.started = datetime.utcnow()
 
                     self.db.commit()
+
+                    if final_spawner and not final_spawner.ready:
+                        await maybe_future(getattr(final_spawner, '_{}_future'.format(final_spawner.pending), None))
 
                 builder._build_future = maybe_future(do_build())
 
@@ -323,12 +327,9 @@ class DashboardBaseMixin:
 
                     builder.add_progress_event({'progress': 90, 'message': 'Attaching to spawn of final server for Dashboard'})
 
-                    # TODO This branch is rare, but should attach pipe to spawner progress
+                    maybe_future(self.pipe_spawner_progress(dashboard_user, dashboard.final_spawner.name, builder))
 
-                    builder._build_future = getattr(final_spawner, '_{}_future'.format(final_spawner.pending), None)
-                    
-                    if builder._build_future:
-                        builder._build_future.add_done_callback(do_final_build)
+                    await maybe_future(getattr(final_spawner, '_{}_future'.format(final_spawner.pending), None))
 
                 else: # stop or check
                     self.log.info("Awaiting failure of builder due to spawner stopping")
