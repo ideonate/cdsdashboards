@@ -367,7 +367,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             )
             return self.write(html)
         
-        self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname))
+        self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.urlname))
 
 
     def read_spawner(self, dashboard, spawners, dashboard_options, errors, require_source_server):
