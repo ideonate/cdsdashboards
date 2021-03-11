@@ -190,6 +190,16 @@ class CDSDashboardsConfig(SingletonConfigurable):
         """
     ).tag(config=True)
 
+    spawn_default_options = Bool(
+        True,
+        help="""
+        This applies when the spawner may display options to the user before starting a server.
+        If True, a Dashboard will always be started with the default spawner options, so no form will be displayed 
+        and the dashboard will start without waiting.
+        If False (and form options are available in the spawner) then the Dashboard will not start until the 
+        dashboard creator has accessed the dashboard and provided options to the spawner.
+        """
+    ).tag(config=True)
 
 class CDSConfigStore():
 

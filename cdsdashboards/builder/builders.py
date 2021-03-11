@@ -211,7 +211,7 @@ class Builder(LoggingConfigurable):
     def add_progress_event(self, event):
         self.event_queue.append(event)
 
-    async def start(self, dashboard, dashboard_user, db, form_options=None):
+    async def start(self, dashboard, dashboard_user, form_options=None, spawn_default_options=True):
         """Start the dashboard
 
         Returns:

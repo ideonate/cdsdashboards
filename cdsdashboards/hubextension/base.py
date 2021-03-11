@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from collections import defaultdict
-from asyncio import sleep, CancelledError, Future, run
+from asyncio import sleep, CancelledError
 
 from async_generator import aclosing
 from tornado.web import HTTPError
@@ -248,6 +248,9 @@ class DashboardBaseMixin:
 
         self.log.debug('starting builder')
 
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+        spawn_default_options = cdsconfig.spawn_default_options
+
 
         def do_final_build(f):
             self.log.debug('In do_final_build')
@@ -290,7 +293,7 @@ class DashboardBaseMixin:
             # Delete existing final spawner if it exists
             await self.maybe_delete_existing_server(dashboard.final_spawner, dashboard_user)
 
-            (new_server_name, new_server_options, need_user_options_form) =  await builder.start(dashboard, dashboard_user, self.db, user_options)
+            (new_server_name, new_server_options, need_user_options_form) =  await builder.start(dashboard, dashboard_user, user_options, spawn_default_options)
 
             if need_user_options_form:
                 builder.add_progress_event({'progress': 80, 'message': 'Needs user options form'})

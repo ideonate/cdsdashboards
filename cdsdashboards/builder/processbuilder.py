@@ -5,7 +5,7 @@ from ..util import maybe_future, url_path_join
 
 class ProcessBuilder(Builder):
  
-    async def start(self, dashboard, dashboard_user, db, form_options=None):
+    async def start(self, dashboard, dashboard_user, form_options=None, spawn_default_options=True):
         """Start the dashboard
 
         Returns:
@@ -44,25 +44,28 @@ class ProcessBuilder(Builder):
                 spawner._spawn_pending = False
 
         # Does this spawner need user options?
-        if not form_options:
-            spawner_options_form = await spawner.get_options_form()
-            if spawner_options_form:
-                app_log.info('Options form is present')
-                return (None, None, spawner_options_form) # Tell caller that we need to go to the options form
+        if not spawn_default_options:
 
-        else:
-
-            try:
-                user_options = await maybe_future(spawner.options_from_form(form_options))
-                new_server_options.update(user_options)
-            except Exception as e:
-                app_log.error(
-                    "Failed to spawn dashboard server with form", exc_info=True
-                )
+            if not form_options:
+                
                 spawner_options_form = await spawner.get_options_form()
                 if spawner_options_form:
-                    app_log.info('Options form is present after failure')
-                    return (None, None, spawner_options_form)
+                    app_log.info('Options form is present')
+                    return (None, None, spawner_options_form) # Tell caller that we need to go to the options form
+
+            else:
+
+                try:
+                    user_options = await maybe_future(spawner.options_from_form(form_options))
+                    new_server_options.update(user_options)
+                except Exception as e:
+                    app_log.error(
+                        "Failed to spawn dashboard server with form", exc_info=True
+                    )
+                    spawner_options_form = await spawner.get_options_form()
+                    if spawner_options_form:
+                        app_log.info('Options form is present after failure')
+                        return (None, None, spawner_options_form)
                         
         # Dashboard-specific options
         git_repo = dashboard.options.get('git_repo', '')
