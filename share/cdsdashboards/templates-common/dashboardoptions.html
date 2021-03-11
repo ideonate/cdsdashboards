@@ -1,0 +1,43 @@
+{% extends "page.html" %}
+
+{% block main %}
+<div id="main" class="container">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+
+            <h2>Dashboard {{ dashboard.name }}</h2>
+
+            {% if dashboard.description %}
+            <p>{{ dashboard.description | escape }}</p>
+            {% endif %}
+
+            <p>Owner: {{ dashboard_user.name }}</p>
+
+            {% if dashboard.created %}
+            <p>Created: {{ dashboard.created.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            {% endif %}
+
+          </div>
+
+        <div class="col-lg-10 col-lg-offset-1">
+          {% if user_options_form and not options_not_allowed %}
+          <form enctype="multipart/form-data" id="spawn_form" action="{{url}}" method="post" role="form">
+            {{user_options_form | safe}}
+            <br>
+            <div class="feedback-container">
+              <input type="submit" value="Save" class="btn btn-jupyter form-control">
+              <div class="feedback-widget hidden">
+                <i class="fa fa-spinner"></i>
+              </div>
+            </div>
+          </form>        
+          {% else %}
+          <p>The dashboard owner needs to start this dashboard in order to choose some options.</p>
+          <p>Please ask them to view the dashboard first and choose their options.</p>
+          {% endif %}
+        </div>
+    </div>
+
+
+</div>
+{% endblock main %}

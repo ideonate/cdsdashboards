@@ -318,23 +318,15 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 db.commit()
 
                 # Now cancel any existing build and force a rebuild
-                # TODO delete existing final_spawner
+
                 builders_store = BuildersStore.get_instance(self.settings['config'])
                 builder = builders_store[dashboard]
 
-                async def do_restart_build(_):
-                    await self.maybe_start_build(dashboard, current_user, True)
-                    self.log.debug('Force build start')
+                dashboard_user = self._user_from_orm(dashboard.user.name)
 
-                if builder.pending and builder._build_future and not builder._build_future.done():
-
-                    self.log.debug('Cancelling build')
-                    builder._build_future.add_done_callback(do_restart_build)
-                    builder._build_future.cancel()
-
-                else:
-                    await do_restart_build(None)
-
+                next_page = await self.maybe_start_build(dashboard, dashboard_user, True)
+                # next_page can be progress/options/dashboard, but actually can't be anything because with force_start==True
+                # it will have set things off async!
 
             except Exception as e:
                 errors.all = str(e)
@@ -375,7 +367,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             )
             return self.write(html)
         
-        self.redirect("{}hub/dashboards/{}".format(self.settings['base_url'], dashboard.urlname))
+        self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.urlname))
+
 
     def read_spawner(self, dashboard, spawners, dashboard_options, errors, require_source_server):
 
@@ -408,6 +401,88 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         return spawner, spawner_id
 
 
+class DashboardOptionsHandler(DashboardBaseHandler):
+
+    @authenticated
+    @check_database_upgrade
+    async def get(self, dashboard_urlname):
+
+        current_user = await self.get_current_user()
+
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
+        dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname)
+
+        if dashboard is None:
+            return self.send_error(404)
+
+        if not dashboard.is_orm_user_allowed(current_user.orm_user):
+            return self.send_error(403)
+
+        builders_store = BuildersStore.get_instance(self.settings['config'])
+        builder = builders_store[dashboard]
+
+        dashboard_user = self._user_from_orm(dashboard.user.name)
+
+        next_page = await self.maybe_start_build(dashboard, dashboard_user, False)
+
+        if next_page == 'options':
+            self.log.info('Display options form')
+            options_not_allowed = False
+            need_user_options_form = builder._needs_user_options
+
+            if current_user.name != dashboard.user.name:
+                need_user_options_form = None
+                options_not_allowed = True
+
+            html = await self.render_template(
+                "dashboardoptions.html",
+                base_url=self.settings['base_url'],
+                dashboard=dashboard,
+                current_user=current_user,
+                dashboard_user=dashboard.user,
+                user_options_form=need_user_options_form,
+                options_not_allowed=options_not_allowed
+            )
+            return self.write(html)
+
+        # The dashboard spawn is in progress, go to the main build page
+        return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname))
+
+    @authenticated
+    @check_database_upgrade
+    async def post(self, dashboard_urlname):
+
+        current_user = await self.get_current_user()
+
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
+        dashboard = Dashboard.find(db=self.db, urlname=dashboard_urlname)
+
+        if dashboard is None:
+            return self.send_error(404)
+
+        if not dashboard.is_orm_user_allowed(current_user.orm_user):
+            return self.send_error(403)
+
+        if current_user.name != dashboard.user.name:
+            return self.send_error(403)
+
+        form_options = {}
+        for key, byte_list in self.request.body_arguments.items():
+            form_options[key] = [bs.decode('utf8') for bs in byte_list]
+        for key, byte_list in self.request.files.items():
+            form_options["%s_file" % key] = byte_list
+
+
+        builders_store = BuildersStore.get_instance(self.settings['config'])
+        builder = builders_store[dashboard]
+        
+        next_page = await self.maybe_start_build(dashboard, current_user, True, form_options)
+
+        return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname))
+
+
 class MainViewDashboardHandler(DashboardBaseHandler):
     
     @authenticated
@@ -426,9 +501,13 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         dashboard_user = self._user_from_orm(dashboard.user.name)
 
-        need_follow_progress = await self.maybe_start_build(dashboard, dashboard_user)
+        next_page = await self.maybe_start_build(dashboard, dashboard_user)
 
-        if not need_follow_progress:
+        if next_page == 'options':
+            self.log.debug('Redirect to dashboard/options')
+            return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname, 'options'))
+
+        if next_page == 'dashboard':
             return self.redirect("/user/{}/{}".format(dashboard_user.name, dashboard.final_spawner.name))
 
         base_url = self.settings['base_url']

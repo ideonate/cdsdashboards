@@ -22,6 +22,7 @@ class Builder(LoggingConfigurable):
     # private attributes for tracking status
     _build_pending = False
     _build_future = None
+    _needs_user_options = False
 
     event_queue = []
 
@@ -210,7 +211,7 @@ class Builder(LoggingConfigurable):
     def add_progress_event(self, event):
         self.event_queue.append(event)
 
-    async def start(self, dashboard, dashboard_user, db):
+    async def start(self, dashboard, dashboard_user, form_options=None, spawn_default_options=True):
         """Start the dashboard
 
         Returns:

@@ -122,6 +122,12 @@ See :ref:`setup` for details of which c.JupyterHub.spawner_class to set.
 Note that from version 0.1.0 onwards, DockerSpawner needs to be replaced with VariableDockerSpawner. (Previous versions worked with the 
 standard DockerSpawner.)
 
+I can't choose profiles or other spawner options for dashboards
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If your spawner is configured so that normal Jupyter servers allow the user to first select options (such as Docker image or 
+another profile) and you also want these options to be selected by the dashboard creator, try :ref:`spawn_default_options`.
+
 Dashboards work but "object NoneType" error in logs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

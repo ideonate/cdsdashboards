@@ -188,6 +188,24 @@ mk get pods
 mk exec --stdin --tty hub-658cdb67d8-gw5kp  -- /bin/bash
 ```
 
+### KubeSpawner testing
+
+Run minikube with provider virtualbox, and run JupyterHub configured with KubeSpawner locally.
+
+This can spawn pods inside minkube which are accessible via JH as long as you route the network:
+
+```
+# Linux
+sudo ip route add 172.17.0.0/16 via $(minikube ip)
+# later on you can undo this with
+sudo ip route del 172.17.0.0/16
+
+# MACOS
+sudo route -n add -net 172.17.0.0/16 $(minikube ip)
+# later on you can undo this with
+sudo route delete -net 172.17.0.0
+```
+
 ## Build local hub image
 
 Don't tag local images as 'latest' otherwise k8s will always attempt to pull first.

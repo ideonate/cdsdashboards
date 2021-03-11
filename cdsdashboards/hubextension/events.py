@@ -36,8 +36,13 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
         # - spawner not running at all
         # - spawner failed
         # - spawner pending start (what we expect)
-        def ready_event(dashboard):
-            url = url_path_join(self.settings['base_url'], "user", dashboard.user.name, dashboard.final_spawner.name)
+        def ready_event(dashboard, options=False):
+            url = ''
+            if options:
+                url = url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.urlname, 'options')
+            else:
+                url = url_path_join(self.settings['base_url'], "user", dashboard.user.name, dashboard.final_spawner.name)
+
             return {
                 'progress': 100,
                 'ready': True,
@@ -63,7 +68,7 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
 
         build_future = builder._build_future
 
-        if not builder._build_pending:
+        if not builder._build_pending and not builder._needs_user_options:
             # not pending, no progress to fetch
             # check if spawner has just failed
             f = build_future
@@ -101,6 +106,9 @@ class ProgressDashboardHandler(SpawnProgressAPIHandler):
             # spawner is ready, signal completion and redirect
             self.log.info("Server %s is ready", builder._log_name)
             await self.send_event(ready_event(dashboard))
+        elif builder._needs_user_options:
+            self.log.info("Server %s needs options form", builder._log_name)
+            await self.send_event(ready_event(dashboard, True))
         else:
             # what happened? Maybe spawn failed?
             f = build_future

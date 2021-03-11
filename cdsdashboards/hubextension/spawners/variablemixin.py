@@ -50,7 +50,10 @@ class VariableMixin(Configurable):
                 '{--}port={port}',
                 '{--}no-browser',
                 '{--}Voila.base_url={base_url}/',
-                '{--}Voila.server_url=/'],
+                '{--}Voila.server_url=/',
+                '{--}VoilaConfiguration.http_header_envs=[\'X-CDSDASHBOARDS-JH-USER\']',
+                '--forward-user-info',
+                '--query-user-info'],
             'extra_args_fn': _get_voila_template
         },
         'streamlit': {
@@ -296,6 +299,22 @@ class VariableMixin(Configurable):
         if not SpawnPermissionsController.get_instance(CDSConfigStore.get_instance(self.config), self.db).can_user_spawn(self.user.orm_user):
             raise Exception('User {} is not allowed to spawn a server'.format(self.user.name))
         return super().run_pre_spawn_hook()
+
+    def options_from_form(self, options):
+        """
+        If there is an options_form present on a spawner, then when it is submitted by the user,
+        it clobbers any existing user_options - which may include 'presentation_*' etc data
+        from the dashboard.
+        For now, 
+        """
+        formdata = super().options_from_form(options)
+        if hasattr(self, 'orm_spawner') and self.orm_spawner and hasattr(self.orm_spawner, 'user_options') \
+                    and isinstance(self.orm_spawner.user_options, dict):
+            existing_user_options = self.orm_spawner.user_options.copy()
+            existing_user_options.update(formdata)
+            formdata = existing_user_options
+        return formdata
+
 
 
 class MetaVariableMixin(type(Configurable)):

@@ -31,7 +31,7 @@ Once JupyterHub is running, please continue based on the spawner or installation
    tljh
    docker
    z2jh
-
+   batchspawners
 
 
 

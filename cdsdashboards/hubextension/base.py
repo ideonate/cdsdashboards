@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from collections import defaultdict
-from asyncio import sleep, CancelledError, Future
+from asyncio import sleep, CancelledError
 
 from async_generator import aclosing
 from tornado.web import HTTPError
@@ -14,7 +14,7 @@ from ..util import maybe_future
 from ..orm import Dashboard
 from ..app import BuildersStore, CDSConfigStore
 from ..dbutil import is_upgrade_needed
-from ..util import DefaultObjDict
+from ..util import DefaultObjDict, url_path_join
 
 def spawner_to_dict(spawner):
     name = spawner.name
@@ -133,7 +133,7 @@ class DashboardBaseMixin:
 
             await sleep(0.01)
 
-            if builder._build_future.done():
+            if builder._build_future and builder._build_future.done():
                 break
 
             if new_server_name in dashboard_user.spawners and dashboard_user.spawners[new_server_name].pending \
@@ -144,7 +144,7 @@ class DashboardBaseMixin:
                 app_log.debug('Found spawner for progress')
 
                 async with aclosing(
-                    iterate_until(builder._build_future, spawner._generate_progress())
+                    iterate_until(maybe_future(builder._build_future), spawner._generate_progress())
                 ) as spawnevents:
                     try:
                         async for event in spawnevents:
@@ -214,133 +214,128 @@ class DashboardBaseMixin:
 
         return False
 
-    async def maybe_start_build(self, dashboard, dashboard_user, force_start=False):
+    async def maybe_start_build(self, dashboard, dashboard_user, force_start=False, user_options=None):
 
         builders_store = BuildersStore.get_instance(self.settings['config'])
 
         builder = builders_store[dashboard]
 
-        need_follow_progress = True
+        user = self._user_from_orm(dashboard_user)
+
+        # If dashboard is already completely running, just redirect there.
+
+        if not force_start:
+
+            if builder.pending or builder._build_future is not None:
+                return 'progress' # already mid-build, or exception to show
+            
+            if builder._needs_user_options:
+                return 'options'
+
+            if dashboard.final_spawner is not None:
+                final_spawner = user.spawners[dashboard.final_spawner.name]
+
+                if final_spawner.ready:
+                    return 'dashboard'
+                #return 'progress' # Need to attach to progress events to await spawn (or stop)
+
+            # Assume builder.pending == False and builder._build_future is None
+
+                
+
+        # There should only really be a build in progress if we have force_start == True
+
+
+        self.log.debug('starting builder')
+
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+        spawn_default_options = cdsconfig.spawn_default_options
+
 
         def do_final_build(f):
+            self.log.debug('In do_final_build')
             if f.cancelled() or f.exception() is None:
                 builder._build_future = None
             builder._build_pending = False
 
-        if not builder.pending and (dashboard.final_spawner is None or force_start):
+        existing_build_future = None
+
+        if builder.pending and builder._build_future and not builder._build_future.done():
+            if force_start:
+                builder._build_future.cancel()
+            existing_build_future = builder._build_future
+
+        async def do_build():
+
+            if existing_build_future:
+                await existing_build_future
+
+            # This section would be better if it was inside dockerbuilder, but we want 
+            # to make use of self.spawn_single_user without repeating the code
+            if dashboard.source_spawner and dashboard.source_spawner.name:
+
+                # Get source spawner
+                source_spawner = dashboard_user.spawners[dashboard.source_spawner.name]
+
+                if source_spawner.ready:
+                    self.log.debug('Source spawner is already ready')
+                elif source_spawner.pending in ['spawn', 'check']:
+                    builder.add_progress_event({'progress': 15, 'message': 'Attaching to pending source server for Dashboard'})
+                    self.log.debug('Source spawner is pending - await')
+                    spawn_future = getattr(final_spawner, '_{}_future'.format(final_spawner.pending), None)
+                    if spawn_future:
+                        await spawn_future
+                else:
+                    builder.add_progress_event({'progress': 10, 'message': 'Starting up source server for Dashboard'})
+                    self.log.debug('Source spawner needs a full start')
+                    await self.spawn_single_user(dashboard_user, dashboard.source_spawner.name)
+
+            # Delete existing final spawner if it exists
+            await self.maybe_delete_existing_server(dashboard.final_spawner, dashboard_user)
+
+            (new_server_name, new_server_options, need_user_options_form) =  await builder.start(dashboard, dashboard_user, user_options, spawn_default_options)
+
+            if need_user_options_form:
+                builder.add_progress_event({'progress': 80, 'message': 'Needs user options form'})
+                builder._needs_user_options = need_user_options_form
+                return
             
-            if builder._build_future and builder._build_future.done() and builder._build_future.exception() and not force_start:
-                pass # Progress stream should display the error for us
+            self.log.debug('Confirming user options not needed')
+            builder._needs_user_options = False
 
-            else:
-                self.log.debug('starting builder')
+            builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard, after build'})
 
-                builder._build_pending = True
+            maybe_future(self.pipe_spawner_progress(dashboard_user, new_server_name, builder))
 
-                async def do_build():
+            await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
 
-                    # This section would be better if it was inside dockerbuilder, but we want 
-                    # to make use of self.spawn_single_user without repeating the code
-                    if dashboard.source_spawner and dashboard.source_spawner.name:
+            self.db.expire(dashboard) # May have changed during async code above
 
-                        # Get source spawner
-                        source_spawner = dashboard_user.spawners[dashboard.source_spawner.name]
+            final_spawner = None
 
-                        if source_spawner.ready:
-                            self.log.debug('Source spawner is already ready')
-                        elif source_spawner.pending in ['spawn', 'check']:
-                            builder.add_progress_event({'progress': 15, 'message': 'Attacheding to pending source server for Dashboard'})
-                            self.log.debug('Source spawner is pending - await')
-                            spawn_future = getattr(final_spawner, '_{}_future'.format(final_spawner.pending), None)
-                            if spawn_future:
-                                await spawn_future
-                        else:
-                            builder.add_progress_event({'progress': 10, 'message': 'Starting up source server for Dashboard'})
-                            self.log.debug('Source spawner needs a full start')
-                            await self.spawn_single_user(dashboard_user, dashboard.source_spawner.name)
+            if new_server_name in dashboard_user.orm_user.orm_spawners:
+                final_spawner = dashboard_user.spawners[new_server_name]
+                dashboard.final_spawner = dashboard_user.orm_user.orm_spawners[new_server_name]
 
-                    # Delete existing final spawner if it exists
-                    await self.maybe_delete_existing_server(dashboard.final_spawner, dashboard_user)
+            # TODO if not, then what?
 
-                    (new_server_name, new_server_options) =  await builder.start(dashboard, dashboard_user, self.db)
+            dashboard.started = datetime.utcnow()
 
-                    builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard, after build'})
+            self.db.commit()
 
-                    maybe_future(self.pipe_spawner_progress(dashboard_user, new_server_name, builder))
+            if final_spawner and not final_spawner.ready:
+                await maybe_future(getattr(final_spawner, '_{}_future'.format(final_spawner.pending), None))
 
-                    await self.spawn_single_user(dashboard_user, new_server_name, options=new_server_options)
+        builder._build_pending = True
+        builder._build_future = maybe_future(do_build())
 
-                    self.db.expire(dashboard) # May have changed during async code above
+        builder._build_future.add_done_callback(do_final_build)
 
-                    if new_server_name in dashboard_user.orm_user.orm_spawners:
-                        dashboard.final_spawner = dashboard_user.orm_user.orm_spawners[new_server_name]
-
-                    # TODO if not, then what?
-
-                    dashboard.started = datetime.utcnow()
-
-                    self.db.commit()
-
-                builder._build_future = maybe_future(do_build())
-
-                builder._build_future.add_done_callback(do_final_build)
-
-        elif builder.pending:
-            pass # Already started - Progress will show where we've got to
-
-        elif dashboard.final_spawner:
-            # Spawner already running so don't need to build anything
-
-            user = self._user_from_orm(dashboard_user)
-
-            final_spawner = user.spawners[dashboard.final_spawner.name]
-
-            if final_spawner.ready:
-                need_follow_progress = False
-
-            elif final_spawner.pending:
-
-                if final_spawner.pending == 'spawn':
-                    builder._build_pending = True
-
-                    builder.add_progress_event({'progress': 90, 'message': 'Attaching to spawn of final server for Dashboard'})
-
-                    # TODO This branch is rare, but should attach pipe to spawner progress
-
-                    builder._build_future = getattr(final_spawner, '_{}_future'.format(final_spawner.pending), None)
-                    
-                    if builder._build_future:
-                        builder._build_future.add_done_callback(do_final_build)
-
-                else: # stop or check
-                    self.log.info("Awaiting failure of builder due to spawner stopping")
-
-                    builder.add_progress_event({'failed': True, 'message': 'Final server for Dashboard is Stopping or Checking'})
-                    builder._build_future = Future()
-
-                    builder._build_future.set_exception(Exception('Could not rebuild - need to wait for destination named server '
-                                                    'to complete {} before you can try again'.format(final_spawner.pending)))
-                    builder._build_pending = False
-                  
-            else:
-
-                builder._build_pending = True
-
-                builder.event_queue = []
-
-                builder.add_progress_event({'progress': 80, 'message': 'Starting up final server for Dashboard'})
-
-                maybe_future(self.pipe_spawner_progress(user, final_spawner.name, builder))
-
-                builder._build_future = maybe_future(self.spawn_single_user(user, final_spawner.name))
-
-                builder._build_future.add_done_callback(do_final_build)
-
-        return need_follow_progress
+        return 'progress'
 
     async def maybe_delete_existing_server(self, orm_spawner, dashboard_user):
         if not orm_spawner:
-            return
+            return False
         
         server_name = orm_spawner.name
 
@@ -353,14 +348,15 @@ class DashboardBaseMixin:
                 raise HTTPError(400, "Named servers are not enabled.")
             if server_name not in user.orm_spawners:
                 self.log.debug("%s does not exist anyway", spawner._log_name)
-                return
+                return False
         else:
             raise HTTPError(400, "Cannot delete the default server")
 
         if spawner.pending == 'stop':
             self.log.debug("%s already stopping", spawner._log_name)
 
-            # TODO ideally wait until the stop is complete
+            if spawner._stop_future:
+                await spawner._stop_future
 
         if spawner.ready or spawner.pending == 'spawn':
 
