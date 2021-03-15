@@ -8,6 +8,10 @@ on:
 jobs:
   
   build_cdsdashboards_local:
+
+    # Include [noga] in the commit message to skip this expensive action
+    if: ${{ !contains( github.event.head_commit.message, '[noga]' ) }}
+
     name: Build and Push cdsdashboards-jupyter-k8s-hub local
     runs-on: ubuntu-18.04
 
