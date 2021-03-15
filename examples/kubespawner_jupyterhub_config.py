@@ -44,13 +44,9 @@ c.CDSDashboardsConfig.require_source_server = False
 
 c.CDSDashboardsConfig.default_allow_all = True
 
-c.KubeSpawner.remove = True
-
-c.KubeSpawner.name_template = "{prefix}-{username}-{servername}"
-
 c.KubeSpawner.image = 'ideonate/containds-all-basic:latest'
 
-c.KubeSpawner.pull_policy = 'ifnotpresent'
+c.KubeSpawner.image_pull_policy = 'IfNotPresent'
 
 notebook_dir = '/home/jovyan'
 c.KubeSpawner.notebook_dir = notebook_dir
@@ -82,6 +78,9 @@ c.KubeSpawner.volume_mounts = [
 
 # User options
 if True:
+
+    c.CDSDashboardsConfig.spawn_default_options = False
+
     c.KubeSpawner.profile_list = [
     {
         'display_name': 'Small',
