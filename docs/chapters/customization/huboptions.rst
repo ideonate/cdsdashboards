@@ -180,15 +180,17 @@ To allow users to select a Conda environment in which the dashboard should run, 
 
     c.CDSDashboardsConfig.conda_envs = ['env1', 'env2', 'myenv', 'anotherenv']
 
-This will add a dropdown to the new/edit dashboard page showing these selections in addition to a 'Default / None' option. The 'Default / None' option will 
-be equivalent to the default behavior which runs the dashboard in whichever 'singleuser server' environment it finds (which may or may not be a Conda env 
-at all). If a named Conda env is selected for the dashboard, the singleuser server (i.e. jhsingle-native-proxy) will actively attempt to switch to the 
-named conda env.
+This will add a dropdown to the new/edit dashboard page showing these selections. The singleuser server (i.e. jhsingle-native-proxy) will actively attempt to 
+switch to the named conda env.
 
 For the conda env activation to work, :code:`conda` must be available on the path. Locating the named Conda env is done by iterating through the list of 
 envs supplied e.g. by :code:`conda env list` and matching by the name of the right-most folder, returning whichever Conda env path it matches first.
 
-It may be possible for env names to be duplicated, in which case only the first match can ever be activated.
+You may provide the empty string as one of the conda_envs (:code:`['', 'env1', 'env2]`). This will display as a 'Default / None' option. 
+This option will be equivalent to the default behavior which runs the dashboard in whichever 'singleuser server' environment it finds 
+itself in (which may or may not be a Conda env at all). (In cdsdashboards v0.4.3 and earlier there was always a 'Default / None' option.)
+
+It may be possible for env names to be duplicated (but within different prefix paths), in which case only the first match can ever be activated.
 
 You may use a full path to a Conda env instead of just the name. This may be necessary in some configurations, especially if your Conda 
 envs are defined with a prefix instead of named in a central location.

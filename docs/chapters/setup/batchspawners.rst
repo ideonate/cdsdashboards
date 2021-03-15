@@ -21,3 +21,9 @@ For example, if you are using SlurmSpawner:
 
     c.JupyterHub.spawner_class = VariableSlurmSpawner
 
+
+    c.VariableMixin.default_presentation_cmd = ['jhsingle-native-proxy']
+
+
+The final line is normally required in order to navigate through the way the standard 
+`batchspawner-singleuser <https://github.com/jupyterhub/batchspawner/blob/master/batchspawner/singleuser.py>`__ script works.

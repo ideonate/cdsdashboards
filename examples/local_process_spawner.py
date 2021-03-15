@@ -108,7 +108,7 @@ c.VariableMixin.extra_presentation_launchers = {
 c.CDSDashboardsConfig.show_source_git = True
 c.CDSDashboardsConfig.show_source_servers = False
 
-c.CDSDashboardsConfig.conda_envs = ['env1', 'env2', 'cds']
+c.CDSDashboardsConfig.conda_envs = ['', 'env1', 'env2', 'cds']
 #c.CDSDashboardsConfig.allow_custom_conda_env = True
 
 #c.CDSDashboardsConfig.default_allow_all = True

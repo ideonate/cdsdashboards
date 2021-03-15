@@ -178,9 +178,8 @@
                         {% endif %}
                         {% if all_conda_envs %}
                             <{% if allow_custom_conda_env %}datalist{% else %}select name="conda_env"{% endif %} id="conda_env_list">
-                                <option value="" {% if conda_env == '' %}selected{% endif %}>None / Default</option>
                                 {% for ce in all_conda_envs %}
-                                    <option value="{{ce}}" {% if conda_env == ce and not allow_custom_conda_env %}selected{% endif %}>{{ce}}</option>
+                                    <option value="{{ce}}" {% if conda_env == ce and not allow_custom_conda_env %}selected{% endif %}>{{ce | default('None / Default', true)}}</option>
                                 {% endfor %}
                             </{% if allow_custom_conda_env %}datalist{% else %}select{% endif %}>
                         {% endif %}
