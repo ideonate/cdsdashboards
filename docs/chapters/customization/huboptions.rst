@@ -251,11 +251,9 @@ Your spawner may be configured to (usually) present options to the user before s
 memory size or a Docker image to use. When dashboard servers are started, by default they just attempt to spawn using the default 
 options for the spawner.
 
-If you want the dashboard creator to be able to choose these spawner options, set:
+If you want the dashboard creator to be able to choose these spawner options, set in your jupyterhub_config:
 
 :code:`c.CDSDashboardsConfig.spawn_default_options = False`
-
-in your jupyterhub_config.
 
 Doing this will ensure the dashboard creator can choose these options when they access the dashboard (and in the future if it 
 is stopped and needs restarting). However, if the dashboard server is stopped or deleted, then other users will not be able to 

@@ -7,8 +7,11 @@ Changelog
 Version 0.5.0
 ~~~~~~~~~~~~~
 
-Released 
+Released 23 Mar 2021
 
+- Dashboard servers are started using default spawner options by default, but a new spawn_default_options 
+  config option can be set to False to require the dashboard owner to select spawner options (if any) when first started. 
+  See :ref:`spawn_default_options`.
 - Breaking change: if you specify conda_envs options for your dashboard creators to choose a Conda environment for their users 
   there was always a 'Default / None' option added at the top of the list, corresponding to 'no Conda env'. You now have to 
   specify an empty string explicitly in conda_envs if you want a 'Default / None' option to appear. See :ref:`conda_envs`.
