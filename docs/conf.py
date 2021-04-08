@@ -17,8 +17,11 @@ import os
 
 # -- Project information -----------------------------------------------------
 
+import datetime
+now = datetime.datetime.now()
+
 project = 'ContainDS Dashboards'
-copyright = '2020, Ideonate'
+copyright = str(now.year)+', Ideonate'
 author = 'Ideonate'
 
 
