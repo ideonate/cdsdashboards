@@ -22,6 +22,9 @@ extras_require = {
         'bokeh-root-cmd>=0.0.5',
         'rshiny-server-cmd>=0.0.2',
         'voila-materialstream>=0.2.6' # Does not install voila itself
+    ],
+    'sudospawner': [
+        "sudospawner>=0.5.2"
     ]
 }
 
