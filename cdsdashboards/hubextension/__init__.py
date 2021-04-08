@@ -22,7 +22,7 @@ cds_extra_handlers = [
     (r'dashboards', AllDashboardsHandler),
     
     (r'dashboards/(?P<dashboard_urlname>[^/]+?)/edit', DashboardEditHandler, {}, 'cds_dashboard_config_handler'),
-    (r'dashboards/(?P<dashboard_urlname>[^/]+?)/options', DashboardOptionsHandler, {}, 'cds_dashboard_config_handler'),
+    (r'dashboards/(?P<dashboard_urlname>[^/]+?)/options', DashboardOptionsHandler, {}, 'cds_dashboard_options_handler'),
     (r'dashboards/(?P<dashboard_urlname>[^/]+?)', MainViewDashboardHandler),
     (r'dashboards/(?P<dashboard_urlname>[^/]+?)/clear-error', ClearErrorDashboardHandler),
 

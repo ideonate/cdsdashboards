@@ -66,6 +66,17 @@ class SameUserSpawner(LocalProcessSpawner):
     def _notebook_dir_default(self):
         return f'/Users/dan/Dev/cdsdashboards/examples/local_process_folder/{self.user.name}'
 
+
+#    def options_form(self, spawner):
+#        self.log.info("In options_form")
+
+#        if spawner.orm_spawner.user_options and 'presentation_type' in spawner.orm_spawner.user_options:
+#            return '<p>The PRESENTATION <input type="text" name="v"></input></p>'
+#        return '<p>The form <input type="text" name="v"></input></p>'
+
+
+# c.CDSDashboardsConfig.spawn_default_options = False
+
 from cdsdashboards.hubextension.spawners.variablemixin import VariableMixin, MetaVariableMixin
 
 class VariableSameUserSpawner(SameUserSpawner, VariableMixin, metaclass=MetaVariableMixin):
