@@ -376,5 +376,7 @@ class DashboardBaseMixin:
         self.db.commit()
 
     def can_user_spawn(self, user):
+        if user is None:
+            return False
         cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
         return SpawnPermissionsController.get_instance(cdsconfig, self.db).can_user_spawn(user.orm_user)

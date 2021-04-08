@@ -4,6 +4,14 @@
 Changelog
 ---------
 
+Version 0.5.1
+~~~~~~~~~~~~~
+
+Released 8 Apr 2021
+
+- Fixed a 500 error when accessing /home-cds (:ref:`restricted mode <restrictusers>`) when not logged in
+- VariableSudoSpawner contributed by `StevenLaan <https://github.com/StevenLaan>`__.
+
 Version 0.5.0
 ~~~~~~~~~~~~~
 
