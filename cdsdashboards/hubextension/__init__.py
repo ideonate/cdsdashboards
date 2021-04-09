@@ -1,4 +1,4 @@
-import os
+import os, sys
 
 from traitlets import Bool
 from traitlets.config import SingletonConfigurable
@@ -11,9 +11,10 @@ from .core import OurHomeHandler
 from .events import ProgressDashboardHandler
 from .._data import DATA_FILES_PATH
 from .api import DashboardsAPIHandler, DashboardDeleteAPIHandler, UserSelfAPIHandler
+from .. import hookimpl
+from ..pluggymanager import pm
 
-
-cds_extra_handlers = [
+basic_cds_extra_handlers = [
     
     (r'dashboards-db-upgrade', UpgradeDashboardsHandler),
 
@@ -39,6 +40,18 @@ cds_extra_handlers = [
     (r'home-cds', OurHomeHandler),
 
 ]
+
+# Register plugin hooks so we use the basic handlers by default, unless overridden
+
+@hookimpl
+def get_cds_extra_handlers():
+    return []
+
+pm.register(sys.modules[__name__])
+
+cds_extra_handlers = basic_cds_extra_handlers + pm.hook.get_cds_extra_handlers()[0]
+
+# Apply some of the config through a function - probably easier to spell out the config in the docs
 
 def config_for_dashboards(c):
     """

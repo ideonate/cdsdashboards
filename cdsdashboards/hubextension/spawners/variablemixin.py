@@ -50,7 +50,8 @@ class VariableMixin(Configurable):
                 '{--}port={port}',
                 '{--}no-browser',
                 '{--}Voila.base_url={base_url}/',
-                '{--}Voila.server_url=/'],
+                '{--}Voila.server_url=/',
+                '--progressive'],
             'extra_args_fn': _get_voila_template
         },
         'streamlit': {

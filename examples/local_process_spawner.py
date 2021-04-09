@@ -176,3 +176,13 @@ c.JupyterHub.default_url = '/hub/dashboards'
 #    return '/hub/home'
 
 #c.JupyterHub.default_url = default_url_fn
+
+
+c.JupyterHub.services = [
+    {
+        'name': 'binder-sincos',
+        # any secret >8 characters, you'll use api_token to
+        # authenticate api requests to the hub from your service
+        'api_token': 'cdsdashboards-secret-123',
+    }
+]
