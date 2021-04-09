@@ -9,11 +9,9 @@ from tornado import ioloop
 from tornado.log import app_log
 from .builders import BuildException
 from .processbuilder import ProcessBuilder
-from .. import hookimpl
-from ..pluggymanager import pm
 
 
-class BasicDockerBuilder(ProcessBuilder):
+class DockerBuilder(ProcessBuilder):
 
     user = Any()
 
@@ -124,15 +122,3 @@ class BasicDockerBuilder(ProcessBuilder):
         self.log.info('Finished commit of Docker image {}:{}'.format(reponame, tag))
 
         return {'image': image_name}
-
-
-DockerBuilder = BasicDockerBuilder
-# Register plugin hooks so we use the Basic handlers by default, unless overridden
-
-@hookimpl
-def get_builder_DockerBuilder():
-    return BasicDockerBuilder
-
-pm.register(sys.modules[__name__])
-
-DockerBuilder = pm.hook.get_builder_DockerBuilder()[0]
