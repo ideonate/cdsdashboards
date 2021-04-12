@@ -230,13 +230,13 @@
 
 {% block script %}
 {{ super () }}
-<link rel="stylesheet" href="../../dashboards-static/components/selectator/fm.selectator.jquery.css"/>
+<link rel="stylesheet" href="{{ base_url }}hub/dashboards-static/components/selectator/fm.selectator.jquery.css"/>
 <script type="text/javascript">
 require(
     [
         "jquery", 
-        "../../dashboards-static/components/selectator/fm.selectator.jquery.js", 
-        "../../dashboards-static/components/jquery.easytabs"
+        "{{ base_url }}hub/dashboards-static/components/selectator/fm.selectator.jquery.js", 
+        "{{ base_url }}hub/dashboards-static/components/jquery.easytabs.js"
     ], 
     function($, selectator, easytabs) {
         "use strict";

@@ -67,6 +67,6 @@
   // hook up event-stream for progress
   var dashboard_progress_url = "{{ progress_url | escape }}";
 
-require(["../../dashboards-static/js/viewdashboard"]);
+require(["{{ base_url }}hub/dashboards-static/js/viewdashboard.js"]);
 </script>
 {% endblock script %}
