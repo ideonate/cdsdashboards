@@ -4,6 +4,16 @@
 Changelog
 ---------
 
+Version 0.5.2
+~~~~~~~~~~~~~
+
+Released 13 Apr 2021
+
+- Fix relative dashboards-static URLs for assets which weren't found in some JupyterHub configurations
+- Depend on jhsingle-native-proxy >= 0.7.3
+- Use --progressive flag of jhsingle-native-proxy for Voila launchers, so the 'loading' page appears sooner
+
+
 Version 0.5.1
 ~~~~~~~~~~~~~
 
