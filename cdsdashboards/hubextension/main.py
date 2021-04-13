@@ -508,7 +508,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname, 'options'))
 
         if next_page == 'dashboard':
-            return self.redirect("/user/{}/{}".format(dashboard_user.name, dashboard.final_spawner.name))
+            return self.redirect(url_path_join(self.settings['base_url'], "user", dashboard_user.name, dashboard.final_spawner.name))
 
         base_url = self.settings['base_url']
 
