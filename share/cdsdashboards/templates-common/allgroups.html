@@ -8,7 +8,7 @@
             <h2>All Groups</h2>
 
             {% for group in groups %}
-                <p><a href="{{ base_url }}hub/groupslist/{{ group.name | escape }}">{{ group.name | escape }}</a></p>
+                <p><a href="{{ base_url }}groupslist/{{ group.name | escape }}">{{ group.name | escape }}</a></p>
             {% endfor %}
  
         </div>

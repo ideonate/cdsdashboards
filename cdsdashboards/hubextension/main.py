@@ -39,7 +39,6 @@ class AllDashboardsHandler(DashboardBaseHandler):
 
         html = await self.render_template(
             "alldashboards.html",
-            base_url=self.settings['base_url'],
             my_dashboards=my_dashboards,
             visitor_dashboard_groups=visitor_dashboard_groups,
             current_user=current_user,
@@ -126,7 +125,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         html = await self.render_template(
             "editdashboard.html",
             **self.template_vars(dict(
-            base_url=self.settings['base_url'],
             dashboard=dashboard,
             dashboard_name=dashboard_name,
             dashboard_description=dashboard_description,
@@ -341,7 +339,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             html = await self.render_template(
                 "editdashboard.html",
                 **self.template_vars(dict(
-                base_url=self.settings['base_url'],
                 dashboard=dashboard,
                 dashboard_name=dashboard_name,
                 dashboard_description=dashboard_description,
@@ -437,7 +434,6 @@ class DashboardOptionsHandler(DashboardBaseHandler):
 
             html = await self.render_template(
                 "dashboardoptions.html",
-                base_url=self.settings['base_url'],
                 dashboard=dashboard,
                 current_user=current_user,
                 dashboard_user=dashboard.user,
@@ -514,7 +510,6 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
         html = await self.render_template(
             "viewdashboard.html",
-            base_url=base_url,
             dashboard=dashboard,
             current_user=current_user,
             dashboard_user=dashboard_user,
@@ -565,7 +560,6 @@ class UpgradeDashboardsHandler(DashboardBaseHandler):
         html = await self.render_template(
             "upgrade-db.html",
             is_admin=current_user.admin,
-            base_url=self.settings['base_url'],
             error='',
             is_sqlite=is_sqlite,
             success=False
@@ -600,8 +594,7 @@ class UpgradeDashboardsHandler(DashboardBaseHandler):
             is_admin=current_user.admin,
             error=error,
             success=success,
-            is_sqlite=is_sqlite,
-            base_url=self.settings['base_url']
+            is_sqlite=is_sqlite
         )
         self.write(html)
 
@@ -620,7 +613,6 @@ class GroupsAllHandler(DashboardBaseHandler):
 
         html = await self.render_template(
             "allgroups.html",
-            base_url=self.settings['base_url'],
             groups=groups
         )
         self.write(html)
@@ -648,7 +640,6 @@ class GroupsSingleHandler(DashboardBaseHandler):
 
         html = await self.render_template(
             "editgroup.html",
-            base_url=self.settings['base_url'],
             group=group,
             errors=errors,
             all_users_tuples=all_users_tuples

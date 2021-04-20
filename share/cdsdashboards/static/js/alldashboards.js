@@ -12,7 +12,7 @@ require(["jquery", "jhapi", "utils"], function($, JHAPI, utils) {
         options = options || {};
         options = update(options, { type: "DELETE", dataType: null });
         this.api_request(
-            utils.url_path_join("..", "hub", "dashboards-api", dashboard_name),
+            utils.url_path_join("..", "dashboards-api", dashboard_name),
             options
         );
     };

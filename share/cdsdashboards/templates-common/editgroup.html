@@ -42,7 +42,7 @@
 
                 <div class="dashboard-buttons">
 
-                    <input type="submit" value="Save" id="group-save" /> or <a href='{{ base_url }}hub/groupslist'>Cancel</a>
+                    <input type="submit" value="Save" id="group-save" /> or <a href='{{ base_url }}groupslist'>Cancel</a>
 
                 </div>
 
@@ -58,12 +58,12 @@
 
 {% block script %}
 {{ super () }}
-<link rel="stylesheet" href="{{ base_url }}hub/dashboards-static/components/selectator/fm.selectator.jquery.css"/>
+<link rel="stylesheet" href="{{ base_url }}dashboards-static/components/selectator/fm.selectator.jquery.css"/>
 <script type="text/javascript">
 require(
     [
         "jquery", 
-        "{{ base_url }}hub/dashboards-static/components/selectator/fm.selectator.jquery.js"
+        "{{ base_url }}dashboards-static/components/selectator/fm.selectator.jquery.js"
     ], 
     function($, selectator, easytabs) {
         "use strict";

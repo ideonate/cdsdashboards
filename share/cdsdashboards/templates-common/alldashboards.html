@@ -31,14 +31,14 @@
                         <td>{{ dash.name | escape }} </td>
                         {# url #}
                         <td>
-                        <a class="dashboard-link" href="{{ base_url }}hub/dashboards/{{ dash.urlname }}" target="_blank">
+                        <a class="dashboard-link" href="{{ base_url }}dashboards/{{ dash.urlname }}" target="_blank">
                             hub/dashboards/{{ dash.urlname }}
                         </a>
                         </td>
                         {# actions #}
                         <td>
                         <a role="button" class="edit-dashboard btn btn-xs btn-primary" id="edit-dash-{{ dash.urlname }}"
-                            href="{{ base_url }}hub/dashboards/{{ dash.urlname }}/edit">
+                            href="{{ base_url }}dashboards/{{ dash.urlname }}/edit">
                             edit</a>
                         <a role="button" class="delete-dashboard btn btn-xs btn-danger" id="delete-dash-{{ dash.urlname }}">delete</a>
                         </td>
@@ -70,7 +70,7 @@
                 {% for dash in dashlist|sort(attribute='name') %}
 
                     <li>
-                        <a href="{{ base_url }}hub/dashboards/{{ dash.urlname }}" target="_blank" title="{{ dash.description | escape }}">{{ dash.name | escape }}</a>
+                        <a href="{{ base_url }}dashboards/{{ dash.urlname }}" target="_blank" title="{{ dash.description | escape }}">{{ dash.name | escape }}</a>
                     </li>
 
                 {% endfor %}
@@ -91,6 +91,6 @@
 {{ super () }}
 <script type="text/javascript">
 
-require(["{{ base_url }}hub/dashboards-static/js/alldashboards.js"]);
+require(["{{ base_url }}dashboards-static/js/alldashboards.js"]);
 </script>
 {% endblock script %}

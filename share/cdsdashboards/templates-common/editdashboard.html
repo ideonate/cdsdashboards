@@ -214,7 +214,7 @@
 
                 <div class="dashboard-buttons">
 
-                    <input type="submit" value="Save" id="dashboard-save" /> or <a href='{{ base_url }}hub/dashboards'>Cancel</a>
+                    <input type="submit" value="Save" id="dashboard-save" /> or <a href='{{ base_url }}dashboards'>Cancel</a>
 
                 </div>
 
@@ -230,13 +230,13 @@
 
 {% block script %}
 {{ super () }}
-<link rel="stylesheet" href="{{ base_url }}hub/dashboards-static/components/selectator/fm.selectator.jquery.css"/>
+<link rel="stylesheet" href="{{ base_url }}dashboards-static/components/selectator/fm.selectator.jquery.css"/>
 <script type="text/javascript">
 require(
     [
         "jquery", 
-        "{{ base_url }}hub/dashboards-static/components/selectator/fm.selectator.jquery.js", 
-        "{{ base_url }}hub/dashboards-static/components/jquery.easytabs.js"
+        "{{ base_url }}dashboards-static/components/selectator/fm.selectator.jquery.js", 
+        "{{ base_url }}dashboards-static/components/jquery.easytabs.js"
     ], 
     function($, selectator, easytabs) {
         "use strict";
