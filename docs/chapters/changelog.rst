@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.5.6
+~~~~~~~~~~~~~
+
+Released 20 Apr 2021
+
+- Fixes to some URLs which were no longer being redirected by JupyterHub as expected (in some JH configs).
+
 Version 0.5.5
 ~~~~~~~~~~~~~
 
