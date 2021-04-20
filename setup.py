@@ -17,7 +17,7 @@ install_requires = [
 
 extras_require = {
     'user': [
-        'jhsingle-native-proxy>=0.7.5',
+        'jhsingle-native-proxy>=0.7.6',
         'plotlydash-tornado-cmd>=0.0.6',
         'bokeh-root-cmd>=0.0.5',
         'rshiny-server-cmd>=0.0.2',
