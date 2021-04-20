@@ -121,6 +121,15 @@ class VariableMixin(Configurable):
         """,
     ).tag(config=True)
 
+    proxy_ready_timeout = Integer(
+        0,
+        help="""
+        Ready timeout in seconds that jhsingle-native-proxy should allow the underlying process to wait during startup before failing if still
+        unable to respond at the --ready-check-path URL.
+        The default of 0 means that no --ready-timeout flag will be passed to jhsingle-native-proxy so it will use its own default.
+        """,
+    ).tag(config=True)
+
     proxy_force_alive = Bool(
         True,
         help="""
@@ -136,6 +145,14 @@ class VariableMixin(Configurable):
         Frequency in seconds that jhsingle-native-proxy should send any recent activity timestamp to the hub.
         If the default of 300 is specified, no --last-activity-interval flag will be passed to jhsingle-native-proxy so it will use its default.
         Otherwise the specified value will be passed to --last-activity-interval.
+        """,
+    ).tag(config=True)
+
+    proxy_websocket_max_message_size = Integer(
+        0,
+        help="""
+        Max websocket message size allowed by jhsingle-native-proxy, passed as --websocket-max-message-size on the command line.
+        The default of 0 means that no --websocket-max-message-size flag will be passed to jhsingle-native-proxy so it will use its own default.
         """,
     ).tag(config=True)
 
@@ -232,6 +249,10 @@ class VariableMixin(Configurable):
         if proxy_request_timeout:
             args.append('--request-timeout={}'.format(proxy_request_timeout))
 
+        proxy_ready_timeout = getattr(self, 'proxy_ready_timeout', 0)
+        if proxy_ready_timeout:
+            args.append('--ready-timeout={}'.format(proxy_ready_timeout))
+
         proxy_force_alive = getattr(self, 'proxy_force_alive', True)
         if proxy_force_alive == False:
             args.append('--no-force-alive')
@@ -239,6 +260,10 @@ class VariableMixin(Configurable):
         proxy_last_activity_interval = getattr(self, 'proxy_last_activity_interval', 300)
         if proxy_last_activity_interval != 300:
             args.append('--last-activity-interval={}'.format(proxy_last_activity_interval))
+
+        proxy_websocket_max_message_size = getattr(self, 'proxy_websocket_max_message_size', 0)
+        if proxy_websocket_max_message_size:
+            args.append('--websocket-max-message-size={}'.format(proxy_websocket_max_message_size))
 
         args.extend(self.args)
 

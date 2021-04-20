@@ -9,7 +9,7 @@ Once initial setup is complete, there are further customizations you may want to
 hide the 'named servers' section on the home page, and restrict which 'presentation types' (frameworks such as Voilà, Streamlit, etc.) 
 that should be available for Dashboards.
 
-:ref:`useroptions` covers settings affecting individual dashboard servers.
+:ref:`useroptions` covers settings affecting individual dashboard servers (spawner config).
 
 :ref:`finetune` explores generic JupyterHub settings that may make sense now that you have non-technical users logging in. For example, 
 launching straight into 'My Server' may not be the best landing page for those users.

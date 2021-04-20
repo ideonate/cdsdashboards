@@ -102,7 +102,7 @@ c.JupyterHub.allow_named_servers = True
 import os
 dirname = os.path.dirname(__file__)
 
-c.CDSDashboardsConfig.extra_presentation_types = ['plotlydash-debug']
+c.CDSDashboardsConfig.extra_presentation_types = ['plotlydash-debug', 'flask']
 
 c.VariableMixin.extra_presentation_launchers = {
     'plotlydash-debug': {
@@ -112,7 +112,11 @@ c.VariableMixin.extra_presentation_launchers = {
         'env': {
             'PYTHONPATH': os.path.join(dirname, '/Users/dan/Dev/cdsdashboards/examples/local_process_folder/{username}/{presentation_dirname}')
         }
-    }
+    },
+    'flask': {
+        'args': ['--destport=0', 'python3', '{-}m','flask_gunicorn_cmd.main', '{presentation_path}',
+            '{--}port={port}']
+    },
 }
 
 

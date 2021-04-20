@@ -4,6 +4,15 @@
 Changelog
 ---------
 
+Version 0.5.4
+~~~~~~~~~~~~~
+
+Released 20 Apr 2021
+
+- Added proxy_ready_timeout and proxy_websocket_max_message_size options to c.VariableMixin (these are 
+  config options passed to jhsingle-native-proxy).
+
+
 Version 0.5.3
 ~~~~~~~~~~~~~
 

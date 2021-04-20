@@ -15,6 +15,7 @@ Below are extra details for the specific framework types available, and anything
    frameworks/plotlydash
    frameworks/bokehpanel
    frameworks/rshiny
+   frameworks/flask
 
 
 
