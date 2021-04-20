@@ -4,7 +4,7 @@
 Changelog
 ---------
 
-Version 0.5.4
+Version 0.5.5
 ~~~~~~~~~~~~~
 
 Released 20 Apr 2021
