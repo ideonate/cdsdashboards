@@ -2,7 +2,7 @@
 
 A Dashboard publishing solution for Data Science teams to share results with decision makers.
 
-Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish apps and notebooks as user-friendly 
+Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish apps and notebooks as user-friendly
 interactive dashboards to share with non-technical colleagues.
 
 Currently supported frameworks:
@@ -13,7 +13,7 @@ Currently supported frameworks:
 - [R Shiny](https://shiny.rstudio.com/) apps
 - Any custom server or framework
 
-This open source package allows data scientists to instantly and reliably publish interactive 
+This open source package allows data scientists to instantly and reliably publish interactive
 notebooks or other scripts as secure interactive web apps.
 
 Source files can be pulled from a Git repo or from the user's Jupyter tree.
@@ -28,7 +28,7 @@ Any authorised JupyterHub user can view the dashboard, or choose to give permiss
 - Data scientist creates a new Dashboard to clone their Jupyter server
 - Other logged-in JupyterHub users see the dashboard in their list
 - Click to launch as a server, using OAuth to gain access
-- User sees a safe user-friendly version of the original notebook - served by Voilà, Streamlit, Dash, Bokeh, R Shiny etc.
+- User sees a safe user-friendly version of the original notebook - served by Voilà, Streamlit, Dash, Bokeh, Panel, R Shiny etc.
 
 All of this works through a new Dashboards menu item added to JupyterHub's header.
 
@@ -87,5 +87,5 @@ There is a [Gitter room](https://gitter.im/ideonate/ContainDS?utm_source=badge&u
 
 [![Join the chat at https://gitter.im/ideonate/ContainDS](https://badges.gitter.im/ideonate/ContainDS.svg)](https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Documentation Status](https://readthedocs.org/projects/cdsdashboards/badge/?version=stable)](https://cdsdashboards.readthedocs.io/en/stable/?badge=stable)
-[![Latest release](https://img.shields.io/pypi/v/cdsdashboards?color=blue)](https://pypi.org/project/cdsdashboards/) 
+[![Latest release](https://img.shields.io/pypi/v/cdsdashboards?color=blue)](https://pypi.org/project/cdsdashboards/)
 [![Latest release](https://anaconda.org/conda-forge/cdsdashboards/badges/version.svg)](https://anaconda.org/conda-forge/cdsdashboards)

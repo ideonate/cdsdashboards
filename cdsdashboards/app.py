@@ -38,7 +38,7 @@ _TEMPLATE_PATH_COMMON = os.path.join(DATA_FILES_PATH, 'templates-common')
 CDS_TEMPLATE_PATHS = [_TEMPLATE_PATH_OPEN, _TEMPLATE_PATH_COMMON]
 CDS_TEMPLATE_PATHS_RESTRICTED = [_TEMPLATE_PATH_RESTRICTED, _TEMPLATE_PATH_COMMON]
 
-_all_allowed_presentation_types = ['voila', 'streamlit', 'plotlydash', 'bokeh', 'rshiny']
+_all_allowed_presentation_types = ['voila', 'streamlit', 'plotlydash', 'bokeh', 'panel', 'rshiny']
 
 
 class CDSDashboardsConfig(SingletonConfigurable):
@@ -113,7 +113,7 @@ class CDSDashboardsConfig(SingletonConfigurable):
     show_source_git = Bool(
         True,
         help="""
-        Allow the user to enter a git repo to fetch files for a dashboard. 
+        Allow the user to enter a git repo to fetch files for a dashboard.
         """
     ).tag(config=True)
 
@@ -181,7 +181,7 @@ class CDSDashboardsConfig(SingletonConfigurable):
         dashboards-api/hub-info/user endpoint; default False.
         """
     ).tag(config=True)
-    
+
     include_servers_state = Bool(
         False,
         help="""
@@ -194,9 +194,9 @@ class CDSDashboardsConfig(SingletonConfigurable):
         True,
         help="""
         This applies when the spawner may display options to the user before starting a server.
-        If True, a Dashboard will always be started with the default spawner options, so no form will be displayed 
+        If True, a Dashboard will always be started with the default spawner options, so no form will be displayed
         and the dashboard will start without waiting.
-        If False (and form options are available in the spawner) then the Dashboard will not start until the 
+        If False (and form options are available in the spawner) then the Dashboard will not start until the
         dashboard creator has accessed the dashboard and provided options to the spawner.
         """
     ).tag(config=True)
@@ -212,7 +212,7 @@ class CDSConfigStore():
         """
         if cls._instance:
             return cls._instance
-        
+
         cls._instance = CDSDashboardsConfig(config=config)
 
         return cls._instance
@@ -229,7 +229,7 @@ class BuildersStore():
         """
         if cls._instance:
             return cls._instance
-        
+
         cdsconfig = CDSConfigStore.get_instance(config)
 
         builder_class = cdsconfig.builder_class
@@ -239,6 +239,6 @@ class BuildersStore():
 
         cls._instance = BuildersDict(builder_factory)
         return cls._instance
-        
+
 
 cds_tornado_settings = {}

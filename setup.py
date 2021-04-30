@@ -19,7 +19,7 @@ extras_require = {
     'user': [
         'jhsingle-native-proxy>=0.7.6',
         'plotlydash-tornado-cmd>=0.0.6',
-        'bokeh-root-cmd>=0.0.5',
+        'bokeh-root-cmd>=0.0.6', # Install bokeh and panel
         'rshiny-server-cmd>=0.0.2',
         'voila-materialstream>=0.2.6' # Does not install voila itself
     ],

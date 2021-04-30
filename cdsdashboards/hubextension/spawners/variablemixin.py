@@ -55,7 +55,7 @@ class VariableMixin(Configurable):
             'extra_args_fn': _get_voila_template
         },
         'streamlit': {
-            'args': ['--destport=0', 'streamlit', 'run', '{presentation_path}', 
+            'args': ['--destport=0', 'streamlit', 'run', '{presentation_path}',
                 '{--}server.port={port}',
                 '{--}server.headless=True',
                 '{--}browser.serverAddress={origin_host}',
@@ -74,6 +74,13 @@ class VariableMixin(Configurable):
                 '{--}allow-websocket-origin={origin_host}',
                 '--ready-check-path=/ready-check']
         },
+        'panel': {
+            'args': ['--destport=0', 'python3', '{-}m','bokeh_root_cmd.main', '{presentation_path}',
+                '{--}port={port}',
+                '{--}allow-websocket-origin={origin_host}',
+                '{--}panel',
+                '--ready-check-path=/ready-check']
+        },
         'rshiny': {
             'args': ['--destport=0', 'python3', '{-}m','rshiny_server_cmd.main', '{presentation_path}',
                 '{--}port={port}']
@@ -87,10 +94,10 @@ class VariableMixin(Configurable):
         Configuration dict containing details of any custom frameworks that should be made available to Dashboard creators.
         Any new keys added here also need to be added to the c.CDSDashboardsConfig.presentation_types list.
         See cdsdashboards/hubextension/spawners/variablemixin.py in the https://github.com/ideonate/cdsdashboards source code
-        for details of the builtin_presentation_launchers dict which shows some examples. This extra_presentation_launchers 
+        for details of the builtin_presentation_launchers dict which shows some examples. This extra_presentation_launchers
         config takes the same format.
-        Any keys in extra_presentation_launchersthat also belong to builtin_presentation_launchers will be merged into the 
-        builtin config, e.g. {'streamlit':{'env':{'STREAMLIT_ENV_VAR':'TEST'}}} will overwrite only the env section of the 
+        Any keys in extra_presentation_launchersthat also belong to builtin_presentation_launchers will be merged into the
+        builtin config, e.g. {'streamlit':{'env':{'STREAMLIT_ENV_VAR':'TEST'}}} will overwrite only the env section of the
         builting streamlit launcher.
         """
     ).tag(config=True)
@@ -190,7 +197,7 @@ class VariableMixin(Configurable):
         """
 
         presentation_type = self._get_presentation_type()
-        
+
         if presentation_type == '':
             return super().get_args()
 
@@ -275,7 +282,7 @@ class VariableMixin(Configurable):
     def _get_presentation_type(self):
         """
         Returns the presentation_type (e.g. '' for standard spawner, 'voila', 'streamlit' for named presentation frameworks).
-        Throws an exception if the presentation_type doesn't have a launcher configuration in either extra_presentation_launchers 
+        Throws an exception if the presentation_type doesn't have a launcher configuration in either extra_presentation_launchers
         or builtin_presentation_launchers.
         """
         if self.user_options and 'presentation_type' in self.user_options:
@@ -304,7 +311,7 @@ class VariableMixin(Configurable):
                 self.log.info('presentation_dirname: {}'.format(presentation_dirname))
 
                 for k,v in launcher['env'].items():
-                    env[k] = _fixed_format(v, 
+                    env[k] = _fixed_format(v,
                         base_url=self.server.base_url,
                         presentation_dirname=presentation_dirname,
                         presentation_path=presentation_path,
@@ -328,7 +335,7 @@ class VariableMixin(Configurable):
         If there is an options_form present on a spawner, then when it is submitted by the user,
         it clobbers any existing user_options - which may include 'presentation_*' etc data
         from the dashboard.
-        For now, 
+        For now,
         """
         formdata = super().options_from_form(options)
         if hasattr(self, 'orm_spawner') and self.orm_spawner and hasattr(self.orm_spawner, 'user_options') \
@@ -344,7 +351,7 @@ class MetaVariableMixin(type(Configurable)):
     """
     Use this metaclass to ensure VariableMixin occurs earlier in the MRO, so all traits are accessible at the right time.
     """
-    
+
     def mro(cls):
         mro = super().mro()
         # Take VariableMixin (normally item 4) and put it at item 1
@@ -354,5 +361,5 @@ class MetaVariableMixin(type(Configurable)):
                 mro = [mro[0], mro[vm_index]]+ mro[1:vm_index] + mro[vm_index+1:]
         except ValueError:
             pass
-        
+
         return mro
