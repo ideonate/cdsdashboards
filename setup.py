@@ -5,6 +5,7 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+__version__ = None
 exec(open(pjoin(here,'cdsdashboards/version.py')).read()) # Load __version__
 
 install_requires = [
