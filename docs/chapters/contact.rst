@@ -26,15 +26,3 @@ Or Tweet the author `@danlester <https://twitter.com/danlester>`__.
 
 Thank you.
 
-
-Sponsorship
-~~~~~~~~~~~
-
-If you are using ContainDS Dashboards in production please consider subscribing to a support plan.
-
-This will back future development of the 
-project and is a great way to satisfy your business stakeholders that you are adopting sustainable and supported software.
-
-It also helps you reach your corporate social responsibility goals since our open source software is used by academic and non-profit organizations. 
-
-More `Sponsorship details are on GitHub <https://github.com/sponsors/ideonate>`__.
