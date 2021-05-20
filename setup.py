@@ -21,8 +21,7 @@ extras_require = {
         'jhsingle-native-proxy>=0.7.6',
         'plotlydash-tornado-cmd>=0.0.6',
         'bokeh-root-cmd>=0.0.5',
-        'rshiny-server-cmd>=0.0.2',
-        'voila-materialstream>=0.2.6' # Does not install voila itself
+        'rshiny-server-cmd>=0.0.2'
     ],
     'sudospawner': [
         "sudospawner>=0.5.2"
