@@ -19,6 +19,7 @@ Read a full description in :ref:`overview`.
 .. image:: ./_static/screencasts/ContainDS_Screencast_Basic.gif
    :target: https://youtu.be/iyryD2ngnx4
 
+View `video on YouTube <https://youtu.be/iyryD2ngnx4>`__
 
 .. note::
 
