@@ -1,3 +1,4 @@
+from traitlets import default
 from kubespawner import KubeSpawner
 
 from .variablemixin import VariableMixin, MetaVariableMixin, Command
@@ -16,13 +17,17 @@ class VariableKubeSpawner(KubeSpawner, VariableMixin, metaclass=MetaVariableMixi
         """
     ).tag(config=True)
     
-#    def get_pvc_manifest(self):
-#        presentation_type = self._get_presentation_type()
+    @default("options_from_form")
+    def _options_from_form_default(self):
+        """
+        Make sure we wrap the default options_from_form in a function that will preserve dashboard metadata
+        May need to override this to something more specific, e.g. in KubeSpawner
+        """
+        usefn = self._default_options_from_form  # Spawner class default, just in case
+        if hasattr(self, "_options_from_form"):  # KubeSpawner >= 1.0
+            usefn = self._options_from_form
+        elif hasattr(self, "options_from_form"):  # KubeSpawner < 1.0
+            usefn = self.options_from_form
 
-#        pvc = super().get_pvc_manifest()
-        
-#        if presentation_type != '':
-#            pass
-#            #pvc.spec.data_source = {'kind': 'PersistentVolumeClaim', 'name': 'claim-dan'}
-        
-#        return pvc
+        return self._wrap_options_from_form(usefn)
+
