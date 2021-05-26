@@ -26,7 +26,7 @@ class VariableKubeSpawner(KubeSpawner, VariableMixin, metaclass=MetaVariableMixi
         usefn = self._default_options_from_form  # Spawner class default, just in case
         if hasattr(self, "_options_from_form"):  # KubeSpawner >= 1.0
             usefn = self._options_from_form
-        elif hasattr(self, "options_from_form"):  # KubeSpawner < 1.0
+        elif hasattr(self, "options_from_form"):  # KubeSpawner < 1.0, although options_from_form fn will override this default anyway
             usefn = self.options_from_form
 
         return self._wrap_options_from_form(usefn)

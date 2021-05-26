@@ -15,6 +15,11 @@ class VariableDockerSpawner(DockerSpawner, VariableMixin, metaclass=MetaVariable
         """
     ).tag(config=True)
 
+    def options_from_form(self, formdata):
+        """Turn options formdata into user_options"""
+        options = super().options_from_form(formdata)
+        options = self._postprocess_options_from_form(options)
+        return options
 
 class VariableSwarmSpawner(SwarmSpawner, VariableMixin, metaclass=MetaVariableMixin):
     
