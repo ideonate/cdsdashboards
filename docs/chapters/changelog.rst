@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.5.7
+~~~~~~~~~~~~~
+
+Released 26 May 2021
+
+- Fix to work with traitlets >= 5.0.
+
 Version 0.5.6
 ~~~~~~~~~~~~~
 
