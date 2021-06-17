@@ -277,7 +277,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
                 if dashboard is None:
 
-                    urlname = self.calc_urlname(dashboard_name)    
+                    urlname = Dashboard.calc_urlname(dashboard_name, self.db)    
 
                     self.log.debug('Final urlname is '+urlname)  
 
@@ -485,6 +485,8 @@ class MainViewDashboardHandler(DashboardBaseHandler):
     @check_database_upgrade
     async def get(self, dashboard_urlname=''):
 
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
         current_user = await self.get_current_user()
 
         dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
@@ -496,6 +498,11 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             return self.send_error(403)
 
         dashboard_user = self._user_from_orm(dashboard.user.name)
+
+        if cdsconfig.spawn_as_viewer and dashboard_user != current_user:
+            # Clone the dashboard as a template
+            new_dashboard = await dashboard.clone_for_viewer(current_user, self.db)
+            return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", new_dashboard.urlname))
 
         next_page = await self.maybe_start_build(dashboard, dashboard_user)
 

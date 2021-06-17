@@ -93,38 +93,11 @@ class SpawnPermissionsController():
 
 class DashboardBaseMixin:
 
-    unsafe_regex = re.compile(r'[^a-zA-Z0-9]+')
-
-    trailingdash_regex = re.compile(r'\-+$')
-
     name_regex = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9\._\- \/~\:\!\@\$#\[\]\(\)\&\*\+\?\<\>\.\'\" ,;\%\=]{0,99}$')
 
     conda_env_regex = re.compile(r'^[a-zA-Z0-9\._\- \/~\:\!\@\$#\[\]\(\)\&\*\+\?\<\>\.\'\" ,;\%\=]+$')
 
     start_path_regex = re.compile(r'^[A-Za-z0-9\-\._~\:\/\?#\[\]@\!\$\&\(\)\*\+\'\" ,;\%\=]*$')
-
-    def calc_urlname(self, dashboard_name):
-        base_urlname = re.sub(self.unsafe_regex, '-', dashboard_name).lower()[:35]
-
-        base_urlname = re.sub(self.trailingdash_regex, '', base_urlname)
-
-        urlname = base_urlname
-
-        self.log.debug('calc safe name from '+urlname)
-
-        now_unique = False
-        counter = 1
-        while not now_unique:
-            orm_dashboard = Dashboard.find(db=self.db, urlname=urlname)
-            self.log.info("{} - {}".format(urlname, orm_dashboard))
-            if orm_dashboard is None or counter >= 100:
-                now_unique = True
-            else:
-                urlname = "{}-{}".format(base_urlname, counter)
-                counter += 1
-
-        self.log.debug('calc safe name : '+urlname)
-        return urlname
 
     @staticmethod
     async def pipe_spawner_progress(dashboard_user, new_server_name, builder):

@@ -201,6 +201,14 @@ class CDSDashboardsConfig(SingletonConfigurable):
         """
     ).tag(config=True)
 
+    spawn_as_viewer = Bool(
+        False,
+        help="""
+        If True, spawns dashboard as a template owned by the viewing user and accessible only by the viewer.
+        Runs multiple dashboard servers per dashboard.
+        """
+    ).tag(config=True)
+
 class CDSConfigStore():
 
     _instance = None

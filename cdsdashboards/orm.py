@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 import alembic.command
 import alembic.config
@@ -48,6 +49,10 @@ class Dashboard(Base):
 
     options = Column(JSONDict)
 
+    template_parent_id = Column(Integer, ForeignKey('dashboards.id', ondelete='CASCADE'))
+    template_children = relationship("Dashboard")
+    
+
     @property
     def groupname(self):
         if not self.urlname:
@@ -74,6 +79,13 @@ class Dashboard(Base):
             return db.query(cls).filter(cls.urlname == urlname).first()
         return db.query(cls).filter(cls.urlname == urlname, cls.user_id == user.id).first()
 
+    @classmethod
+    def find_template_clone(cls, db, dashboard, viewer_user):
+        """Find a Dashboard by urlname.
+        Returns None if not found.
+        """
+        return db.query(cls).filter(cls.template_parent_id == dashboard.id, cls.user_id == viewer_user.id).first()
+
     def is_orm_user_allowed(self, user):
         if user == self.user:
             return True
@@ -91,6 +103,48 @@ class Dashboard(Base):
         """
         return iter([self])
 
+    async def clone_for_viewer(self, viewer_user, db):
+        existing_dashboard = self.find_template_clone(db, self, viewer_user)
+        if existing_dashboard is not None:
+            return existing_dashboard
+
+        new_dashboard = Dashboard(
+            name=self.name,
+            urlname=Dashboard.calc_urlname("{}-{}".format(self.urlname, viewer_user.name), db),
+            user=viewer_user.orm_user, 
+            description=self.description, start_path=self.start_path, 
+            presentation_type=self.presentation_type,
+            options=self.options,
+            allow_all=False,
+            template_parent_id=self.id
+            )
+
+        db.add(new_dashboard)
+        db.commit()
+        return new_dashboard
+
+    trailingdash_regex = re.compile(r'\-+$')
+    unsafe_regex = re.compile(r'[^a-zA-Z0-9]+')
+
+    @classmethod
+    def calc_urlname(cls, dashboard_name, db):
+        base_urlname = re.sub(cls.unsafe_regex, '-', dashboard_name).lower()[:35]
+
+        base_urlname = re.sub(cls.trailingdash_regex, '', base_urlname)
+
+        urlname = base_urlname
+
+        now_unique = False
+        counter = 1
+        while not now_unique:
+            orm_dashboard = Dashboard.find(db=db, urlname=urlname)
+            if orm_dashboard is None or counter >= 100:
+                now_unique = True
+            else:
+                urlname = "{}-{}".format(base_urlname, counter)
+                counter += 1
+
+        return urlname
 
 class DatabaseSchemaMismatch(Exception):
     """Exception raised when the database schema version does not match
