@@ -35,6 +35,10 @@ class AllDashboardsHandler(DashboardBaseHandler):
 
         my_dashboards = current_user.dashboards_own
 
+        if cdsconfig.spawn_as_viewer:
+            # Remove clones of template dashboards
+            my_dashboards = [d for d in my_dashboards if d.template_parent_id is None]
+
         visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
 
         html = await self.render_template(
@@ -77,6 +81,16 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
             if current_user.name != dashboard.user.name: # Only allowed to edit your own dashboard
                 return self.send_error(403)
+
+            if cdsconfig.spawn_as_viewer and dashboard.template_parent_id is not None:
+                html = await self.render_template(
+                    "templatedashboard.html",
+                    **self.template_vars(dict(
+                    dashboard=dashboard,
+                    parent_dashboard=dashboard.template_child_of)
+                    )
+                )
+                return self.write(html)
 
             dashboard_name = dashboard.name
             dashboard_description = dashboard.description
@@ -158,6 +172,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
     @check_database_upgrade
     async def post(self, dashboard_urlname=None):
 
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
         current_user = await self.get_current_user()
 
         if not self.can_user_spawn(current_user):
@@ -175,6 +191,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 return self.send_error(404)
 
             if current_user.name != dashboard.user.name:
+                return self.send_error(403)
+
+            if cdsconfig.spawn_as_viewer and dashboard.template_parent_id is not None:
                 return self.send_error(403)
 
             group = dashboard.group

@@ -1,0 +1,23 @@
+{% extends "page.html" %}
+
+{% block main %}
+<div id="main" class="container">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+
+            <h2>
+                Dashboard {{ dashboard.name | escape }}
+            </h2>
+            
+            <p>This dashboard ({{ dashboard.urlname }}) is a clone of another user's template dashboard.</p>
+
+            <p>To make changes, ask the original dashboard creator ({{ parent_dashboard.user.name }}) to do so, or <a href="{{ base_url }}dashboards-new">create your own</a>
+                 separate dashboard.</p>
+
+
+        </div>
+    </div>
+    <a href="https://cdsdashboards.readthedocs.io/en/stable/chapters/userguide/userguide.html" 
+    id="help-floater" target="_blank" title="View ContainDS Dashboards user guide">Help</a>
+</div>
+{% endblock main %}

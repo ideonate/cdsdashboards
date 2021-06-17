@@ -49,8 +49,9 @@ class Dashboard(Base):
 
     options = Column(JSONDict)
 
-    template_parent_id = Column(Integer, ForeignKey('dashboards.id', ondelete='CASCADE'))
-    template_children = relationship("Dashboard")
+    # Templates are only used when CDSConfig.spawn_as_viewer=True
+    template_parent_id = Column(Integer, ForeignKey('dashboards.id', ondelete='SET NULL'))
+    template_children = relationship("Dashboard", backref=backref('template_child_of', uselist=False, remote_side=id))
     
 
     @property
@@ -106,13 +107,33 @@ class Dashboard(Base):
     async def clone_for_viewer(self, viewer_user, db):
         existing_dashboard = self.find_template_clone(db, self, viewer_user)
         if existing_dashboard is not None:
+            # Clone dashboard already exists, but update and save first if any fields need updating:
+            if existing_dashboard.name != self.name \
+                    or existing_dashboard.description != self.description \
+                    or existing_dashboard.start_path != self.start_path \
+                    or existing_dashboard.presentation_type != self.presentation_type \
+                    or existing_dashboard.options != self.options \
+                    or existing_dashboard.allow_all != False:
+
+                existing_dashboard.name = self.name
+                existing_dashboard.description = self.description
+                existing_dashboard.start_path = self.start_path
+                existing_dashboard.presentation_type = self.presentation_type
+                existing_dashboard.options = self.options
+                existing_dashboard.allow_all = False
+
+                db.add(existing_dashboard)
+                db.commit()
+
             return existing_dashboard
 
+        # Create a completely new clone dashboard since none exists already
         new_dashboard = Dashboard(
             name=self.name,
             urlname=Dashboard.calc_urlname("{}-{}".format(self.urlname, viewer_user.name), db),
             user=viewer_user.orm_user, 
-            description=self.description, start_path=self.start_path, 
+            description=self.description,
+            start_path=self.start_path, 
             presentation_type=self.presentation_type,
             options=self.options,
             allow_all=False,
@@ -128,6 +149,9 @@ class Dashboard(Base):
 
     @classmethod
     def calc_urlname(cls, dashboard_name, db):
+        """
+        Generate a unique URL slug based on the given dashboard name.
+        """
         base_urlname = re.sub(cls.unsafe_regex, '-', dashboard_name).lower()[:35]
 
         base_urlname = re.sub(cls.trailingdash_regex, '', base_urlname)
