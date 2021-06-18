@@ -209,6 +209,14 @@ class CDSDashboardsConfig(SingletonConfigurable):
         """
     ).tag(config=True)
 
+    jupyter_startpath_regex = Unicode(
+        "",
+        help="""
+        If not blank, used as a regex that the Start Path of a dashboard must match (if using Jupyter Tree rather than Git Repo as a source).
+        This is checked only when a dashboard is created or edited (through the form).
+        """
+    ).tag(config=True)
+
 class CDSConfigStore():
 
     _instance = None

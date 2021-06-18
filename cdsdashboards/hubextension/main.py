@@ -208,6 +208,21 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         errors = DefaultObjDict()
 
+        # source type (jupytertree or gitrepo) - to be added to dashboard_options later
+        git_repo = ''
+        git_repo_branch = ''
+        source_type = self.get_argument('source_type', '').strip()
+
+        if cdsconfig.show_source_git and source_type == 'gitrepo':
+            git_repo = self.get_argument('git_repo', '').strip()
+            git_repo_branch = self.get_argument('git_repo_branch', '').strip()
+
+            if git_repo != '':
+                if not re.match('^((git|ssh|http(s)?)|(git@[\w\.]+))(:(//)?)([\w\.@\:/\-~]+)(/)?$', git_repo):
+                    errors.git_repo = 'Please enter a valid git repo URL'
+        else:
+            source_type = 'jupytertree'
+
         # Presentation basics
 
         if dashboard_name == '':
@@ -215,12 +230,21 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         elif not self.name_regex.match(dashboard_name):
             errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>\'". Max 100 chars.'
 
+        jupyter_startpath_regex = None
+        if source_type == 'jupytertree' and cdsconfig.jupyter_startpath_regex != "":
+            try:
+                jupyter_startpath_regex = re.compile(cdsconfig.jupyter_startpath_regex)
+            except re.error as rerr:
+                self.log.warn('jupyter_startpath_regex ({}) cannot compile: {}'.format(cdsconfig.jupyter_startpath_regex, rerr))  
+
         if '..' in dashboard_start_path:
             errors.start_path = 'Path must not contain ..'
         elif len(dashboard_start_path) and dashboard_start_path[0] == '/':
             errors.start_path = 'Path must be relative to Jupyter tree home or Git repo root (not starting with /)'
         elif not self.start_path_regex.match(dashboard_start_path):
             errors.start_path = 'Please enter valid URL path characters'
+        elif jupyter_startpath_regex is not None and not jupyter_startpath_regex.match(dashboard_start_path):
+            errors.start_path = 'Path does not match the pattern specified by your admin ({})'.format(cdsconfig.jupyter_startpath_regex)
 
         cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
@@ -246,20 +270,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         # Dashboard options
         dashboard_options = {}
-
-        git_repo = ''
-        git_repo_branch = ''
-        source_type = self.get_argument('source_type', '').strip()
-
-        if cdsconfig.show_source_git and source_type == 'gitrepo':
-            git_repo = self.get_argument('git_repo', '').strip()
-            git_repo_branch = self.get_argument('git_repo_branch', '').strip()
-
-            if git_repo != '':
-                if not re.match('^((git|ssh|http(s)?)|(git@[\w\.]+))(:(//)?)([\w\.@\:/\-~]+)(/)?$', git_repo):
-                    errors.git_repo = 'Please enter a valid git repo URL'
-        else:
-            source_type = 'jupytertree'
 
         conda_env = self.get_argument('conda_env', '').strip()
 
