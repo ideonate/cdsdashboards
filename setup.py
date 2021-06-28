@@ -20,7 +20,7 @@ extras_require = {
     'user': [
         'jhsingle-native-proxy>=0.7.6',
         'plotlydash-tornado-cmd>=0.0.6',
-        'bokeh-root-cmd>=0.0.5',
+        'bokeh-root-cmd>=0.1.0', # Install bokeh and panel server
         'rshiny-server-cmd>=0.0.2'
     ],
     'sudospawner': [
