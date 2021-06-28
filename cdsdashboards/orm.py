@@ -21,10 +21,6 @@ class Dashboard(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     user = relationship(User, backref=backref("dashboards_own", uselist=True, cascade='all, delete-orphan'))
 
-    # Which spawner/server is being cloned
-    source_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    source_spawner = relationship(Spawner, foreign_keys=[source_spawner_id], backref=backref('dashboard_source_for', uselist=True))
-
     name = Column(Unicode(255))
     description = Column(Unicode(255), default='')
 

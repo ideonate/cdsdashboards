@@ -88,37 +88,6 @@ Now the 'New Dashboard' page will have 'Selected Users' highlighted by default. 
 specify any user names in the list, then no-one apart from themselves will have access to the dashboard.
 
 
-.. _docker_source_servers:
-
-Source Servers
-~~~~~~~~~~~~~~
-
-The following options are currently only used by the DockerSpawner.
-
-DockerSpawner users have extra functionality available whereby the dashboard creator 
-can select a 'source server' to clone (*docker commit*). The dashboard server will be built out of that image, meaning any extra packages installed in the 
-source server will be 
-available. Likewise, if your home folder is built into the container rather than mounted as a volume, the source files will be copied into the new 
-dashboard server.
-
-Unless 
-different servers are likely to have different files or packages installed, it probably won't make much difference which server is selected 
-as the source anyway - most JupyterHubs will share the user's home file system across the different servers, so the Dashboard will 
-be able to locate your notebooks and files. Most JupyterHubs maintain a central Docker image that contains all required packages, so users rarely 
-install packages into their own server exclusively.
-
-In your jupyterhub_config.py file:
-
-::
-
-    c.CDSDashboardsConfig.show_source_servers = True
-    c.CDSDashboardsConfig.require_source_server = True
-
-If show_source_servers is True, the create/edit Dashboard page will allow the dashboard creator to select a source server to clone. If require_source_server 
-is False, there will also be a 'No Server' option to maintain the default behavior of starting a new dashboard server based on the usual Jupyter server 
-configuration. If require_source_server is True, there will be no such option and a source server must be selected (your 'Default Server' will be available, 
-along with any non-dashboard named servers).
-
 File Source
 ~~~~~~~~~~~
 
@@ -216,8 +185,31 @@ Doing this will ensure the dashboard creator can choose these options when they 
 is stopped and needs restarting). However, if the dashboard server is stopped or deleted, then other users will not be able to 
 access the dashboard until the creator starts it again (and chooses spawner options for it).
 
-Mailing List for Updates
+Jupyter Start Path Regex
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please `sign up to the ContainDS email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
-features and security advice.
+Restrict dashboard creators to entering start paths that match a specified regular expression (applies only to dashboards from a 
+Jupyter Tree, not from Git Repo source).
+
+Example: :code:`c.CDSDashboardsConfig.jupyter_startpath_regex = "^shared/"`
+
+This can be used to ensure dashboards must always be created from a particular folder ('shared' in this case). This functionality 
+can be useful when combined with spawn_as_viewer, below.
+
+Default value is a blank string, meaning no regex match is required.
+
+Spawn As Viewer
+~~~~~~~~~~~~~~~
+
+Default behavior (spawn_as_viewer = False) runs each dashboard under the user who created it, and all viewers access the 
+dashboard server directly, as hosted by the creator.
+
+If you set :code:`c.CDSDashboardsConfig.spawn_as_viewer = True` in the jupyterhub_config, the behavior will be different: 
+each time a viewer tries to access the dashboard (through the Dashboards page in JupyterHub), a copy of the dashboard will 
+be created in the name of the viewer, and that will be run if it doesn't already exist. So each viewer can only access 
+the version of the dashboard being run as themselves. These copies are not normally listed as dashboards in their own right 
+(in the Dashboards page) but may appear in the Servers list.
+
+Of course, running multiple copies of the dashboard may use up more resources (and have a slower startup time for a new 
+viewer) compared to just running one copy centrally in the name of the creator. However, some setups find this approach 
+to be more secure or predictable for resource allocation.

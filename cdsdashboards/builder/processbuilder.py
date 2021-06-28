@@ -27,7 +27,7 @@ class ProcessBuilder(Builder):
 
         new_server_name = self.format_string(self.cdsconfig.server_name_template, ns=ns)
 
-        new_server_options = await self.prespawn_server_options(dashboard, dashboard_user, ns)
+        new_server_options = {}
 
         if not self.allow_named_servers:
             raise BuildException(400, "Named servers are not enabled.")
@@ -88,7 +88,3 @@ class ProcessBuilder(Builder):
                 })
 
         return (new_server_name, new_server_options, None)
-
-    async def prespawn_server_options(self, dashboard, dashboard_user, ns):
-        return {} # Empty options - override in subclasses if needed
-

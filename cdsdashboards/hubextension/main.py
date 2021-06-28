@@ -106,21 +106,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         all_users_tuples = self.get_visitor_tuples(current_user.id, existing_group_users)
 
-        # Get User's spawners:
-
-        spawners = []
-        spawner_id = ''
         source_type = dashboard_options.get('source_type', 'jupytertree')
         git_repo = ''
         git_repo_branch = ''
-
-        if cdsconfig.show_source_servers:
-
-            spawners = self.get_source_spawners(current_user)
-            spawner_id = 'default'
-
-            if dashboard is not None and dashboard.source_spawner is not None:
-                spawner_id = spawner_to_dict(dashboard.source_spawner).id
 
         if cdsconfig.show_source_git:
             git_repo = dashboard_options.get('git_repo', '')
@@ -152,13 +140,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             presentation_types=merged_presentation_types,
             all_conda_envs=all_conda_envs,
             allow_custom_conda_env=allow_custom_conda_env,
-            spawner_id=spawner_id,
             current_user=current_user,
             user_permissions=user_permissions,
-            spawners=spawners,
-            show_source_servers=cdsconfig.show_source_servers,
             show_source_git=cdsconfig.show_source_git,
-            require_source_server=cdsconfig.require_source_server,
             all_users_tuples=all_users_tuples,
             errors=errors)
             )
@@ -287,22 +271,11 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         dashboard_options['git_repo_branch'] = git_repo_branch
         dashboard_options['conda_env'] = conda_env
 
-        spawners = []
-        spawner = None
-        spawner_id = ''
 
-        if cdsconfig.show_source_servers:
-            spawners = self.get_source_spawners(current_user)
-            spawner, spawner_id = self.read_spawner(dashboard, spawners, dashboard_options, errors, cdsconfig.require_source_server)
- 
         if len(errors) == 0:
             db = self.db
 
             try:
-
-                orm_spawner = None
-                if spawner:
-                    orm_spawner = spawner.orm_spawner
 
                 if dashboard is None:
 
@@ -314,7 +287,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                         name=dashboard_name, urlname=urlname, user=current_user.orm_user, 
                         description=dashboard_description, start_path=dashboard_start_path, 
                         presentation_type=dashboard_presentation_type,
-                        source_spawner=orm_spawner,
                         options=dashboard_options,
                         allow_all=user_permissions=='anyusers'
                         )
@@ -325,7 +297,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                     dashboard.description = dashboard_description
                     dashboard.start_path = dashboard_start_path
                     dashboard.presentation_type = dashboard_presentation_type
-                    dashboard.source_spawner = orm_spawner
                     dashboard.options = dashboard_options
                     allow_all=user_permissions=='anyusers'
                     dashboard.allow_all=allow_all
@@ -382,11 +353,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 presentation_types=merged_presentation_types,
                 all_conda_envs=all_conda_envs,
                 allow_custom_conda_env=allow_custom_conda_env,
-                spawner_id=spawner_id,
-                spawners=spawners,
-                show_source_servers=cdsconfig.show_source_servers,
                 show_source_git=cdsconfig.show_source_git,
-                require_source_server=cdsconfig.require_source_server,
                 all_users_tuples=all_users_tuples,
                 errors=errors,
                 current_user=current_user))
@@ -394,37 +361,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             return self.write(html)
         
         self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.urlname))
-
-
-    def read_spawner(self, dashboard, spawners, dashboard_options, errors, require_source_server):
-
-        # Get Spawners
-        
-        spawner_id = self.get_argument('spawner_id', '')
-
-        self.log.debug('Got spawner_id {}.'.format(spawner_id))
-
-        spawner = None
-        thisspawners = [spawner for spawner in spawners if spawner.id == spawner_id]
-
-        if len(thisspawners) == 1:
-            spawner = thisspawners[0]
-        else:
-            if spawner_id == '':
-                if require_source_server:
-                    errors.spawner = 'Please select a source spawner'
-                else:
-                    return spawner, spawner_id
-            else:
-                errors.spawner = 'Spawner {} not found'.format(spawner_id)
-
-            # Pick the existing one again
-            if dashboard is not None and dashboard.source_spawner is not None:
-                spawner_id = spawner_to_dict(dashboard.source_spawner).id
-            else:
-                spawner_id = ''
-
-        return spawner, spawner_id
 
 
 class DashboardOptionsHandler(DashboardBaseHandler):

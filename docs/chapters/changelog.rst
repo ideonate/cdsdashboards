@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.6.0
+~~~~~~~~~~~~~
+
+Released 28 June 2021
+
+- Remove show_source_servers and require_source_server functionality from DockerSpawner.
+
 Version 0.5.7
 ~~~~~~~~~~~~~
 
@@ -157,7 +164,7 @@ Released 8 July 2020
   :code:`c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.variabledocker.VariableDockerSpawner'`
   This is to bring DockerSpawner into line with the other spawners. See `GitHub Issue <https://github.com/ideonate/cdsdashboards/issues/13>`__ for rationale.
 - By default, there is no longer a 'source server' selection on the create/edit dashboard page. This is because it has no effect for most spawners 
-  and now is not expected by VariableDockerSpawner. It can be enabled as described in :ref:`docker_source_servers`, allowing users to clone 
+  and now is not expected by VariableDockerSpawner. It can be enabled as described in docker_source_servers, allowing users to clone 
   (*docker commit*) an existing server as a Docker image to be used for the new dashboard server.
 
 Version 0.0.20
