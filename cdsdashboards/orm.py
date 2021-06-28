@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 import alembic.command
 import alembic.config
@@ -19,10 +20,6 @@ class Dashboard(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     user = relationship(User, backref=backref("dashboards_own", uselist=True, cascade='all, delete-orphan'))
-
-    # Which spawner/server is being cloned
-    source_spawner_id = Column(Integer, ForeignKey('spawners.id', ondelete='SET NULL'))
-    source_spawner = relationship(Spawner, foreign_keys=[source_spawner_id], backref=backref('dashboard_source_for', uselist=True))
 
     name = Column(Unicode(255))
     description = Column(Unicode(255), default='')
@@ -47,6 +44,11 @@ class Dashboard(Base):
     group = relationship(Group, foreign_keys=[group_id], backref=backref('dashboard_visitors_for', uselist=False))
 
     options = Column(JSONDict)
+
+    # Templates are only used when CDSConfig.spawn_as_viewer=True
+    template_parent_id = Column(Integer, ForeignKey('dashboards.id', ondelete='SET NULL'))
+    template_children = relationship("Dashboard", backref=backref('template_child_of', uselist=False, remote_side=id))
+    
 
     @property
     def groupname(self):
@@ -74,6 +76,13 @@ class Dashboard(Base):
             return db.query(cls).filter(cls.urlname == urlname).first()
         return db.query(cls).filter(cls.urlname == urlname, cls.user_id == user.id).first()
 
+    @classmethod
+    def find_template_clone(cls, db, dashboard, viewer_user):
+        """Find a Dashboard by urlname.
+        Returns None if not found.
+        """
+        return db.query(cls).filter(cls.template_parent_id == dashboard.id, cls.user_id == viewer_user.id).first()
+
     def is_orm_user_allowed(self, user):
         if user == self.user:
             return True
@@ -91,6 +100,71 @@ class Dashboard(Base):
         """
         return iter([self])
 
+    async def clone_for_viewer(self, viewer_user, db):
+        existing_dashboard = self.find_template_clone(db, self, viewer_user)
+        if existing_dashboard is not None:
+            # Clone dashboard already exists, but update and save first if any fields need updating:
+            if existing_dashboard.name != self.name \
+                    or existing_dashboard.description != self.description \
+                    or existing_dashboard.start_path != self.start_path \
+                    or existing_dashboard.presentation_type != self.presentation_type \
+                    or existing_dashboard.options != self.options \
+                    or existing_dashboard.allow_all != False:
+
+                existing_dashboard.name = self.name
+                existing_dashboard.description = self.description
+                existing_dashboard.start_path = self.start_path
+                existing_dashboard.presentation_type = self.presentation_type
+                existing_dashboard.options = self.options
+                existing_dashboard.allow_all = False
+
+                db.add(existing_dashboard)
+                db.commit()
+
+            return existing_dashboard
+
+        # Create a completely new clone dashboard since none exists already
+        new_dashboard = Dashboard(
+            name=self.name,
+            urlname=Dashboard.calc_urlname("{}-{}".format(self.urlname, viewer_user.name), db),
+            user=viewer_user.orm_user, 
+            description=self.description,
+            start_path=self.start_path, 
+            presentation_type=self.presentation_type,
+            options=self.options,
+            allow_all=False,
+            template_parent_id=self.id
+            )
+
+        db.add(new_dashboard)
+        db.commit()
+        return new_dashboard
+
+    trailingdash_regex = re.compile(r'\-+$')
+    unsafe_regex = re.compile(r'[^a-zA-Z0-9]+')
+
+    @classmethod
+    def calc_urlname(cls, dashboard_name, db):
+        """
+        Generate a unique URL slug based on the given dashboard name.
+        """
+        base_urlname = re.sub(cls.unsafe_regex, '-', dashboard_name).lower()[:35]
+
+        base_urlname = re.sub(cls.trailingdash_regex, '', base_urlname)
+
+        urlname = base_urlname
+
+        now_unique = False
+        counter = 1
+        while not now_unique:
+            orm_dashboard = Dashboard.find(db=db, urlname=urlname)
+            if orm_dashboard is None or counter >= 100:
+                now_unique = True
+            else:
+                urlname = "{}-{}".format(base_urlname, counter)
+                counter += 1
+
+        return urlname
 
 class DatabaseSchemaMismatch(Exception):
     """Exception raised when the database schema version does not match

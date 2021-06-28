@@ -27,7 +27,7 @@ class ProcessBuilder(Builder):
 
         new_server_name = self.format_string(self.cdsconfig.server_name_template, ns=ns)
 
-        new_server_options = await self.prespawn_server_options(dashboard, dashboard_user, ns)
+        new_server_options = {}
 
         if not self.allow_named_servers:
             raise BuildException(400, "Named servers are not enabled.")
@@ -82,13 +82,10 @@ class ProcessBuilder(Builder):
         if 'environment' not in new_server_options:
             new_server_options['environment'] = {}
 
-        new_server_options['environment'].update({
-                'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
-                'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)
-                })
+        if not self.cdsconfig.spawn_as_viewer:
+            new_server_options['environment'].update({
+                    'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
+                    'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)
+                    })
 
         return (new_server_name, new_server_options, None)
-
-    async def prespawn_server_options(self, dashboard, dashboard_user, ns):
-        return {} # Empty options - override in subclasses if needed
-

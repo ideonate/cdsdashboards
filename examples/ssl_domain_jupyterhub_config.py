@@ -82,9 +82,6 @@ c.DockerSpawner.debug = True
 #c.DockerSpawner.go_slow = True
 
 
-c.CDSDashboardsConfig.show_source_servers = False
-c.CDSDashboardsConfig.require_source_server = False
-
 c.CDSDashboardsConfig.default_allow_all = True
 
 c.DockerSpawner.remove = True

@@ -116,10 +116,6 @@ Options
 
 Extra options to control behavior of Dashboards are available - see :ref:`customization`.
 
-DockerSpawner users (compared to users of LocalProcessSpawner or KubeSpawner etc) have extra functionality available whereby the dashboard creator 
-can select a 'source server' to clone. The dashboard will be built out of that image, meaning any extra packages installed in the server will be 
-available. (:ref:`docker_source_servers`)
-
 Please `sign up to the ContainDS email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
 features and security advice.
 

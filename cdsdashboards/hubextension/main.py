@@ -35,6 +35,10 @@ class AllDashboardsHandler(DashboardBaseHandler):
 
         my_dashboards = current_user.dashboards_own
 
+        if cdsconfig.spawn_as_viewer:
+            # Remove clones of template dashboards
+            my_dashboards = [d for d in my_dashboards if d.template_parent_id is None]
+
         visitor_dashboard_groups = self.get_visitor_dashboards(current_user)
 
         html = await self.render_template(
@@ -78,6 +82,16 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             if current_user.name != dashboard.user.name: # Only allowed to edit your own dashboard
                 return self.send_error(403)
 
+            if cdsconfig.spawn_as_viewer and dashboard.template_parent_id is not None:
+                html = await self.render_template(
+                    "templatedashboard.html",
+                    **self.template_vars(dict(
+                    dashboard=dashboard,
+                    parent_dashboard=dashboard.template_child_of)
+                    )
+                )
+                return self.write(html)
+
             dashboard_name = dashboard.name
             dashboard_description = dashboard.description
             dashboard_start_path = dashboard.start_path or ''
@@ -92,21 +106,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         all_users_tuples = self.get_visitor_tuples(current_user.id, existing_group_users)
 
-        # Get User's spawners:
-
-        spawners = []
-        spawner_id = ''
         source_type = dashboard_options.get('source_type', 'jupytertree')
         git_repo = ''
         git_repo_branch = ''
-
-        if cdsconfig.show_source_servers:
-
-            spawners = self.get_source_spawners(current_user)
-            spawner_id = 'default'
-
-            if dashboard is not None and dashboard.source_spawner is not None:
-                spawner_id = spawner_to_dict(dashboard.source_spawner).id
 
         if cdsconfig.show_source_git:
             git_repo = dashboard_options.get('git_repo', '')
@@ -138,13 +140,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             presentation_types=merged_presentation_types,
             all_conda_envs=all_conda_envs,
             allow_custom_conda_env=allow_custom_conda_env,
-            spawner_id=spawner_id,
             current_user=current_user,
             user_permissions=user_permissions,
-            spawners=spawners,
-            show_source_servers=cdsconfig.show_source_servers,
             show_source_git=cdsconfig.show_source_git,
-            require_source_server=cdsconfig.require_source_server,
             all_users_tuples=all_users_tuples,
             errors=errors)
             )
@@ -157,6 +155,8 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
     @authenticated
     @check_database_upgrade
     async def post(self, dashboard_urlname=None):
+
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
         current_user = await self.get_current_user()
 
@@ -177,6 +177,9 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             if current_user.name != dashboard.user.name:
                 return self.send_error(403)
 
+            if cdsconfig.spawn_as_viewer and dashboard.template_parent_id is not None:
+                return self.send_error(403)
+
             group = dashboard.group
 
         dashboard_name = self.get_argument('name').strip()
@@ -189,6 +192,21 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
         errors = DefaultObjDict()
 
+        # source type (jupytertree or gitrepo) - to be added to dashboard_options later
+        git_repo = ''
+        git_repo_branch = ''
+        source_type = self.get_argument('source_type', '').strip()
+
+        if cdsconfig.show_source_git and source_type == 'gitrepo':
+            git_repo = self.get_argument('git_repo', '').strip()
+            git_repo_branch = self.get_argument('git_repo_branch', '').strip()
+
+            if git_repo != '':
+                if not re.match('^((git|ssh|http(s)?)|(git@[\w\.]+))(:(//)?)([\w\.@\:/\-~]+)(/)?$', git_repo):
+                    errors.git_repo = 'Please enter a valid git repo URL'
+        else:
+            source_type = 'jupytertree'
+
         # Presentation basics
 
         if dashboard_name == '':
@@ -196,12 +214,21 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         elif not self.name_regex.match(dashboard_name):
             errors.name = 'Please use letters and digits (start with one of these), and then spaces or these characters _-!@$()*+?<>\'". Max 100 chars.'
 
+        jupyter_startpath_regex = None
+        if source_type == 'jupytertree' and cdsconfig.jupyter_startpath_regex != "":
+            try:
+                jupyter_startpath_regex = re.compile(cdsconfig.jupyter_startpath_regex)
+            except re.error as rerr:
+                self.log.warn('jupyter_startpath_regex ({}) cannot compile: {}'.format(cdsconfig.jupyter_startpath_regex, rerr))  
+
         if '..' in dashboard_start_path:
             errors.start_path = 'Path must not contain ..'
         elif len(dashboard_start_path) and dashboard_start_path[0] == '/':
             errors.start_path = 'Path must be relative to Jupyter tree home or Git repo root (not starting with /)'
         elif not self.start_path_regex.match(dashboard_start_path):
             errors.start_path = 'Please enter valid URL path characters'
+        elif jupyter_startpath_regex is not None and not jupyter_startpath_regex.match(dashboard_start_path):
+            errors.start_path = 'Path does not match the pattern specified by your admin ({})'.format(cdsconfig.jupyter_startpath_regex)
 
         cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
@@ -228,20 +255,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         # Dashboard options
         dashboard_options = {}
 
-        git_repo = ''
-        git_repo_branch = ''
-        source_type = self.get_argument('source_type', '').strip()
-
-        if cdsconfig.show_source_git and source_type == 'gitrepo':
-            git_repo = self.get_argument('git_repo', '').strip()
-            git_repo_branch = self.get_argument('git_repo_branch', '').strip()
-
-            if git_repo != '':
-                if not re.match('^((git|ssh|http(s)?)|(git@[\w\.]+))(:(//)?)([\w\.@\:/\-~]+)(/)?$', git_repo):
-                    errors.git_repo = 'Please enter a valid git repo URL'
-        else:
-            source_type = 'jupytertree'
-
         conda_env = self.get_argument('conda_env', '').strip()
 
         if conda_env != '':
@@ -258,26 +271,15 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         dashboard_options['git_repo_branch'] = git_repo_branch
         dashboard_options['conda_env'] = conda_env
 
-        spawners = []
-        spawner = None
-        spawner_id = ''
 
-        if cdsconfig.show_source_servers:
-            spawners = self.get_source_spawners(current_user)
-            spawner, spawner_id = self.read_spawner(dashboard, spawners, dashboard_options, errors, cdsconfig.require_source_server)
- 
         if len(errors) == 0:
             db = self.db
 
             try:
 
-                orm_spawner = None
-                if spawner:
-                    orm_spawner = spawner.orm_spawner
-
                 if dashboard is None:
 
-                    urlname = self.calc_urlname(dashboard_name)    
+                    urlname = Dashboard.calc_urlname(dashboard_name, self.db)    
 
                     self.log.debug('Final urlname is '+urlname)  
 
@@ -285,7 +287,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                         name=dashboard_name, urlname=urlname, user=current_user.orm_user, 
                         description=dashboard_description, start_path=dashboard_start_path, 
                         presentation_type=dashboard_presentation_type,
-                        source_spawner=orm_spawner,
                         options=dashboard_options,
                         allow_all=user_permissions=='anyusers'
                         )
@@ -296,7 +297,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                     dashboard.description = dashboard_description
                     dashboard.start_path = dashboard_start_path
                     dashboard.presentation_type = dashboard_presentation_type
-                    dashboard.source_spawner = orm_spawner
                     dashboard.options = dashboard_options
                     allow_all=user_permissions=='anyusers'
                     dashboard.allow_all=allow_all
@@ -353,11 +353,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 presentation_types=merged_presentation_types,
                 all_conda_envs=all_conda_envs,
                 allow_custom_conda_env=allow_custom_conda_env,
-                spawner_id=spawner_id,
-                spawners=spawners,
-                show_source_servers=cdsconfig.show_source_servers,
                 show_source_git=cdsconfig.show_source_git,
-                require_source_server=cdsconfig.require_source_server,
                 all_users_tuples=all_users_tuples,
                 errors=errors,
                 current_user=current_user))
@@ -365,37 +361,6 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             return self.write(html)
         
         self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.urlname))
-
-
-    def read_spawner(self, dashboard, spawners, dashboard_options, errors, require_source_server):
-
-        # Get Spawners
-        
-        spawner_id = self.get_argument('spawner_id', '')
-
-        self.log.debug('Got spawner_id {}.'.format(spawner_id))
-
-        spawner = None
-        thisspawners = [spawner for spawner in spawners if spawner.id == spawner_id]
-
-        if len(thisspawners) == 1:
-            spawner = thisspawners[0]
-        else:
-            if spawner_id == '':
-                if require_source_server:
-                    errors.spawner = 'Please select a source spawner'
-                else:
-                    return spawner, spawner_id
-            else:
-                errors.spawner = 'Spawner {} not found'.format(spawner_id)
-
-            # Pick the existing one again
-            if dashboard is not None and dashboard.source_spawner is not None:
-                spawner_id = spawner_to_dict(dashboard.source_spawner).id
-            else:
-                spawner_id = ''
-
-        return spawner, spawner_id
 
 
 class DashboardOptionsHandler(DashboardBaseHandler):
@@ -485,6 +450,8 @@ class MainViewDashboardHandler(DashboardBaseHandler):
     @check_database_upgrade
     async def get(self, dashboard_urlname=''):
 
+        cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
+
         current_user = await self.get_current_user()
 
         dashboard = self.db.query(Dashboard).filter(Dashboard.urlname==dashboard_urlname).one_or_none()
@@ -496,6 +463,11 @@ class MainViewDashboardHandler(DashboardBaseHandler):
             return self.send_error(403)
 
         dashboard_user = self._user_from_orm(dashboard.user.name)
+
+        if cdsconfig.spawn_as_viewer and dashboard_user != current_user:
+            # Clone the dashboard as a template
+            new_dashboard = await dashboard.clone_for_viewer(current_user, self.db)
+            return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", new_dashboard.urlname))
 
         next_page = await self.maybe_start_build(dashboard, dashboard_user)
 

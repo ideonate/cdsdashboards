@@ -74,43 +74,6 @@
                 {% endif %}
 
 
-                {% if show_source_servers %}
-
-                    <h3>Choose a source server:</h3>
-
-                    {% if not require_source_server %}
-
-                        <p>
-                            <input type="radio" name="spawner_id" id="spawner-none" 
-                                value=""
-                                {% if spawner_id == "" %}checked{% endif %}/>
-                            <label for="spawner-none"> No Source Server </label>
-                        </p>
-
-                    {% endif %}
-
-                    {% for spawner in spawners %}
-
-                        <p>
-                            <input type="radio" name="spawner_id" id="spawner-{{ spawner.id }}" 
-                                value="{{ spawner.id | escape }}"
-                                {% if spawner_id == spawner.id %}checked{% endif %} />
-                            <label for="spawner-{{ spawner.id }}">{{ spawner.name | escape }} 
-                                {% if spawner.active %} (ACTIVE) {% endif %}</label>
-                        </p>
-
-                    {% endfor %}
-
-
-                    {% if errors.spawner %}
-        
-                    <p class="error">{{ errors.spawner | escape }}</p>
-        
-                    {% endif %}
-                    
-                {% endif %}
-
-
                 {% if show_source_git %}
 
                 <h3>File source</h3>

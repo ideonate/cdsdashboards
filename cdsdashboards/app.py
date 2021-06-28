@@ -95,21 +95,6 @@ class CDSDashboardsConfig(SingletonConfigurable):
     def merged_presentation_types(self):
         return self.presentation_types + self.extra_presentation_types
 
-    show_source_servers = Bool(
-        False,
-        help="""
-        Allow the user to select a source server when creating a Dashboard (currently only relevant for DockerSpawner).
-        """
-    ).tag(config=True)
-
-    require_source_server = Bool(
-        False,
-        help="""
-        Require the user to select a source server when creating a Dashboard (currently only relevant for DockerSpawner).
-        You must set show_source_servers to True if you set require_source_server to True.
-        """
-    ).tag(config=True)
-
     show_source_git = Bool(
         True,
         help="""
@@ -198,6 +183,22 @@ class CDSDashboardsConfig(SingletonConfigurable):
         and the dashboard will start without waiting.
         If False (and form options are available in the spawner) then the Dashboard will not start until the
         dashboard creator has accessed the dashboard and provided options to the spawner.
+        """
+    ).tag(config=True)
+
+    spawn_as_viewer = Bool(
+        False,
+        help="""
+        If True, spawns dashboard as a template owned by the viewing user and accessible only by the viewer.
+        Runs multiple dashboard servers per dashboard.
+        """
+    ).tag(config=True)
+
+    jupyter_startpath_regex = Unicode(
+        "",
+        help="""
+        If not blank, used as a regex that the Start Path of a dashboard must match (if using Jupyter Tree rather than Git Repo as a source).
+        This is checked only when a dashboard is created or edited (through the form).
         """
     ).tag(config=True)
 

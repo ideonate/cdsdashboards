@@ -38,10 +38,6 @@ c.JupyterHub.hub_ip = public_ips()[0]
 
 c.KubeSpawner.debug = True
 
-
-c.CDSDashboardsConfig.show_source_servers = False
-c.CDSDashboardsConfig.require_source_server = False
-
 c.CDSDashboardsConfig.default_allow_all = True
 
 c.KubeSpawner.image = 'ideonate/containds-all-basic:latest'
