@@ -100,6 +100,8 @@ When upgrading from an older version you must upgrade both hub and user environm
 
 If a database upgrade is required, users will be prompted within the JupyterHub website - see the :ref:`changelog`.
 
+See the guide on :ref:`upgrading`.
+
 Dashboards (and servers) keep dying
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

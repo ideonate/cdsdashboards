@@ -185,6 +185,8 @@ Doing this will ensure the dashboard creator can choose these options when they 
 is stopped and needs restarting). However, if the dashboard server is stopped or deleted, then other users will not be able to 
 access the dashboard until the creator starts it again (and chooses spawner options for it).
 
+.. _jupyter_startpath_regex:
+
 Jupyter Start Path Regex
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -197,6 +199,8 @@ This can be used to ensure dashboards must always be created from a particular f
 can be useful when combined with spawn_as_viewer, below.
 
 Default value is a blank string, meaning no regex match is required.
+
+.. _spawn_as_viewer:
 
 Spawn As Viewer
 ~~~~~~~~~~~~~~~

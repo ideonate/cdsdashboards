@@ -127,7 +127,7 @@ c.CDSDashboardsConfig.conda_envs = ['', 'env1', 'env2', 'cds']
 
 #c.CDSDashboardsConfig.default_allow_all = True
 
-c.CDSDashboardsConfig.spawn_as_viewer = True
+#c.CDSDashboardsConfig.spawn_as_viewer = True
 #c.CDSDashboardsConfig.jupyter_startpath_regex = "^shared/"
 
 #c.VariableMixin.voila_template = 'materialstream'

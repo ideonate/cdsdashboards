@@ -82,9 +82,10 @@ class ProcessBuilder(Builder):
         if 'environment' not in new_server_options:
             new_server_options['environment'] = {}
 
-        new_server_options['environment'].update({
-                'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
-                'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)
-                })
+        if not self.cdsconfig.spawn_as_viewer:
+            new_server_options['environment'].update({
+                    'JUPYTERHUB_ANYONE': '{}'.format(dashboard.allow_all and '1' or '0'),
+                    'JUPYTERHUB_GROUP': '{}'.format(dashboard.groupname)
+                    })
 
         return (new_server_name, new_server_options, None)
