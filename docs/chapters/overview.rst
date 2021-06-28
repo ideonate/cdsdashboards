@@ -80,14 +80,3 @@ Or build dashboards using other frameworks - Streamlit, Plotly Dash, Bokeh, Pane
 
 More details on how this works are in the :ref:`user guide<userguide>`, or you can find out :ref:`how to install<setup>` ContainDS Dashboards.
 
-Sponsorship
-~~~~~~~~~~~
-
-If you are using ContainDS Dashboards in production please consider subscribing to a support plan. This will back future development of the 
-project and is a great way to satisfy your business stakeholders that you are adopting sustainable and supported software.
-
-It also helps you reach your corporate social responsibility goals since our open source software is used by academic and non-profit organizations. 
-
-Optionally, your name and logo can be featured on GitHub and our website.
-
-More `Sponsorship details are on GitHub <https://github.com/sponsors/ideonate>`__.

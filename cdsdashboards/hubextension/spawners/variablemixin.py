@@ -1,7 +1,7 @@
 import os.path
 import re
 from copy import deepcopy
-from traitlets import Unicode, Integer, Dict, Bool
+from traitlets import Unicode, Integer, Dict, Bool, validate, default
 from traitlets.config import Configurable
 
 from jupyterhub.spawner import _quote_safe
@@ -330,14 +330,27 @@ class VariableMixin(Configurable):
             raise Exception('User {} is not allowed to spawn a server'.format(self.user.name))
         return super().run_pre_spawn_hook()
 
-    def options_from_form(self, options):
+    def _wrap_options_from_form(outerself, realfn):
+        def inner_options_from_form(options):
+            """
+            If there is an options_form present on a spawner, then when it is submitted by the user,
+            it clobbers any existing user_options - which may include 'presentation_*' etc data
+            from the dashboard.
+            For now, 
+            """
+            formdata = realfn(options)
+            return outerself._postprocess_options_from_form(formdata)
+
+        return inner_options_from_form
+
+
+    def _postprocess_options_from_form(self, formdata):
         """
         If there is an options_form present on a spawner, then when it is submitted by the user,
         it clobbers any existing user_options - which may include 'presentation_*' etc data
         from the dashboard.
         For now,
         """
-        formdata = super().options_from_form(options)
         if hasattr(self, 'orm_spawner') and self.orm_spawner and hasattr(self.orm_spawner, 'user_options') \
                     and isinstance(self.orm_spawner.user_options, dict):
             existing_user_options = self.orm_spawner.user_options.copy()
@@ -345,6 +358,20 @@ class VariableMixin(Configurable):
             formdata = existing_user_options
         return formdata
 
+    @validate('options_from_form')
+    def _validate_options_from_form(self, proposal):
+        """
+        Make sure we wrap this custom options_from_form in a function that will preserve dashboard metadata
+        """
+        return self._wrap_options_from_form(proposal['value'])
+
+    @default("options_from_form")
+    def _varmix_options_from_form(self):
+        """
+        Make sure we wrap the default options_from_form in a function that will preserve dashboard metadata
+        May need to override this to something more specific, e.g. in KubeSpawner
+        """
+        return self._wrap_options_from_form(self._default_options_from_form)  # Spawner class' default
 
 
 class MetaVariableMixin(type(Configurable)):
