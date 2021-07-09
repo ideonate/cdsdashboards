@@ -41,10 +41,11 @@ class VariableKubeSpawner(KubeSpawner, VariableMixin, metaclass=MetaVariableMixi
         extra_env = self.user_options.get('environment', None)
         if extra_env is None:
             self.log.warning("No extra environment variables found in user_options for VariableKubeSpawner!")
-        if not isinstance(extra_env, dict):
+        elif not isinstance(extra_env, dict):
             self.log.warning("Error: `environment` user_option for VariableKubeSpawner is not a dictionary, but a {}"
                              .format(type(extra_env)))
-        for key, val in extra_env.items():
-            env[key] = val
+        else:
+            for key, val in extra_env.items():
+                env[key] = val
 
         return env
