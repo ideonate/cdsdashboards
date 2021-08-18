@@ -5,6 +5,7 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+__version__ = None
 exec(open(pjoin(here,'cdsdashboards/version.py')).read()) # Load __version__
 
 install_requires = [
@@ -19,9 +20,8 @@ extras_require = {
     'user': [
         'jhsingle-native-proxy>=0.7.6',
         'plotlydash-tornado-cmd>=0.0.6',
-        'bokeh-root-cmd>=0.0.6', # Install bokeh and panel
-        'rshiny-server-cmd>=0.0.2',
-        'voila-materialstream>=0.2.6' # Does not install voila itself
+        'bokeh-root-cmd>=0.1.0', # Install bokeh and panel server
+        'rshiny-server-cmd>=0.0.2'
     ],
     'sudospawner': [
         "sudospawner>=0.5.2"

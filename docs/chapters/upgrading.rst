@@ -13,17 +13,6 @@ should run *both* the hub and user upgrade commands in your environment.
 Especially in containerised environments (Docker or Kubernetes), existing singleuser servers may need to be deleted. They can be recreated by re-accessing 
 the dashboard through the Dashboards page.
 
-    **Sponsorship**
-
-    If you are using ContainDS Dashboards in production please consider subscribing to a support plan.
-
-    This will back future development of the 
-    project and is a great way to satisfy your business stakeholders that you are adopting sustainable and supported software.
-
-    It also helps you reach your corporate social responsibility goals since our open source software is used by academic and non-profit organizations. 
-    
-    More `Sponsorship details are on GitHub <https://github.com/sponsors/ideonate>`__.
-
 
 LocalProcessSpawner or SystemdSpawner
 =====================================

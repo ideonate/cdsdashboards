@@ -19,6 +19,14 @@ Read a full description in :ref:`overview`.
 .. image:: ./_static/screencasts/ContainDS_Screencast_Basic.gif
    :target: https://youtu.be/iyryD2ngnx4
 
+View `video on YouTube <https://youtu.be/iyryD2ngnx4>`__
+
+.. note::
+
+   Please see our commercial `ContainDS Deploy <https://containds.com/deploy/>`__ product for a git-based workflow to deploy 
+   dashboards directly into Kubernetes behind enterprise-ready authentication.
+
+
 JupyterHub
 ~~~~~~~~~~
 
@@ -42,8 +50,8 @@ ContainDS Solutions will:
 - Eliminate IT security threats from data science teams hosting web apps and sensitive data in arbitrary insecure cloud locations.
 - Empower data scientists to use their dashboarding framework of choice while unifying your team’s approach to publishing.
 
-ContainDS is a suite of two products: `Dashboards <https://containds.com/dashboards/>`__ for sharing online, and `Desktop <https://containds.com/desktop/>`__ 
-for local-only development and running of data science environments on laptops or desktop computers where the internet is unavailable or insufficiently secure.
+ContainDS is a suite of two products: the open source `Dashboards <https://containds.com/dashboards/>`__ extension for JupyterHub 
+and `Deploy <https://containds.com/deploy/>`__ directly for Kubernetes.
 
 
 Installation and Setup
@@ -59,7 +67,7 @@ To continue installation please see :ref:`setup`.
 Support and Mailing List
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-For more background on this project and our related ContainDS Desktop product, please see our website: 
+For more background on this project and our related ContainDS Deploy product, please see our website: 
 `containds.com <https://containds.com/>`__.
 
 Please contact `support@containds.com <mailto:support@containds.com>`__ with any comments or questions at all.
@@ -70,17 +78,6 @@ features and security advice.
 And there is a `Gitter room <https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`__ 
 for general chat with other community members.
 
-Sponsorship
-~~~~~~~~~~~
-
-If you are using ContainDS Dashboards in production please consider subscribing to a support plan. This will back future development of the 
-project and is a great way to satisfy your business stakeholders that you are adopting sustainable and supported software.
-
-It also helps you reach your corporate social responsibility goals since our open source software is used by academic and non-profit organizations. 
-
-Optionally, your name and logo can be featured on GitHub and our website.
-
-More `Sponsorship details are on GitHub <https://github.com/sponsors/ideonate>`__.
 
 Documentation Contents
 ~~~~~~~~~~~~~~~~~~~~~~
