@@ -15,7 +15,7 @@ RUN rm -rf /home/jovyan/work
 
 ARG JHSINGLENATIVEPROXY_LINE=jhsingle-native-proxy>=0.6.1
 
-RUN pip install $JHSINGLENATIVEPROXY_LINE plotlydash-tornado-cmd>=0.0.4 bokeh-root-cmd>=0.0.5 rshiny-server-cmd>=0.0.2 voila-materialstream>=0.2.6
+RUN pip install $JHSINGLENATIVEPROXY_LINE plotlydash-tornado-cmd>=0.0.4 bokeh-root-cmd>=0.1.2 rshiny-server-cmd>=0.0.2 voila-materialstream>=0.2.6
 
 # Install the frameworks
 
