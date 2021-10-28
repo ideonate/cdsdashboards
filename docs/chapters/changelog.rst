@@ -7,7 +7,7 @@ Changelog
 Version 0.6.0
 ~~~~~~~~~~~~~
 
-Released 28 June 2021
+Released 28 October 2021
 
 - Warning: This upgrade requires a Database Upgrade (which can be handled interactively by an admin from the Dashboards 
   page in JupyterHub).
@@ -15,7 +15,10 @@ Released 28 June 2021
   themself instead of accessing the creator's dashboard server directly.
 - :ref:`jupyter_startpath_regex` to restrict Jupyter Tree source dashboards to a specified regex, e.g. to ensure all 
   dashboards reference a file on a shared path.
+- Allows Panel as a first-class dashboard type (separate to Bokeh).
+- Expects bokeh-root-cmd 0.1.2 to be installed in the lab environment for Bokeh/Panel.
 - Remove show_source_servers and require_source_server functionality from DockerSpawner.
+- Enhancements to VariableSudoSpawner.
 
 If you are using DockerSpawner please only upgrade if you are not using the source spawner functionality (where 
 Docker images are copied from existing spawners to create new dashboard images).
