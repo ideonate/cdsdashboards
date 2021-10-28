@@ -29,7 +29,8 @@ jobs:
     - name: Run all tests
       run: cd e2e && ./run_all.sh
       env:
-        E2E_STAGES: localprocess localprocess12 tljh
+        E2E_STAGES: localprocess localprocess12
+        # Hide tljh for now
 
     - name: Save Cypress screenshots and videos
       if: ${{ success() }} || ${{ failure() }}
