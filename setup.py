@@ -91,6 +91,11 @@ setup_metadata.update(dict(
     extras_require=extras_require
 ))
 
+setup_metadata.update(dict(
+    entry_points={
+        'console_scripts': ['cds_sudospawner=cdsdashboards.hubextension.spawners.variablesudospawner:mediator']
+    }))
+
 setup(
     **setup_metadata
 )
