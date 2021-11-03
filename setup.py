@@ -37,7 +37,7 @@ setup_metadata=dict(
     author='Ideonate',
     author_email='dan@containds.com',
     license='BSD',
-    url='https://containds.com/',
+    url='https://github.com/ideonate/cdsdashboards',
     # this should be a whitespace separated string of keywords, not a list
     keywords="containds jupyterhub",
     classifiers=[

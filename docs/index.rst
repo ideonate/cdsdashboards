@@ -21,11 +21,6 @@ Read a full description in :ref:`overview`.
 
 View `video on YouTube <https://youtu.be/iyryD2ngnx4>`__
 
-.. note::
-
-   Please see our commercial `ContainDS Deploy <https://containds.com/deploy/>`__ product for a git-based workflow to deploy 
-   dashboards directly into Kubernetes behind enterprise-ready authentication.
-
 
 JupyterHub
 ~~~~~~~~~~
@@ -38,7 +33,7 @@ powerful, even if you don't believe your organisation requires a JupyterHub for 
 ContainDS
 ~~~~~~~~~
 
-`ContainDS <https://containds.com/>`__ is a data science platform for teams working on discrete projects. 
+ContainDS is a data science platform for teams working on discrete projects. 
 It provides simple infrastructure to share prototypes and dashboards based on any open source frameworks.
 
 Your data scientists will always use their preferred development environments.
@@ -49,9 +44,6 @@ ContainDS Solutions will:
 - Save time and reduce errors for your Data Science team, allowing them to focus on their core roles.
 - Eliminate IT security threats from data science teams hosting web apps and sensitive data in arbitrary insecure cloud locations.
 - Empower data scientists to use their dashboarding framework of choice while unifying your team’s approach to publishing.
-
-ContainDS is a suite of two products: the open source `Dashboards <https://containds.com/dashboards/>`__ extension for JupyterHub 
-and `Deploy <https://containds.com/deploy/>`__ directly for Kubernetes.
 
 
 Installation and Setup
@@ -67,13 +59,7 @@ To continue installation please see :ref:`setup`.
 Support and Mailing List
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-For more background on this project and our related ContainDS Deploy product, please see our website: 
-`containds.com <https://containds.com/>`__.
-
 Please contact `support@containds.com <mailto:support@containds.com>`__ with any comments or questions at all.
-
-Also `sign up to our email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
-features and security advice.
 
 And there is a `Gitter room <https://gitter.im/ideonate/ContainDS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`__ 
 for general chat with other community members.

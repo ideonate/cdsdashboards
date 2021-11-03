@@ -3,7 +3,7 @@
 Overview
 --------
 
-`ContainDS <https://containds.com/>`__ is a data science platform for teams working on discrete projects. 
+ContainDS is a data science platform for teams working on discrete projects. 
 It provides simple infrastructure to share prototypes and dashboards based on any open source frameworks.
 
 Your data scientists will always use their preferred development environments.

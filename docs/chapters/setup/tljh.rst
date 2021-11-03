@@ -112,9 +112,3 @@ Options
 
 Extra options to control behavior of Dashboards are available - see :ref:`customization`.
 
-Mailing list
-~~~~~~~~~~~~
-
-Please `sign up to the ContainDS email list <https://containds.com/signup/>`__ to receive notifications about updates to the project including new 
-features and security advice.
-

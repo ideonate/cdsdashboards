@@ -22,8 +22,6 @@ Any authorised JupyterHub user can view the dashboard, or choose to give permiss
 
 See [full documentation](https://cdsdashboards.readthedocs.io/)
 
-Note: **Please see our commercial [ContainDS Deploy](https://containds.com/deploy/) product for a git-based workflow to deploy dashboards directly into Kubernetes behind enterprise-ready authentication.**
-
 
 ## How it works
 
@@ -81,8 +79,6 @@ Full [Setup and Installation details](https://cdsdashboards.readthedocs.io/en/st
 Please see LICENSE for details.
 
 Please do get in touch if you try out the package, or would like to but need some support. I would be very interested to find out how it can be used, and to work (without charge) to help you get it running. The project needs feedback in order to develop further!
-
-For more background on this project and our ContainDS Deploy product, please see our website: [containds.com](https://containds.com/).
 
 Contact [support@containds.com](mailto:support@containds.com) with any comments or questions at all.
 
