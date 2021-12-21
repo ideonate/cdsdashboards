@@ -30,6 +30,8 @@ To use ContainDS Dashboards, you will need a JupyterHub setup, but you don't nee
 ContainDS Dashboards leverages the standardised security and authentication functionality of JupyterHub, which makes ContainDS Dashboards incredibly 
 powerful, even if you don't believe your organisation requires a JupyterHub for any other purposes.
 
+Note that JupyterHub 2.x is not supported. You will need to install a version 1.x (e.g. 1.5).
+
 ContainDS
 ~~~~~~~~~
 

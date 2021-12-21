@@ -5,7 +5,7 @@ Setup
 
 First of all, you will need to install JupyterHub on your server.
 
-If you aren't sure which installation type is best for you, please :ref:`get in touch<contact>` and we can help. 
+Note that JupyterHub 2.x is not supported. You will need to install a version 1.x (e.g. 1.5).
 
 For a straightforward single-machine setup try `The Littlest JupyterHub <http://tljh.jupyter.org/en/latest/>`__.
 

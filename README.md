@@ -63,8 +63,10 @@ _Or other app frameworks_
 
 Basic requirements:
 
-- JupyterHub 1.0+
+- JupyterHub 1.x
 - Python 3.6+
+
+Note that JupyterHub 2.x is not supported. You will need to install a version 1.x (e.g. 1.5).
 
 You should be able to use any authenticator for users to login - for example, corporate Google email sign in, or LDAP.
 

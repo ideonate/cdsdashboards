@@ -1,7 +1,8 @@
 name: Get latest release version of Z2JH
 on:
-  schedule:
-    - cron:  '0 10 * * *'
+# Stop cron because we don't want to pick up JupyterHub 2.x Helm Charts
+#  schedule:
+#    - cron:  '0 10 * * *'
   workflow_dispatch:
 jobs:
   get-version:

@@ -3,7 +3,9 @@
 Requirements
 ------------
 
-ContainDS Dashboards requires JupyterHub 1.0+ installed under Python 3.6+.
+ContainDS Dashboards requires JupyterHub 1.x installed under Python 3.6+.
+
+Note that JupyterHub 2.x is not supported. You will need to install a version 1.x (e.g. 1.5).
 
 JupyterHub should ideally be configured with LocalProcessSpawner, SystemdSpawner, DockerSpawner, or KubeSpawner.
 
