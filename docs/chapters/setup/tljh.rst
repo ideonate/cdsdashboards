@@ -30,9 +30,7 @@ Install the cdsdashboards package in the hub environment:
 ::
 
     sudo -E /opt/tljh/hub/bin/python3 -m pip install cdsdashboards
-    sudo -E /opt/tljh/hub/bin/python3 -m pip install --upgrade jupyterhub-traefik-proxy
 
-The last line is just an upgrade to a package used by TLJH that causes problems if you have an old version.
 
 Also install cdsdashboards in the user environment, including extra dependencies:
 
