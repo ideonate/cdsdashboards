@@ -67,7 +67,7 @@ The above is an attempt to run a Python script directly into the python interpre
 be the full path of the Python file as provided by the user who is creating the dashboard. Their script should expect a port number and 
 a web origin as the two 'argv' parameters.
 
-The user probably runs the script on their own command line as :code:`python3 /home/dan/myscripts/script_name.py`, except subsituting the full path to the py 
+The user probably runs the script on their own command line as :code:`python3 /home/dan/myscripts/script_name.py`, except substituting the full path to the py 
 file themselves.
 
 Within ContainDS Dashboards you can see that PYTHONPATH has to be set to work correctly. The variables {presentation_basename} and 
