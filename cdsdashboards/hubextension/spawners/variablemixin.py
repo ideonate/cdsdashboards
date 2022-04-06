@@ -51,6 +51,8 @@ class VariableMixin(Configurable):
                 '{--}no-browser',
                 '{--}Voila.base_url={base_url}/',
                 '{--}Voila.server_url=/',
+                '{--}Voila.ip=0.0.0.0',
+                '{--}Voila.tornado_settings', 'allow_origin={origin_host}',
                 '--progressive'],
             'extra_args_fn': _get_voila_template
         },
@@ -81,7 +83,8 @@ class VariableMixin(Configurable):
                 '{--}allow-websocket-origin={origin_host}',
                 '{--}server=panel',
                 '{--}prefix={base_url}',
-                '--ready-check-path=/ready-check']
+                '--ready-check-path=/ready-check',
+                '--forward-user-info']
         },
         'rshiny': {
             'args': ['--destport=0', 'python3', '{-}m','rshiny_server_cmd.main', '{presentation_path}',
