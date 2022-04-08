@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.6.1
+~~~~~~~~~~~~~
+
+Released 8 April 2022
+
+- Fixes to work better with Voilà 0.3.5.
+
 Version 0.6.0
 ~~~~~~~~~~~~~
 

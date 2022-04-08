@@ -88,8 +88,7 @@ class VariableMixin(Configurable):
                 '{--}allow-websocket-origin={origin_host}',
                 '{--}server=panel',
                 '{--}prefix={base_url}',
-                '--ready-check-path=/ready-check',
-                '--forward-user-info']
+                '--ready-check-path=/ready-check']
         },
         'rshiny': {
             'args': ['--destport=0', 'python3', '{-}m','rshiny_server_cmd.main', '{presentation_path}',
