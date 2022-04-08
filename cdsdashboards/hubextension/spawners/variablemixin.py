@@ -53,7 +53,12 @@ class VariableMixin(Configurable):
                 '{--}Voila.server_url=/',
                 '{--}Voila.ip=0.0.0.0',
                 '{--}Voila.tornado_settings', 'allow_origin={origin_host}',
-                '--progressive'],
+                '--progressive',
+                # If {--}preheat_kernel=False (Volia's default in 0.3.5) then using / as the ready check URL
+                # gives a connection refused. /voila/static/ at least gives a 404 so we can tell the 
+                # Voila server is available.
+                '--ready-check-path=/voila/static/'
+                ],
             'extra_args_fn': _get_voila_template
         },
         'streamlit': {
