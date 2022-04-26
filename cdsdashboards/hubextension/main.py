@@ -15,7 +15,7 @@ from ..app import BuildersStore, CDSConfigStore
 
 
 class DashboardBaseHandler(BaseHandler, DashboardBaseMixin):
-    
+
     def render_template(self, name, sync=False, **ns):
         """
         JupyterHub 1.3+ returns an awaitable from render_template (if new param sync=False).
@@ -119,9 +119,14 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         conda_env = dashboard_options.get('conda_env', '')
 
         errors = DefaultObjDict()
-        
+
         merged_presentation_types = cdsconfig.merged_presentation_types
-        all_conda_envs = cdsconfig.conda_envs
+
+        if callable(cdsconfig.conda_envs):
+            all_conda_envs = cdsconfig.conda_envs()
+        else:
+            all_conda_envs = cdsconfig.conda_envs
+
         allow_custom_conda_env = cdsconfig.allow_custom_conda_env
 
         html = await self.render_template(
@@ -219,7 +224,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
             try:
                 jupyter_startpath_regex = re.compile(cdsconfig.jupyter_startpath_regex)
             except re.error as rerr:
-                self.log.warn('jupyter_startpath_regex ({}) cannot compile: {}'.format(cdsconfig.jupyter_startpath_regex, rerr))  
+                self.log.warn('jupyter_startpath_regex ({}) cannot compile: {}'.format(cdsconfig.jupyter_startpath_regex, rerr))
 
         if '..' in dashboard_start_path:
             errors.start_path = 'Path must not contain ..'
@@ -235,7 +240,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         merged_presentation_types = cdsconfig.merged_presentation_types
         all_conda_envs = cdsconfig.conda_envs
         allow_custom_conda_env = cdsconfig.allow_custom_conda_env
-        
+
         if not dashboard_presentation_type in merged_presentation_types:
             errors.presentation_type = 'Framework {} invalid - it must be one of the allowed types: {}'.format(
                 dashboard_presentation_type, ', '.join(merged_presentation_types)
@@ -279,13 +284,13 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
                 if dashboard is None:
 
-                    urlname = Dashboard.calc_urlname(dashboard_name, self.db)    
+                    urlname = Dashboard.calc_urlname(dashboard_name, self.db)
 
-                    self.log.debug('Final urlname is '+urlname)  
+                    self.log.debug('Final urlname is '+urlname)
 
                     dashboard = Dashboard(
-                        name=dashboard_name, urlname=urlname, user=current_user.orm_user, 
-                        description=dashboard_description, start_path=dashboard_start_path, 
+                        name=dashboard_name, urlname=urlname, user=current_user.orm_user,
+                        description=dashboard_description, start_path=dashboard_start_path,
                         presentation_type=dashboard_presentation_type,
                         options=dashboard_options,
                         allow_all=user_permissions=='anyusers'
@@ -300,7 +305,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                     dashboard.options = dashboard_options
                     allow_all=user_permissions=='anyusers'
                     dashboard.allow_all=allow_all
-                    
+
                 if group is None:
                     group = Group.find(db, dashboard.groupname)
                     if group is None:
@@ -312,7 +317,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
 
                 if self.sync_group(group, selected_users_orm):
                     db.add(group)
-                    
+
                 db.commit()
 
                 # Now cancel any existing build and force a rebuild
@@ -359,7 +364,7 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
                 current_user=current_user))
             )
             return self.write(html)
-        
+
         self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard.urlname))
 
 
@@ -438,14 +443,14 @@ class DashboardOptionsHandler(DashboardBaseHandler):
 
         builders_store = BuildersStore.get_instance(self.settings['config'])
         builder = builders_store[dashboard]
-        
+
         next_page = await self.maybe_start_build(dashboard, current_user, True, form_options)
 
         return self.redirect(url_path_join(self.settings['base_url'], "hub", "dashboards", dashboard_urlname))
 
 
 class MainViewDashboardHandler(DashboardBaseHandler):
-    
+
     @authenticated
     @check_database_upgrade
     async def get(self, dashboard_urlname=''):
@@ -491,7 +496,7 @@ class MainViewDashboardHandler(DashboardBaseHandler):
 
 
 class ClearErrorDashboardHandler(DashboardBaseHandler):
-    
+
     @authenticated
     @check_database_upgrade
     async def get(self, dashboard_urlname=''):
@@ -640,7 +645,7 @@ class GroupsSingleHandler(DashboardBaseHandler):
         selected_users_orm = self.db.query(User).filter(User.name.in_(selected_users)).all()
 
         if self.sync_group(group, selected_users_orm):
-            self.db.add(group)            
+            self.db.add(group)
             self.db.commit()
 
         self.redirect('{}hub/groupslist'.format(self.settings['base_url']))

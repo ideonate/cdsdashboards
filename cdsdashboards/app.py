@@ -7,7 +7,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
-from traitlets import Unicode, Integer, Bool, Dict, validate, Any, default, observe, List, TraitError
+from traitlets import Unicode, Integer, Bool, Dict, validate, Any, default, observe, List, TraitError, Union, Callable
 from traitlets.config import Application, catch_config_error, SingletonConfigurable
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
@@ -111,14 +111,17 @@ class CDSDashboardsConfig(SingletonConfigurable):
         """
     ).tag(config=True)
 
-    conda_envs = List(
-        trait=Unicode,
-        default_value=[],
-        minlen=0,
+    conda_envs = Union(
+        [
+            List(trait=Unicode, default_value=[], minlen=0),
+            Callable()
+        ],
         help="""
         A list of Conda env names for the dashboard creator to select.
         A list.
-        Default value is the empty list.
+        Default value is the empty list. Also accepts conda_envs to
+        be a callable function which is evaluated for each render of
+        the dashboard page.
         """
     ).tag(config=True)
 
