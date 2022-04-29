@@ -21,7 +21,7 @@ RUN pip install voila
 
 # FASTAPI
 
-RUN pip install fastapi==0.63.0 flask==1.1.2 jupyterhub==1.3.0 requests==2.25.1 typer==0.3.2 uvicorn==0.13.3
+RUN pip install fastapi==0.63.0 flask==1.1.2 jupyterhub==1.5.0 requests==2.25.1 typer==0.3.2 uvicorn==0.13.3
 
 
 USER $NB_UID

@@ -5,7 +5,7 @@ c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
 c.DummyAuthenticator.password = 'password'
 
 c.Authenticator.admin_users = {'dan'}
-c.Authenticator.whitelist = {'dan'}
+c.Authenticator.allowed_users = {'dan'}
 
 c.JupyterHub.spawner_class = 'cdsdashboards.hubextension.spawners.VariableLocalProcessSpawner'
 

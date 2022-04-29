@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=jupyterhub/jupyterhub:1.2
+ARG BASE_IMAGE=jupyterhub/jupyterhub:1.5
 FROM $BASE_IMAGE
 
 RUN apt-get update && apt-get --assume-yes install git

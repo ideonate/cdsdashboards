@@ -146,7 +146,7 @@ auth:
     access: true
     users:
       - dan
-  whitelist:
+  allowed_users:
     users:
       - bob
 ```

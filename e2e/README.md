@@ -3,5 +3,5 @@
 To run:
 
 ```
-docker-compose up --exit-code-from cypress
+./run_one.sh localprocess login
 ```

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export JH_CYPRESS_BASE_IMAGE="jupyterhub/jupyterhub:1.3"
+export JH_CYPRESS_BASE_IMAGE="jupyterhub/jupyterhub:1.5"
 
 export JH_CYPRESS_DOCKERFILE="Dockerfile"
 

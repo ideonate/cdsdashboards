@@ -5,7 +5,7 @@ c.JupyterHub.bind_url = 'https://0.0.0.0:80'
 c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
 
 c.Authenticator.admin_users = {'dan'}
-c.Authenticator.whitelist = {'dan'}
+c.Authenticator.allowed_users = {'dan'}
 
 
 c.JupyterHub.allow_named_servers = True
