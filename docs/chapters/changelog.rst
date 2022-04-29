@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.6.2
+~~~~~~~~~~~~~
+
+Released 29 April 2022
+
+- conda_envs can now be a callable or a list.
+
 Version 0.6.1
 ~~~~~~~~~~~~~
 

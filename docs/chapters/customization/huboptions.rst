@@ -128,6 +128,9 @@ It may be possible for env names to be duplicated (but within different prefix p
 You may use a full path to a Conda env instead of just the name. This may be necessary in some configurations, especially if your Conda 
 envs are defined with a prefix instead of named in a central location.
 
+It is now also possible to provide a callable to conda_envs that returns a list whenever called. This allows you to change the contents dynamically, 
+e.g. pulling the list of conda envs from an API.
+
 ::
 
     c.CDSDashboardsConfig.allow_custom_conda_env = True
