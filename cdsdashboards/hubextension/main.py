@@ -238,7 +238,12 @@ class BasicDashboardEditHandler(DashboardBaseHandler):
         cdsconfig = CDSConfigStore.get_instance(self.settings['config'])
 
         merged_presentation_types = cdsconfig.merged_presentation_types
-        all_conda_envs = cdsconfig.conda_envs
+
+        if callable(cdsconfig.conda_envs):
+            all_conda_envs = cdsconfig.conda_envs()
+        else:
+            all_conda_envs = cdsconfig.conda_envs
+
         allow_custom_conda_env = cdsconfig.allow_custom_conda_env
 
         if not dashboard_presentation_type in merged_presentation_types:
