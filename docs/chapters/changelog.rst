@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+Version 0.6.3
+~~~~~~~~~~~~~
+
+Released 12 Sep 2022
+
+- conda_envs fixed for callable
+
 Version 0.6.2
 ~~~~~~~~~~~~~
 
