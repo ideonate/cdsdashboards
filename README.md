@@ -1,5 +1,9 @@
 # ContainDS Dashboards for JupyterHub
 
+> [!WARNING]
+> This code may still be useful to you, but please note it does not generally work with the latest versions of JupyterHub.
+> Please try [https://github.com/nebari-dev/jhub-apps](jhub-apps) for a more active codebase (which might still need configuration and custom code for your setup).
+
 A Dashboard publishing solution for Data Science teams to share results with decision makers.
 
 Run a private on-premise or cloud-based JupyterHub with extensions to instantly publish apps and notebooks as user-friendly
