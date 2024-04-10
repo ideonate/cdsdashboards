@@ -4,7 +4,7 @@ ContainDS Dashboards
 
 .. warning::
     This code may still be useful to you, but please note it does not generally work with the latest versions of JupyterHub.
-    Please try [https://github.com/nebari-dev/jhub-apps](jhub-apps) for a more active codebase (which might still need configuration and custom code for your setup).
+    Please try `jhub-apps <https://github.com/nebari-dev/jhub-apps>`__ for a more active codebase (which might still need configuration and custom code for your setup).
 
 Note that JupyterHub 2.x is not supported. You will need to install a version 1.x (e.g. 1.5).
 
