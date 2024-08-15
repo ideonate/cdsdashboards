@@ -31,3 +31,21 @@ class VariableKubeSpawner(KubeSpawner, VariableMixin, metaclass=MetaVariableMixi
 
         return self._wrap_options_from_form(usefn)
 
+    def get_env(self):
+        """Return the environment dict to use for the Spawner.
+        See also: jupyterhub.Spawner.get_env
+        """
+
+        env = super().get_env()
+        # Add environment variables from user_options
+        extra_env = self.user_options.get('environment', None)
+        if extra_env is None:
+            self.log.warning("No extra environment variables found in user_options for VariableKubeSpawner!")
+        elif not isinstance(extra_env, dict):
+            self.log.warning("Error: `environment` user_option for VariableKubeSpawner is not a dictionary, but a {}"
+                             .format(type(extra_env)))
+        else:
+            for key, val in extra_env.items():
+                env[key] = val
+
+        return env
